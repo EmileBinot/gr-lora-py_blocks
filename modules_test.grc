@@ -9,7 +9,7 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: no_gui
+    generate_options: qt_gui
     hier_block_src_path: '.:'
     id: modules_test
     max_nouts: '0'
@@ -28,7 +28,7 @@ options:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 28.0]
+    coordinate: [40, 20.0]
     rotation: 0
     state: enabled
 
@@ -42,26 +42,81 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 28.0]
+    coordinate: [384, 4.0]
     rotation: 0
     state: enabled
-- name: blocks_null_sink_0
-  id: blocks_null_sink
+- name: blocks_file_sink_0
+  id: blocks_file_sink
   parameters:
     affinity: ''
     alias: ''
-    bus_structure_sink: '[[0,],]'
+    append: 'False'
     comment: ''
-    num_inputs: '1'
-    type: int
+    file: dump
+    type: byte
+    unbuffered: 'False'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [592, 176.0]
+    coordinate: [736, 356.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: blocks_file_sink_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: dump
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1384, 380.0]
+    rotation: 0
+    state: disabled
+- name: blocks_file_sink_0_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: dumpOUT
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [976, 108.0]
+    rotation: 0
+    state: disabled
+- name: blocks_file_sink_0_0_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: dumpIN
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 100.0]
+    rotation: 0
+    state: disabled
 - name: blocks_null_sink_0_0
   id: blocks_null_sink
   parameters:
@@ -76,9 +131,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [584, 272.0]
+    coordinate: [648, 408.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_null_sink_0_0_0
   id: blocks_null_sink
   parameters:
@@ -93,9 +148,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 376.0]
+    coordinate: [1064, 496.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 644.0]
+    rotation: 0
+    state: disabled
 - name: blocks_vector_source_x_0
   id: blocks_vector_source_x
   parameters:
@@ -107,15 +181,15 @@ blocks:
     repeat: 'False'
     tags: '[]'
     type: byte
-    vector: (0xFF, 0x7F, 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x00)
+    vector: (0xFF, 0x7F, 0x3F, 0x1F, 0xFF, 0x07, 0x03, 0x01, 0xFF)
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [128, 156.0]
+    coordinate: [256, 220.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_vector_source_x_0_0
   id: blocks_vector_source_x
   parameters:
@@ -133,9 +207,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [128, 252.0]
+    coordinate: [80, 356.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_vector_source_x_0_0_0
   id: blocks_vector_source_x
   parameters:
@@ -153,9 +227,67 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [128, 356.0]
+    coordinate: [520, 476.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: blocks_vector_source_x_0_1
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'False'
+    tags: '[]'
+    type: byte
+    vector: (0xFF, 0x7F, 0x3F, 0x1F, 0x1F, 0x1F)
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1008, 380.0]
+    rotation: 0
+    state: disabled
+- name: blocks_vector_source_x_0_1_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: int
+    vector: (0xFF, 0x7F, 0x3F, 0x1F, 0x1F, 0x1F)
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 628.0]
+    rotation: 0
+    state: disabled
+- name: blocks_vector_to_stream_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '512'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 648.0]
+    rotation: 0
+    state: disabled
 - name: epy_block_0
   id: epy_block
   parameters:
@@ -164,86 +296,143 @@ blocks:
     _source_code: "\"\"\"\nInterleaving block\nScrambles bits together to fight error\
       \ bursts.\nReference : \"Towards an SDR implementation of LoRa...\" 2020 A.Marquet,\
       \ N.Montavont, G.Papadopoulos)\n\"\"\"\n\nimport numpy as np\nfrom gnuradio\
-      \ import gr\n\nclass Interleaver(gr.basic_block):\n    def __init__(self, SF=5,\
+      \ import gr\n\nclass Interleaver(gr.basic_block):\n    def __init__(self, SF=9,\
       \ CR=4):\n        gr.basic_block.__init__(self,\n            name=\"Interleaver\"\
       ,\n            in_sig=[np.uint8],\n            out_sig=[np.uint32])\n      \
-      \  self.SF = SF\n        self.CR = CR\n\n    def general_work(self, input_items,\
-      \ output_items):\n\n        #buffer references\n        in0 = input_items[0][:self.SF]\n\
-      \        out = output_items[0]\n\n        # parsing in0 (convert + crop to lines\
-      \ of CR+4 bits and bundle in matrix)\n        input_matrix = np.zeros((self.SF,\
-      \ self.CR+4), dtype=np.uint8)\n        for i in range(len(in0)):\n         \
-      \   bits_crop = [int(x) for x in bin(in0[i])[2:]]        \n            bits_crop_norm\
-      \ = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]\n          \
-      \  input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)\n\n     \
-      \   # interleaving\n        output_matrix = np.zeros((self.CR+4, self.SF), dtype=np.uint8)\n\
-      \        for i in range(0,(self.CR+4)-1) :\n            for j in range(0,(self.SF)-1)\
-      \ :\n                idi=self.SF-1-(j-i)%self.SF\n                idj=self.CR+4-1-i\n\
-      \                output_matrix[i][j]=input_matrix[idi][idj]\n\n        out =\
-      \ output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))\n\n\
-      \        # debug\n        # print(\"\\n--- GENERAL WORK : INTERLEAVER ---\"\
-      )\n        # print(\"in0 :\")\n        # print(in0)\n        # print(\"len(in0)\
-      \ (should be SF): \")\n        # print(len(in0))\n        # print(\"input_matrix\
-      \ (SF x CR+4):\")\n        # print(input_matrix)\n        # print(\"output_matrix\
-      \ (CR+4 x SF):\")\n        # print(output_matrix)\n        # print(\"out = \"\
-      )\n        # print(out)\n        # print(\"return len(out) (should be CR+4):\
-      \ \")\n        # print(len(out))\n\n        #consume the inputs (should be SF)\n\
-      \        self.consume(0, len(in0))\n\n        #return produced items (should\
-      \ be CR+4)\n        return len(out)\n\n"
+      \  self.SF = SF\n        self.CR = CR\n\n    def forecast(self, noutput_items,\
+      \ ninputs) :\n        ninput_items_required = [self.SF]*ninputs #ninput_items_required[i]\
+      \ is the number of items that will be consumed on input port i\n        return\
+      \ ninput_items_required\n\n    def general_work(self, input_items, output_items):\n\
+      \        \n        if(len(input_items[0]) >= self.SF) :\n\n            #buffer\
+      \ references\n            in0 = input_items[0][:self.SF]\n\n            # parsing\
+      \ in0 (convert + crop to SF lines of CR+4 bits and bundle in matrix)\n     \
+      \       input_matrix = np.zeros((self.SF, self.CR+4), dtype=np.uint8)\n    \
+      \        for i in range(len(in0)):\n                bits_crop = [int(x) for\
+      \ x in bin(in0[i])[2:]]        \n                bits_crop_norm = ([0]*(self.CR+4-len(bits_crop))\
+      \ + bits_crop)[-(self.CR+4):]\n                input_matrix[i][:] = np.asarray(bits_crop_norm,\
+      \ dtype=np.uint8)\n\n            # interleaving\n            output_matrix =\
+      \ np.zeros((self.CR+4, self.SF), dtype=np.uint8)\n            for i in range(0,(self.CR+4))\
+      \ :\n                for j in range(0,(self.SF)) :\n                    idi=self.SF-1-(j-i)%self.SF\n\
+      \                    idj=self.CR+4-1-i\n                    output_matrix[i][j]=input_matrix[idi][idj]\n\
+      \            \n            # to uint32\n            output_items[0][0:(self.CR+4)]\
+      \ = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))\n\
+      \n            # debug\n            print(\"\\n--- GENERAL WORK : INTERLEAVER\
+      \ ---\")\n            print(\"in0 :\")\n            print(in0)\n           \
+      \ print(\"len(in0) (should be SF): \")\n            print(len(in0))\n      \
+      \      print(\"input_matrix (SF x CR+4):\")\n            print(input_matrix)\n\
+      \            print(\"output_matrix (CR+4 x SF):\")\n            print(output_matrix)\n\
+      \            print(\"output_items[0] = \")\n            print(output_items[0])\n\
+      \n            #consume inputs (should be SF)\n            self.consume(0, self.SF)\n\
+      \            return self.CR+4\n\n        else :\n            return 0\n\n\n\n"
     affinity: ''
     alias: ''
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
-    _io_cache: ('Interleaver', 'Interleaver', [('SF', '5'), ('CR', '4')], [('0', 'byte',
+    _io_cache: ('Interleaver', 'Interleaver', [('SF', '9'), ('CR', '4')], [('0', 'byte',
       1)], [('0', 'int', 1)], '', ['CR', 'SF'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 164.0]
+    coordinate: [520, 228.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: epy_block_0_0
+  id: epy_block
+  parameters:
+    CR: '2'
+    SF: '9'
+    _source_code: "\"\"\"\nInterleaving block\nScrambles bits together to fight error\
+      \ bursts.\nReference : \"Towards an SDR implementation of LoRa...\" 2020 A.Marquet,\
+      \ N.Montavont, G.Papadopoulos)\n\"\"\"\n\nimport numpy as np\nfrom gnuradio\
+      \ import gr\n\nclass Interleaver(gr.basic_block):\n    def __init__(self, SF=9,\
+      \ CR=4):\n        gr.basic_block.__init__(self,\n            name=\"Deiterleaver\"\
+      ,\n            in_sig=[np.uint32],\n            out_sig=[np.uint8])\n      \
+      \  self.SF = SF\n        self.CR = CR\n\n    def forecast(self, noutput_items,\
+      \ ninputs) :\n        ninput_items_required = [self.CR+4]*ninputs #ninput_items_required[i]\
+      \ is the number of items that will be consumed on input port i\n        return\
+      \ ninput_items_required\n\n    def general_work(self, input_items, output_items):\n\
+      \        \n        if(len(input_items[0]) >= self.CR+4) :\n\n            #buffer\
+      \ references\n            in0 = input_items[0][:self.CR+4]\n\n            #\
+      \ parsing in0 (convert + crop to CR+4 lines of SF bits and bundle in matrix)\n\
+      \            input_matrix = np.zeros((self.CR+4, self.SF), dtype=np.uint8)\n\
+      \            for i in range(len(in0)):\n                bits_crop = [int(x)\
+      \ for x in bin(in0[i])[2:]]        \n                bits_crop_norm = ([0]*(self.SF-len(bits_crop))\
+      \ + bits_crop)[-(self.SF):]\n                input_matrix[i][:] = np.asarray(bits_crop_norm,\
+      \ dtype=np.uint8)\n\n            # deinterleaving\n            output_matrix\
+      \ = np.zeros((self.SF, self.CR+4), dtype=np.uint8)\n            for i in range(0,(self.SF))\
+      \ :\n                for j in range(0,(self.CR+4)) :\n                    idi=self.CR+4-1-j\n\
+      \                    idj=(self.SF-1-i+(self.CR+4)-1-j)%self.SF\n           \
+      \         output_matrix[i][j]=input_matrix[idi][idj]\n\n\n            # to uint32\n\
+      \            output_items[0][0:(self.SF)] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1]\
+      \ - 1, -1, -1))\n\n            # debug\n            print(\"\\n--- GENERAL WORK\
+      \ : DEINTERLEAVER ---\")\n            print(\"in0 :\")\n            print(in0)\n\
+      \            print(\"len(in0) (should be CR+4): \")\n            print(len(in0))\n\
+      \            print(\"input_matrix (CR+4 x SF):\")\n            print(input_matrix)\n\
+      \            print(\"output_matrix (SF x CR+4 ):\")\n            print(output_matrix)\n\
+      \            print(\"output_items[0] = \")\n            print(output_items[0][0:(self.SF)])\n\
+      \            print(\"return len(output_items[0]) (should be CR+4): \")\n   \
+      \         print(len(output_items[0]))\n\n            #consume inputs (should\
+      \ be CR+4)\n            self.consume(0, self.CR+4)\n            return self.SF\n\
+      \n        else :\n            return 0\n\n\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Deiterleaver', 'Interleaver', [('SF', '9'), ('CR', '4')], [('0',
+      'int', 1)], [('0', 'byte', 1)], '', ['CR', 'SF'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 164.0]
+    rotation: 0
+    state: disabled
 - name: epy_block_1
   id: epy_block
   parameters:
     CR: '4'
     _source_code: "\"\"\"\nHamming encoding block\nForward Error Correction encoding\
       \ block\nReference : \"Towards an SDR implementation of LoRa...\" 2020 A.Marquet,\
-      \ N.Montavont, G.Papadopoulos)\n\"\"\"\n\nfrom nis import match\nfrom unittest\
-      \ import case\nimport numpy as np\nfrom gnuradio import gr\n\n\nclass Hamming_enc(gr.sync_block):\
-      \  # other base classes are basic_block, decim_block, interp_block\n    def\
-      \ __init__(self, CR = 4):  # only default arguments here\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='Hamming_enc',   # will show up in GRC\n\
-      \            in_sig=[np.uint8],\n            out_sig=[np.uint8]\n        )\n\
-      \        self.CR = CR\n\n    def work(self, input_items, output_items):\n  \
-      \      \n        in0 = input_items[0]\n        out = output_items[0]\n    \n\
-      \        # Hamming encoding (iterate over matrix lines and encode each)\n  \
-      \      output_matrix = np.zeros((len(in0), 4+self.CR), dtype=np.uint8)\n   \
-      \     input_matrix = np.zeros((len(in0), 4), dtype=np.uint8)\n        for i\
-      \ in range(len(in0)):\n\n            # parsing in0 (convert + crop to lines\
-      \ of 4 bits and bundle in matrix)\n            bits_crop = [int(x) for x in\
-      \ bin(in0[i])[2:]]        \n            bits_crop_norm = ([0]*(4-len(bits_crop))\
-      \ + bits_crop)[-(4):]\n            input_matrix[i][:] = np.asarray(bits_crop_norm,\
-      \ dtype=np.uint8)\n\n            if self.CR == 1:\n                p0 = input_matrix[i][0]\
-      \ ^ input_matrix[i][1] ^ input_matrix[i][2] ^ input_matrix[i][3]\n         \
-      \       output_matrix[i] = np.asarray([input_matrix[i][0], input_matrix[i][1],\
-      \ input_matrix[i][2], input_matrix[i][3], p0], dtype=np.uint8)\n\n         \
-      \   if self.CR == 2:\n                p0 = input_matrix[i][0] ^ input_matrix[i][1]\
-      \ ^ input_matrix[i][2]\n                p1 = input_matrix[i][1] ^ input_matrix[i][2]\
-      \ ^ input_matrix[i][3]\n                output_matrix[i] = np.asarray([input_matrix[i][0],\
-      \ input_matrix[i][1], input_matrix[i][2], input_matrix[i][3], p1, p0], dtype=np.uint8)\n\
-      \n            if self.CR == 3:\n                Q = np.array([[0,1,1,1], [1,1,0,1],\
+      \ N.Montavont, G.Papadopoulos)\n\"\"\"\n\nimport numpy as np\nfrom gnuradio\
+      \ import gr\n\n\nclass Hamming_enc(gr.sync_block):  # other base classes are\
+      \ basic_block, decim_block, interp_block\n    def __init__(self, CR = 4):  #\
+      \ only default arguments here\n        gr.sync_block.__init__(\n           \
+      \ self,\n            name='Hamming_enc',   # will show up in GRC\n         \
+      \   in_sig=[np.uint8],\n            out_sig=[np.uint8]\n        )\n        self.CR\
+      \ = CR\n\n    def work(self, input_items, output_items):\n        \n       \
+      \ in0 = input_items[0]\n        out = output_items[0]\n    \n        # Hamming\
+      \ encoding (iterate over matrix lines and encode each)\n        output_matrix\
+      \ = np.zeros((len(in0), 4+self.CR), dtype=np.uint8)\n        input_matrix =\
+      \ np.zeros((len(in0), 4), dtype=np.uint8)\n        for i in range(len(in0)):\n\
+      \n            # parsing in0 (convert + crop to lines of 4 bits and bundle in\
+      \ matrix)\n            bits_crop = [int(x) for x in bin(in0[i])[2:]]       \
+      \ \n            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]\n\
+      \            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)\n\
+      \n            if self.CR == 1:\n                p0 = input_matrix[i][0] ^ input_matrix[i][1]\
+      \ ^ input_matrix[i][2] ^ input_matrix[i][3]\n                output_matrix[i]\
+      \ = np.asarray([input_matrix[i][0], input_matrix[i][1], input_matrix[i][2],\
+      \ input_matrix[i][3], p0], dtype=np.uint8)\n\n            if self.CR == 2:\n\
+      \                p0 = input_matrix[i][0] ^ input_matrix[i][1] ^ input_matrix[i][2]\n\
+      \                p1 = input_matrix[i][1] ^ input_matrix[i][2] ^ input_matrix[i][3]\n\
+      \                output_matrix[i] = np.asarray([input_matrix[i][0], input_matrix[i][1],\
+      \ input_matrix[i][2], input_matrix[i][3], p1, p0], dtype=np.uint8)\n\n     \
+      \       if self.CR == 3:\n                Q = np.array([[0,1,1,1], [1,1,0,1],\
       \ [1,1,1,0], [1,0,1,1]], np.uint8)\n                Id = np.identity(4, dtype=np.uint8)\n\
       \                G = np.concatenate((Id, Q),axis=1)\n                output_matrix[i]\
       \ = (np.dot(input_matrix[i],G)%2)[0:4+self.CR]\n\n            if self.CR ==\
       \ 4:\n                Q = np.array([[0,1,1,1], [1,1,0,1], [1,1,1,0], [1,0,1,1]],\
       \ np.uint8)\n                Id = np.identity(4, dtype=np.uint8)\n         \
       \       G = np.concatenate((Id, Q),axis=1)\n                output_matrix[i]\
-      \ = (np.dot(input_matrix[i],G)%2)\n\n        #debug\n        # print(\"\\n---\
-      \ GENERAL WORK : HAMMING_ENC ---\")\n        # print(\"in0 :\")\n        # print(in0)\n\
-      \        # print(\"input_matrix :\")\n        # print(input_matrix)\n      \
-      \  # print(\"output_matrix :\")\n        # print(output_matrix)\n\n        return\
-      \ len(output_items[0])\n"
+      \ = (np.dot(input_matrix[i],G)%2)\n\n        # convert output matrix to uint8\n\
+      \        out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] -\
+      \ 1, -1, -1))\n\n        # #debug\n        # print(\"\\n--- GENERAL WORK : HAMMING_ENC\
+      \ ---\")\n        # print(\"in0 :\")\n        # print(in0)\n        # print(\"\
+      input_matrix :\")\n        # print(input_matrix)\n        # print(\"output_matrix\
+      \ :\")\n        # print(output_matrix)\n        # print(\"out :\")\n       \
+      \ # print(out)\n\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -255,14 +444,51 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 268.0]
+    coordinate: [296, 372.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: epy_block_1_0
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nWhitening block\nWhiten input sequence to remove the frequency\
       \ and time correlations in it.\n\n\"\"\"\nimport numpy as np\nfrom gnuradio\
+      \ import gr\n\n# whitening_seq_debug =0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1\n\n\
+      class Whitening(gr.sync_block):  # other base classes are basic_block, decim_block,\
+      \ interp_block\n    def __init__(self):  # only default arguments here\n   \
+      \     gr.sync_block.__init__(\n            self,\n            name='Whitening',\
+      \   # will show up in GRC\n            in_sig=[np.uint8],\n            out_sig=[np.uint8]\n\
+      \        )\n        self.table_idx = 0\n        \n    def work(self, input_items,\
+      \ output_items):\n        \n        in0 = input_items[0]\n        out = output_items[0]\n\
+      \        # parsing in0 (convert + crop to lines of 4 bits and bundle in matrix)\n\
+      \        input_matrix = np.zeros((len(in0), 4), dtype=np.uint8)\n        for\
+      \ i in range(len(in0)):\n            bits_crop = [int(x) for x in bin(in0[i])[2:]]\
+      \        \n            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]\n\
+      \            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)\n\
+      \            \n            # whitening\n            out[i] = in0[i] ^ whitening_seq[self.table_idx]\n\
+      \            self.table_idx += 1\n            if(self.table_idx == len(whitening_seq)):\n\
+      \                self.table_idx = 0\n\n\n        #debug\n        # print(\"\\\
+      n--- GENERAL WORK : WHITENING ---\")\n        # print(\"in0 :\")\n        #\
+      \ print(in0)\n        # print(\"input_matrix :\")\n        # print(input_matrix)\n\
+      \        # print(\"out :\")\n        # print(out)\n        # print(\"return\
+      \ len(out): \")\n        # print(len(out))\n\n        return len(out)\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Whitening', 'Whitening', [], [('0', 'byte', 1)], [('0', 'byte', 1)],
+      '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 496.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_2
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nDewhitening block\n\"\"\"\nimport numpy as np\nfrom gnuradio\
       \ import gr\n\nwhitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85,\
       \ 0x0B, 0x17, 0x2F, 0x5E, 0xBC, 0x78, 0xF1, 0xE3,\n                0xC6, 0x8D,\
       \ 0x1A, 0x34, 0x68, 0xD0, 0xA0, 0x40, 0x80, 0x01, 0x02, 0x04, 0x08, 0x11, 0x23,\
@@ -286,24 +512,23 @@ blocks:
       \ 0xD4, 0xA8, 0x51, 0xA3, 0x46, 0x8C, 0x18, 0x30, 0x60, 0xC1, 0x83, 0x07,\n\
       \                0x0E, 0x1D, 0x3A, 0x75, 0xEA, 0xD5, 0xAA, 0x55, 0xAB, 0x57,\
       \ 0xAF, 0x5F, 0xBE, 0x7C, 0xF9, 0xF2,\n                0xE5, 0xCA, 0x94, 0x28,\
-      \ 0x50, 0xA1, 0x42, 0x84, 0x09, 0x13, 0x27, 0x4F, 0x9F, 0x3F, 0x7F)\n\n# whitening_seq_debug\
-      \ =0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1\n\nclass Whitening(gr.sync_block):  #\
-      \ other base classes are basic_block, decim_block, interp_block\n    def __init__(self):\
-      \  # only default arguments here\n        gr.sync_block.__init__(\n        \
-      \    self,\n            name='Whitening',   # will show up in GRC\n        \
-      \    in_sig=[np.uint8],\n            out_sig=[np.uint8]\n        )\n       \
-      \ self.table_idx = 0\n        \n    def work(self, input_items, output_items):\n\
-      \        \n        in0 = input_items[0]\n        out = output_items[0]\n   \
-      \     # parsing in0 (convert + crop to lines of 4 bits and bundle in matrix)\n\
+      \ 0x50, 0xA1, 0x42, 0x84, 0x09, 0x13, 0x27, 0x4F, 0x9F, 0x3F, 0x7F)\n\nclass\
+      \ Dewhitening(gr.sync_block):  # other base classes are basic_block, decim_block,\
+      \ interp_block\n    def __init__(self):  # only default arguments here\n   \
+      \     gr.sync_block.__init__(\n            self,\n            name='Dewhitening',\
+      \   # will show up in GRC\n            in_sig=[np.uint8],\n            out_sig=[np.uint8]\n\
+      \        )\n        self.table_idx = 0\n        \n    def work(self, input_items,\
+      \ output_items):\n        \n        in0 = input_items[0]\n        out = output_items[0]\n\
+      \        # parsing in0 (convert + crop to lines of 4 bits and bundle in matrix)\n\
       \        input_matrix = np.zeros((len(in0), 4), dtype=np.uint8)\n        for\
       \ i in range(len(in0)):\n            bits_crop = [int(x) for x in bin(in0[i])[2:]]\
       \        \n            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]\n\
       \            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)\n\
       \            \n            # whitening\n            out[i] = in0[i] ^ whitening_seq[self.table_idx]\n\
       \            self.table_idx += 1\n            if(self.table_idx == len(whitening_seq)):\n\
-      \                self.table_idx = 0\n\n\n        #debug\n        # print(\"\\\
-      n--- GENERAL WORK : WHITENING ---\")\n        # print(\"in0 :\")\n        #\
-      \ print(in0)\n        # print(\"input_matrix :\")\n        # print(input_matrix)\n\
+      \                self.table_idx = 0\n\n\n        # # debug\n        # print(\"\
+      \\n--- GENERAL WORK : DEWHITENING ---\")\n        # print(\"in0 :\")\n     \
+      \   # print(in0)\n        # print(\"input_matrix :\")\n        # print(input_matrix)\n\
       \        # print(\"out :\")\n        # print(out)\n        # print(\"return\
       \ len(out): \")\n        # print(len(out))\n\n        return len(out)\n"
     affinity: ''
@@ -312,22 +537,293 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
-    _io_cache: ('Whitening', 'Whitening', [], [('0', 'byte', 1)], [('0', 'byte', 1)],
-      '', [])
+    _io_cache: ('Dewhitening', 'Dewhitening', [], [('0', 'byte', 1)], [('0', 'byte',
+      1)], '', [])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [336, 376.0]
+    coordinate: [888, 496.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: epy_block_3
+  id: epy_block
+  parameters:
+    CR: '4'
+    _source_code: "\"\"\"\nHamming Decoding block\nForward Error Correction encoding\
+      \ block\nReference : \"Towards an SDR implementation of LoRa...\" 2020 A.Marquet,\
+      \ N.Montavont, G.Papadopoulos)\n\"\"\"\n\nimport numpy as np\nfrom gnuradio\
+      \ import gr\n\n\nclass Hamming_dec(gr.sync_block):  # other base classes are\
+      \ basic_block, decim_block, interp_block\n    def __init__(self, CR = 4):  #\
+      \ only default arguments here\n        gr.sync_block.__init__(\n           \
+      \ self,\n            name='Hamming_dec',   # will show up in GRC\n         \
+      \   in_sig=[np.uint8],\n            out_sig=[np.uint8]\n        )\n        self.CR\
+      \ = CR\n\n    def decode(self, input_vect, CR_loc) : \n\n        output=input_vect\n\
+      \n        if CR_loc == 1:\n            syndrome = input_vect[0] ^ input_vect[1]\
+      \ ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]\n            output = input_vect\n\
+      \n        if CR_loc == 2:\n            syndrome = np.zeros((2,1), dtype=np.uint8)\n\
+      \            syndrome[0] = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[5]\n\
+      \            syndrome[1] = input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]\n\
+      \            output = input_vect\n\n        if CR_loc == 3:\n            n =\
+      \ 4+CR_loc\n            k = 4\n            Q = np.array([[0,1,1], [1,1,0], [1,1,1],\
+      \ [1,0,1]], np.uint8)\n            Id = np.identity(n-k, dtype=np.uint8)\n \
+      \           H = np.concatenate((Q.transpose(), Id),axis=1)\n            syndrome\
+      \ = np.dot(input_vect[:], H.transpose())%2\n\n            tmp = np.zeros((1,n-k+4),\
+      \ dtype=np.uint8)\n            tmp2 = np.identity(n-k+4, dtype=np.uint8)\n \
+      \           E = np.concatenate((tmp, tmp2),axis=0)\n            S = np.dot(E,H.transpose())%2\n\
+      \n            # if(syndrome[0] == 1 or syndrome[1] == 1):\n            #   \
+      \  print(\"Error detected, correcting...\")\n\n            for j in range(S.shape[1]):\n\
+      \                if np.array_equal(S[j],syndrome):\n                    output\
+      \ = input_vect ^ E[j][:]\n\n\n        if CR_loc == 4:\n            n = 4+CR_loc\n\
+      \            k = 4\n            Q = np.array([[0,1,1,1], [1,1,0,1], [1,1,1,0],\
+      \ [1,0,1,1]], np.uint8)\n            Id = np.identity(n-k, dtype=np.uint8)\n\
+      \            H = np.concatenate((Q.transpose(), Id),axis=1)\n            syndrome\
+      \ = np.dot(input_vect[:], H.transpose())%2\n            if np.array_equal(syndrome,np.array([0,0,0,0])):\n\
+      \                output = input_vect\n                # print(\"no error detected\"\
+      )\n\n            else :\n                parity = input_vect[0] ^ input_vect[1]\
+      \ ^ input_vect[2] ^ input_vect[3] ^ input_vect[4] ^ input_vect[5] ^ input_vect[6]\
+      \ ^ input_vect[7]\n\n                if parity :\n                    # print(\"\
+      1 error detected, sending to hamming(7,3)\")\n                    output = self.decode(input_vect[:][0:7],\
+      \ 3)\n                # else :\n                    # print(\"2 errors detected\"\
+      )\n                \n        \n        return output[:][0:4]\n\n    def work(self,\
+      \ input_items, output_items):\n\n        in0 = input_items[0]\n        out =\
+      \ output_items[0]\n    \n        # Hamming encoding (iterate over matrix lines\
+      \ and encode each)\n        output_matrix = np.zeros((len(in0), 4), dtype=np.uint8)\n\
+      \        input_matrix = np.zeros((len(in0), 4+self.CR), dtype=np.uint8)\n\n\
+      \        for i in range(len(in0)):\n\n            # parsing in0 (convert + crop\
+      \ to lines of 4 bits and bundle in matrix)\n            bits_crop = [int(x)\
+      \ for x in bin(in0[i])[2:]]        \n            bits_crop_norm = ([0]*(self.CR+4-len(bits_crop))\
+      \ + bits_crop)[-(self.CR+4):]\n            input_matrix[i][:] = np.asarray(bits_crop_norm,\
+      \ dtype=np.uint8)\n\n            output_matrix[i][:] = self.decode(input_matrix[i][:],self.CR)\n\
+      \n\n        # convert output matrix to uint8\n        out[:] = output_matrix.dot(1\
+      \ << np.arange(output_matrix.shape[-1] - 1, -1, -1))\n\n        # debug\n  \
+      \      # print(\"\\n--- GENERAL WORK : HAMMING_DEC ---\")\n        # print(\"\
+      in0 :\")\n        # print(in0)\n        # print(\"input_matrix :\")\n      \
+      \  # print(input_matrix)\n        # print(\"output_matrix :\")\n        # print(output_matrix)\n\
+      \        # print(\"out :\")\n        # print(out)\n\n\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Hamming_dec', 'Hamming_dec', [('CR', '4')], [('0', 'byte', 1)], [('0',
+      'byte', 1)], '', ['CR'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [464, 372.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_4
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass my_basic_adder_block(gr.basic_block):\n   \
+      \ # def __init__(self):\n    #     gr.basic_block.__init__(self,\n    #    \
+      \     name=\"test_blqsdock\",\n    #         in_sig=[np.uint8],\n    #     \
+      \    out_sig=[np.uint8])\n\n    # def forecast(self, noutput_items, ninputs)\
+      \ :\n    #     ninput_items_required = [0]*ninputs #ninput_items_required[i]\
+      \ is the number of items that will be consumed on input port i\n    #     for\
+      \ i in range(ninputs):\n    #         ninput_items_required[i] = 1.5 * noutput_items\
+      \ * ninputs\n\n    #     # print(\"--- FORECAST ---\")\n    #     # print(ninputs)\n\
+      \    #     # print(noutput_items)\n    #     # print(ninput_items_required)\n\
+      \n    #     return ninput_items_required\n\n\n    # def general_work(self, input_items,\
+      \ output_items):\n        \n    #     #buffer references\n    #     in0 = input_items[0][:len(output_items[0])]\n\
+      \    #     out = output_items[0]\n        \n\n    #     output_items[0][:] =\
+      \ in0\n\n\n    #     print(\"\\n--- GENERAL WORK 1  ---\")\n    #     print(\"\
+      input_items[0]\")\n    #     print(input_items[0])\n    #     print(\"in0\"\
+      )\n    #     print(in0)\n    #     print(\"len(in0)\")\n    #     print(len(in0))\n\
+      \    #     print(\"output_items[0]\")\n    #     print(output_items[0])\n  \
+      \  #     print(\"len(output_items[0])\")\n    #     print(len(output_items[0]))\n\
+      \n    #     #consume the inputs\n    #     self.consume(0, len(in0)) #consume\
+      \ port 0 input\n    #     # self.produce(0, 1) #produce 3 items on port 0\n\
+      \    #     #return produced\n    #     return len(output_items[0])\n\n   def\
+      \ __init__(self, input_buffer_len=2):\n      gr.basic_block.__init__(self,\n\
+      \         name=\"sync_test\",\n         in_sig=[np.uint8],\n         out_sig=[np.uint8])\n\
+      \      self.input_buffer_len = input_buffer_len\n\n   def forecast(self, noutput_items,\
+      \ ninputs):\n    #   print(\"FORECAST START\")\n      ninput_items_required\
+      \ = [self.input_buffer_len] * ninputs\n    #   print(\"len(ninput_items_required),noutput_items\"\
+      ,len(ninput_items_required),noutput_items)\n    #   print(\"FORECAST END\")\n\
+      \      return ninput_items_required\n\n   def general_work(self, input_items,\
+      \ output_items):\n    print(\"\\n--- GENERAL WORK START ---\")\n    if(len(input_items[0])\
+      \ >= self.input_buffer_len) :\n        out_vect = [0xFF, 0x55, 0xAA]\n     \
+      \   output_items[0][0:len(out_vect)] = out_vect\n        self.consume(0, self.input_buffer_len)\n\
+      \        self.produce(0, len(out_vect))\n\n\n        print(\"len(input_items)\"\
+      , len(input_items[0]))\n        print(\"input_buffer_len\", self.input_buffer_len)\n\
+      \        print(\"len(input_items[0]) >= input_buffer_len\")\n        print(\"\
+      len(output_items[0])\", len(output_items[0]))\n        print(\"output_items[0]\
+      \ = \")\n        print(output_items[0])\n\n    print(\"--- GENERAL WORK END\
+      \ ---\")\n    return len(out_vect)"
+    affinity: ''
+    alias: ''
+    comment: ''
+    input_buffer_len: '2'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('sync_test', 'my_basic_adder_block', [('input_buffer_len', '2')],
+      [('0', 'byte', 1)], [('0', 'byte', 1)], '', ['input_buffer_len'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 396.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_6
+  id: epy_block
+  parameters:
+    SF: '9'
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport math\n\nclass blk(gr.sync_block):  # other base\
+      \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
+      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, SF\
+      \ = 9):  # only default arguments here\n        \"\"\"arguments to this function\
+      \ show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n    \
+      \        self,\n            name='Modulation',   # will show up in GRC\n   \
+      \         in_sig=[np.uint32],\n            out_sig=[(np.complex64,512)]\n  \
+      \      )\n        self.SF = SF\n\n    def work(self, input_items, output_items):\n\
+      \        \"\"\"example: multiply with constant\"\"\"\n        \n        symbols\
+      \ = input_items[0]\n        M  = pow(2,self.SF)\n        ka = np.arange(0,M)\n\
+      \n        fact1 = np.exp(1j*1*math.pi*pow(ka,2)/M)\n        fact1 = np.reshape(fact1,(1,-1))\n\
+      \        \n        r=0\n        txSig=np.zeros((len(symbols), M), dtype=np.complex64)\n\
+      \n        for k in range (len(symbols)) :\n            symbK = np.multiply(fact1,np.exp(2j*math.pi*(symbols[0]/M)*ka))\n\
+      \            output_items[0][:] = symbK\n\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Modulation', 'blk', [('SF', '9')], [('0', 'int', 1)], [('0', 'complex',
+      512)], 'Embedded Python Block example - a simple multiply const', ['SF'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 644.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1056, 628.0]
+    rotation: 0
+    state: disabled
 
 connections:
+- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_file_sink_0_0_0_0, '0']
 - [blocks_vector_source_x_0, '0', epy_block_0, '0']
 - [blocks_vector_source_x_0_0, '0', epy_block_1, '0']
 - [blocks_vector_source_x_0_0_0, '0', epy_block_1_0, '0']
-- [epy_block_0, '0', blocks_null_sink_0, '0']
-- [epy_block_1, '0', blocks_null_sink_0_0, '0']
-- [epy_block_1_0, '0', blocks_null_sink_0_0_0, '0']
+- [blocks_vector_source_x_0_1, '0', epy_block_4, '0']
+- [blocks_vector_source_x_0_1_0, '0', epy_block_6, '0']
+- [blocks_vector_to_stream_0, '0', blocks_throttle_0, '0']
+- [epy_block_0, '0', epy_block_0_0, '0']
+- [epy_block_0_0, '0', blocks_file_sink_0_0_0, '0']
+- [epy_block_1, '0', epy_block_3, '0']
+- [epy_block_1_0, '0', epy_block_2, '0']
+- [epy_block_2, '0', blocks_null_sink_0_0_0, '0']
+- [epy_block_3, '0', blocks_file_sink_0, '0']
+- [epy_block_3, '0', blocks_null_sink_0_0, '0']
+- [epy_block_4, '0', blocks_file_sink_0_0, '0']
+- [epy_block_6, '0', blocks_vector_to_stream_0, '0']
 
 metadata:
   file_format: 1

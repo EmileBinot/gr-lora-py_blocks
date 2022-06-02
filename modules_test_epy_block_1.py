@@ -4,8 +4,6 @@ Forward Error Correction encoding block
 Reference : "Towards an SDR implementation of LoRa..." 2020 A.Marquet, N.Montavont, G.Papadopoulos)
 """
 
-from nis import match
-from unittest import case
 import numpy as np
 from gnuradio import gr
 
@@ -56,7 +54,10 @@ class Hamming_enc(gr.sync_block):  # other base classes are basic_block, decim_b
                 G = np.concatenate((Id, Q),axis=1)
                 output_matrix[i] = (np.dot(input_matrix[i],G)%2)
 
-        #debug
+        # convert output matrix to uint8
+        out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
+
+        # #debug
         # print("\n--- GENERAL WORK : HAMMING_ENC ---")
         # print("in0 :")
         # print(in0)
@@ -64,5 +65,7 @@ class Hamming_enc(gr.sync_block):  # other base classes are basic_block, decim_b
         # print(input_matrix)
         # print("output_matrix :")
         # print(output_matrix)
+        # print("out :")
+        # print(out)
 
         return len(output_items[0])
