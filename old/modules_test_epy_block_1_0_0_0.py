@@ -1,5 +1,7 @@
 """
-Dewhitening block
+Whitening block
+Whiten input sequence to remove the frequency and time correlations in it.
+
 """
 import numpy as np
 from gnuradio import gr
@@ -21,11 +23,13 @@ whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F
                 0x0E, 0x1D, 0x3A, 0x75, 0xEA, 0xD5, 0xAA, 0x55, 0xAB, 0x57, 0xAF, 0x5F, 0xBE, 0x7C, 0xF9, 0xF2,
                 0xE5, 0xCA, 0x94, 0x28, 0x50, 0xA1, 0x42, 0x84, 0x09, 0x13, 0x27, 0x4F, 0x9F, 0x3F, 0x7F)
 
-class LoRa_Dewhitening(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
+# whitening_seq_debug =0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1
+
+class Whitening(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     def __init__(self):  # only default arguments here
         gr.sync_block.__init__(
             self,
-            name='LoRa Dewhitening',   # will show up in GRC
+            name='LoRa Whitening',   # will show up in GRC
             in_sig=[np.uint8],
             out_sig=[np.uint8]
         )
@@ -43,22 +47,21 @@ class LoRa_Dewhitening(gr.sync_block):  # other base classes are basic_block, de
             input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)
             
             # whitening
-            output_items[0][i] = in0[i] ^ whitening_seq[self.table_idx]
+            out[i] = in0[i] ^ whitening_seq[self.table_idx]
             self.table_idx += 1
             if(self.table_idx == len(whitening_seq)):
                 self.table_idx = 0
 
 
+        #debug
+        print("\n--- GENERAL WORK : WHITENING ---")
+        print("in0 :")
+        print(in0)
+        print("input_matrix :")
+        print(input_matrix)
+        print("out :")
+        print(out)
+        print("return len(out): ")
+        print(len(out))
 
-        # #debug
-        # print("\n--- GENERAL WORK : DEWHITENING ---")
-        # print("in0 :")
-        # print(in0)
-        # print("input_matrix :")
-        # print(input_matrix)
-        # print("out :")
-        # print(output_items[0][:])
-        # print("return len(out): ")
-        # print(len(out))
-        # print("--- DEWHITENING END---")
-        return len(output_items[0])
+        return len(out)

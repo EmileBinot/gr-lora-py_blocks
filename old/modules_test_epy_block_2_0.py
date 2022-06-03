@@ -50,15 +50,15 @@ class LoRa_Dewhitening(gr.sync_block):  # other base classes are basic_block, de
 
 
 
-        # #debug
-        # print("\n--- GENERAL WORK : DEWHITENING ---")
-        # print("in0 :")
-        # print(in0)
-        # print("input_matrix :")
-        # print(input_matrix)
-        # print("out :")
-        # print(output_items[0][:])
-        # print("return len(out): ")
-        # print(len(out))
-        # print("--- DEWHITENING END---")
+        #debug
+        print("\n--- GENERAL WORK : DEWHITENING ---")
+        print("in0 :")
+        print(in0)
+        print("input_matrix :")
+        print(input_matrix)
+        print("out :")
+        print(output_items[0][:])
+        print("return len(out): ")
+        print(len(out))
+        
         return len(output_items[0])

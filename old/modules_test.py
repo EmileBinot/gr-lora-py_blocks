@@ -17,14 +17,8 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-import modules_test_epy_block_0 as epy_block_0  # embedded python block
-import modules_test_epy_block_0_1_0_0 as epy_block_0_1_0_0  # embedded python block
-import modules_test_epy_block_1 as epy_block_1  # embedded python block
 import modules_test_epy_block_1_0_0 as epy_block_1_0_0  # embedded python block
 import modules_test_epy_block_1_1 as epy_block_1_1  # embedded python block
-import modules_test_epy_block_2 as epy_block_2  # embedded python block
-import modules_test_epy_block_5 as epy_block_5  # embedded python block
-import modules_test_epy_block_6_0_0_0_0 as epy_block_6_0_0_0_0  # embedded python block
 
 
 
@@ -42,14 +36,8 @@ class modules_test(gr.top_block):
         ##################################################
         # Blocks
         ##################################################
-        self.epy_block_6_0_0_0_0 = epy_block_6_0_0_0_0.blk(SF=9)
-        self.epy_block_5 = epy_block_5.blk(SF=9, B=250000)
-        self.epy_block_2 = epy_block_2.LoRa_Dewhitening()
         self.epy_block_1_1 = epy_block_1_1.Hamming_enc(CR=2)
         self.epy_block_1_0_0 = epy_block_1_0_0.Whitening()
-        self.epy_block_1 = epy_block_1.Hamming_Rx(CR=2)
-        self.epy_block_0_1_0_0 = epy_block_0_1_0_0.Interleaver(SF=9, CR=2)
-        self.epy_block_0 = epy_block_0.Deinterleaver(SF=9, CR=2)
         self.blocks_vector_source_x_0_0_0_0 = blocks.vector_source_b((0x01, 0x02), False, 1, [])
         self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_char*1, 'dumpOUT', False)
         self.blocks_file_sink_0_1.set_unbuffered(False)
@@ -62,14 +50,8 @@ class modules_test(gr.top_block):
         ##################################################
         self.connect((self.blocks_vector_source_x_0_0_0_0, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.blocks_vector_source_x_0_0_0_0, 0), (self.epy_block_1_0_0, 0))
-        self.connect((self.epy_block_0, 0), (self.epy_block_1, 0))
-        self.connect((self.epy_block_0_1_0_0, 0), (self.epy_block_6_0_0_0_0, 0))
-        self.connect((self.epy_block_1, 0), (self.epy_block_2, 0))
         self.connect((self.epy_block_1_0_0, 0), (self.epy_block_1_1, 0))
-        self.connect((self.epy_block_1_1, 0), (self.epy_block_0_1_0_0, 0))
-        self.connect((self.epy_block_2, 0), (self.blocks_file_sink_0_1, 0))
-        self.connect((self.epy_block_5, 0), (self.epy_block_0, 0))
-        self.connect((self.epy_block_6_0_0_0_0, 0), (self.epy_block_5, 0))
+        self.connect((self.epy_block_1_1, 0), (self.blocks_file_sink_0_1, 0))
 
 
     def get_samp_rate(self):

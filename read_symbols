@@ -1,0 +1,12 @@
+clear all;
+close all;
+
+fid=fopen('modulated_symbols','rb');
+
+readsize=512; % e.g. if you want to read 1000 samples
+ir=1:2:2*readsize-1;
+ii=2:2:2*readsize;
+[val, count] = fread (fid, readsize*2, 'float'); % times 2 for reading
+s=complex(val(ir),-val(ii)); % put the data into a complex vector
+
+plot(1:readsize,real(s),1:readsize,imag(s))
