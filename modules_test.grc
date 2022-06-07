@@ -9,7 +9,7 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: no_gui
+    generate_options: qt_gui
     hier_block_src_path: '.:'
     id: modules_test
     max_nouts: '0'
@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [808, 292.0]
+    coordinate: [480, 36.0]
     rotation: 0
     state: enabled
 - name: SF
@@ -54,7 +54,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 292.0]
+    coordinate: [408, 36.0]
+    rotation: 0
+    state: enabled
+- name: preamble_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 36.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -66,7 +78,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 292.0]
+    coordinate: [312, 36.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0
@@ -84,9 +96,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 332.0]
+    coordinate: [400, 228.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_file_sink_0_0
   id: blocks_file_sink
   parameters:
@@ -102,7 +114,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 116.0]
+    coordinate: [1320, 92.0]
     rotation: 0
     state: disabled
 - name: blocks_file_sink_0_1
@@ -120,9 +132,46 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1200, 564.0]
+    coordinate: [1136, 628.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: blocks_file_sink_1
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: lora_frame
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1368, 428.0]
+    rotation: 0
+    state: true
+- name: blocks_stream_mux_0
+  id: blocks_stream_mux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengths: (round(pow(2,SF)*(preamble_len+2.25)), 9*512)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 392.0]
+    rotation: 0
+    state: true
 - name: blocks_vector_source_x_0_0_0_0
   id: blocks_vector_source_x
   parameters:
@@ -134,13 +183,14 @@ blocks:
     repeat: 'False'
     tags: '[]'
     type: byte
-    vector: (0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
+    vector: (0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x01, 0x02, 0x03,
+      0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [120, 420.0]
+    coordinate: [88, 348.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_1
@@ -160,9 +210,45 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 116.0]
+    coordinate: [944, 92.0]
     rotation: 0
     state: disabled
+- name: blocks_vector_to_stream_0_0_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: round(pow(2,SF)*(preamble_len+2.25))
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [984, 376.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_0_0_1
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: pow(2,SF)
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [976, 440.0]
+    rotation: 0
+    state: enabled
 - name: epy_block_0
   id: epy_block
   parameters:
@@ -212,9 +298,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [648, 572.0]
+    coordinate: [584, 636.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: epy_block_0_1_0_0
   id: epy_block
   parameters:
@@ -262,7 +348,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 428.0]
+    coordinate: [648, 428.0]
     rotation: 0
     state: enabled
 - name: epy_block_1
@@ -333,9 +419,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 580.0]
+    coordinate: [760, 644.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: epy_block_1_0_0
   id: epy_block
   parameters:
@@ -522,7 +608,50 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 584.0]
+    coordinate: [944, 648.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_3
+  id: epy_block
+  parameters:
+    SF: '9'
+    _source_code: "\"\"\"\nModulation Block:\n\"\"\"\n\nimport numpy as np\nfrom gnuradio\
+      \ import gr\nimport math\n\ndef modulate(SF, id, os_factor) :\n    M  = pow(2,SF)\n\
+      \    chirp = np.zeros((len(id),M*os_factor), dtype=np.complex64)\n\n    for\
+      \ i in range(len(id)) :\n        n_fold = M * os_factor - id[i] * os_factor\n\
+      \        for n in range(0,M*os_factor):\n            if n < n_fold:\n      \
+      \          chirp[i][n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id[i]/M-0.5)*n/os_factor))\n\
+      \            else:\n                chirp[i][n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id[i]/M-1.5)*n/os_factor))\n\
+      \    \n    # chirp = np.reshape(chirp,-1)\n\n    return chirp\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n\n    def\
+      \ __init__(self, SF = 9, preamble_len = 4):  # only default arguments here\n\
+      \        gr.sync_block.__init__(\n            self,\n            name='LoRa\
+      \ Preamble',   # will show up in GRC\n            in_sig=None,\n           \
+      \ # out_sig=[(np.complex64,pow(2,SF)*preamble_len+round(pow(2,SF)*2.25))]\n\
+      \            out_sig=[(np.complex64,round(pow(2,SF)*(preamble_len+2.25)))]\n\
+      \        )\n        self.SF = SF\n        self.preamble_len = preamble_len\n\
+      \n    def work(self, input_items, output_items):\n\n        # for i in range\
+      \ (len(symbols)) :\n        #     output_items[0][i] = modulate(self.SF, [symbols[i]],\
+      \ 1)\n        \n        # preamble = np.zeros((self.preamble_len*pow(2,self.SF)),\
+      \ dtype=np.complex64)\n        preamble_up = np.reshape(modulate(self.SF, [0]*self.preamble_len,\
+      \ 1), -1)\n        preamble_down = np.reshape(np.conjugate(modulate(self.SF,\
+      \ [0]*3, 1)), -1)[0:int(2.25*pow(2,self.SF))]\n        #  [:round(0.75*pow(2,self.SF))]\n\
+      \        # print(preamble_up.shape)\n        # print(preamble_down.shape)\n\
+      \        preamble = np.concatenate((preamble_up, preamble_down))\n        output_items[0][0]\
+      \ = np.reshape(preamble,-1)\n\n\n        return len(output_items[0])"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    preamble_len: '4'
+  states:
+    _io_cache: ('LoRa Preamble', 'blk', [('SF', '9'), ('preamble_len', '4')], [],
+      [('0', 'complex', 3200)], '', ['SF', 'preamble_len'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 364.0]
     rotation: 0
     state: enabled
 - name: epy_block_4
@@ -580,7 +709,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [784, 132.0]
+    coordinate: [1160, 108.0]
     rotation: 0
     state: disabled
 - name: epy_block_5
@@ -629,29 +758,34 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 572.0]
+    coordinate: [400, 636.0]
     rotation: 0
-    state: enabled
-- name: epy_block_6_0_0_0_0
+    state: disabled
+- name: epy_block_6_0_0_0_0_0
   id: epy_block
   parameters:
     SF: SF
     _source_code: "\"\"\"\nModulation Block:\n\"\"\"\n\nimport numpy as np\nfrom gnuradio\
-      \ import gr\nimport math\n\ndef modulate(SF, id, os_factor) :\n    M  = pow(2,SF)\n\
-      \    n_fold = M * os_factor - id * os_factor\n    chirp = np.zeros(M*os_factor,\
-      \ dtype=np.complex64)\n    for n in range(0,M*os_factor):\n        if n < n_fold:\n\
-      \            chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-0.5)*n/os_factor))\n\
+      \ import gr\nimport math\nimport pmt\n\ndef modulate(SF, id, os_factor) :\n\
+      \    M  = pow(2,SF)\n    n_fold = M * os_factor - id * os_factor\n    chirp\
+      \ = np.zeros(M*os_factor, dtype=np.complex64)\n    for n in range(0,M*os_factor):\n\
+      \        if n < n_fold:\n            chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-0.5)*n/os_factor))\n\
       \        else:\n            chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))\n\
       \    return chirp\n\nclass blk(gr.sync_block):  # other base classes are basic_block,\
       \ decim_block, interp_block\n\n    def __init__(self, SF = 9):  # only default\
       \ arguments here\n        gr.sync_block.__init__(\n            self,\n     \
       \       name='LoRa Modulation',   # will show up in GRC\n            in_sig=[np.uint32],\n\
-      \            out_sig=[(np.complex64,512)]\n        )\n        self.SF = SF\n\
-      \n    def work(self, input_items, output_items):\n        \n        symbols\
-      \ = input_items[0]\n\n        for i in range (len(symbols)) :\n            output_items[0][i]\
-      \ = modulate(self.SF, symbols[i], 1)\n        \n        # # debug\n        #\
-      \ print(\"\\n--- GENERAL WORK : MODULATION ---\")\n        # print(\"symbols\
-      \ :\")\n        # print(symbols)\n\n\n        return len(output_items[0])\n"
+      \            out_sig=[(np.complex64,pow(2,SF))]\n        )\n        self.SF\
+      \ = SF\n\n    def work(self, input_items, output_items):\n        \n       \
+      \ symbols = input_items[0]\n\n        for i in range (len(symbols)) :\n    \
+      \        output_items[0][i] = modulate(self.SF, symbols[i], 1)\n\n\n       \
+      \ # tags = self.get_tags_in_window(0, 0, len(input_items[0]))\n        # #if\
+      \ there exist tag\n        # if len(tags) > 0:\n        #     #for each tag\
+      \ apply\n        #     for tag in tags:\n        #         tag_name   = pmt.to_python(tag.key)\
+      \            # packet_tag\n        #         tag_len    = pmt.to_python(tag.value)\
+      \          # packet_len\n        #         tag_pos    = tag.offset - self.nitems_read(0)\
+      \  # packet_position_index\n        #         print(\"tag_name :\", tag_name,\
+      \ \"\\ntag_len :\", tag_len, \"\\ntag_pos:\", tag_pos)\n\n        return len(output_items[0])"
     affinity: ''
     alias: ''
     comment: ''
@@ -666,20 +800,122 @@ blocks:
     coordinate: [808, 436.0]
     rotation: 0
     state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: 512*9+round(pow(2,SF)*(preamble_len+2.25))
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1368, 348.0]
+    rotation: 0
+    state: enabled
 
 connections:
-- [blocks_vector_source_x_0_0_0_0, '0', blocks_file_sink_0, '0']
+- [blocks_stream_mux_0, '0', blocks_file_sink_1, '0']
+- [blocks_stream_mux_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_vector_source_x_0_0_0_0, '0', epy_block_1_0_0, '0']
 - [blocks_vector_source_x_0_1, '0', epy_block_4, '0']
+- [blocks_vector_to_stream_0_0_0, '0', blocks_stream_mux_0, '0']
+- [blocks_vector_to_stream_0_0_1, '0', blocks_stream_mux_0, '1']
 - [epy_block_0, '0', epy_block_1, '0']
-- [epy_block_0_1_0_0, '0', epy_block_6_0_0_0_0, '0']
+- [epy_block_0_1_0_0, '0', epy_block_6_0_0_0_0_0, '0']
 - [epy_block_1, '0', epy_block_2, '0']
 - [epy_block_1_0_0, '0', epy_block_1_1, '0']
 - [epy_block_1_1, '0', epy_block_0_1_0_0, '0']
 - [epy_block_2, '0', blocks_file_sink_0_1, '0']
+- [epy_block_3, '0', blocks_vector_to_stream_0_0_0, '0']
 - [epy_block_4, '0', blocks_file_sink_0_0, '0']
 - [epy_block_5, '0', epy_block_0, '0']
-- [epy_block_6_0_0_0_0, '0', epy_block_5, '0']
+- [epy_block_6_0_0_0_0_0, '0', blocks_vector_to_stream_0_0_1, '0']
+- [epy_block_6_0_0_0_0_0, '0', epy_block_5, '0']
 
 metadata:
   file_format: 1

@@ -1,0 +1,9 @@
+clear all;
+close all;
+clc;
+
+c=read_cplx_binary('/home/ebinot/Documents/blocks/lora_frame');
+
+plot(1:length(c),real(c),1:length(c),imag(c))
+
+specgram(c,128,32000,16);
