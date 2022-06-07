@@ -38,19 +38,21 @@ class modules_test(gr.top_block):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 32000
+        self.SF = SF = 9
+        self.CR = CR = 2
 
         ##################################################
         # Blocks
         ##################################################
-        self.epy_block_6_0_0_0_0 = epy_block_6_0_0_0_0.blk(SF=9)
-        self.epy_block_5 = epy_block_5.blk(SF=9, B=250000)
+        self.epy_block_6_0_0_0_0 = epy_block_6_0_0_0_0.blk(SF=SF)
+        self.epy_block_5 = epy_block_5.blk(SF=SF, B=250000)
         self.epy_block_2 = epy_block_2.LoRa_Dewhitening()
-        self.epy_block_1_1 = epy_block_1_1.Hamming_enc(CR=2)
+        self.epy_block_1_1 = epy_block_1_1.Hamming_enc(CR=CR)
         self.epy_block_1_0_0 = epy_block_1_0_0.Whitening()
-        self.epy_block_1 = epy_block_1.Hamming_Rx(CR=2)
-        self.epy_block_0_1_0_0 = epy_block_0_1_0_0.Interleaver(SF=9, CR=2)
-        self.epy_block_0 = epy_block_0.Deinterleaver(SF=9, CR=2)
-        self.blocks_vector_source_x_0_0_0_0 = blocks.vector_source_b((0x01, 0x02), False, 1, [])
+        self.epy_block_1 = epy_block_1.Hamming_Rx(CR=CR)
+        self.epy_block_0_1_0_0 = epy_block_0_1_0_0.Interleaver(SF=SF, CR=CR)
+        self.epy_block_0 = epy_block_0.Deinterleaver(SF=SF, CR=CR)
+        self.blocks_vector_source_x_0_0_0_0 = blocks.vector_source_b((0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09), False, 1, [])
         self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_char*1, 'dumpOUT', False)
         self.blocks_file_sink_0_1.set_unbuffered(False)
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'dumpIN', False)
@@ -77,6 +79,26 @@ class modules_test(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+
+    def get_SF(self):
+        return self.SF
+
+    def set_SF(self, SF):
+        self.SF = SF
+        self.epy_block_0.SF = self.SF
+        self.epy_block_0_1_0_0.SF = self.SF
+        self.epy_block_5.SF = self.SF
+        self.epy_block_6_0_0_0_0.SF = self.SF
+
+    def get_CR(self):
+        return self.CR
+
+    def set_CR(self, CR):
+        self.CR = CR
+        self.epy_block_0.CR = self.CR
+        self.epy_block_0_1_0_0.CR = self.CR
+        self.epy_block_1.CR = self.CR
+        self.epy_block_1_1.CR = self.CR
 
 
 

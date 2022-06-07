@@ -30,7 +30,7 @@ class Hamming_enc(gr.sync_block):  # other base classes are basic_block, decim_b
 
             # parsing in0 (convert + crop to lines of 4 bits and bundle in matrix)
             bits_crop = [int(x) for x in bin(in0[i])[2:]] 
-            print(bits_crop)      
+            # print(bits_crop)      
             bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]
             input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)
 
@@ -58,16 +58,16 @@ class Hamming_enc(gr.sync_block):  # other base classes are basic_block, decim_b
         # convert output matrix to uint8
         out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
 
-        #debug
-        print("\n--- GENERAL WORK : HAMMING_ENC ---")
-        print("in0 :")
-        print(in0)
-        print("input_matrix :")
-        print(input_matrix)
-        print("output_matrix :")
-        print(output_matrix)
-        print("out :")
-        print(out)
-        print("--- HAMMING_ENC END---")
+        # #debug
+        # print("\n--- GENERAL WORK : HAMMING_ENC ---")
+        # print("in0 :")
+        # print(in0)
+        # print("input_matrix :")
+        # print(input_matrix)
+        # print("output_matrix :")
+        # print(output_matrix)
+        # print("out :")
+        # print(out)
+        # print("--- HAMMING_ENC END---")
 
         return len(output_items[0])

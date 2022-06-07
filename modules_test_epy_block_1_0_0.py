@@ -23,7 +23,9 @@ whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F
                 0x0E, 0x1D, 0x3A, 0x75, 0xEA, 0xD5, 0xAA, 0x55, 0xAB, 0x57, 0xAF, 0x5F, 0xBE, 0x7C, 0xF9, 0xF2,
                 0xE5, 0xCA, 0x94, 0x28, 0x50, 0xA1, 0x42, 0x84, 0x09, 0x13, 0x27, 0x4F, 0x9F, 0x3F, 0x7F)
 
-# whitening_seq_debug =0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1
+whitening_seq_debug =0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+
+whitening_seq = whitening_seq_debug
 
 class Whitening(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     def __init__(self):  # only default arguments here
@@ -53,16 +55,16 @@ class Whitening(gr.sync_block):  # other base classes are basic_block, decim_blo
                 self.table_idx = 0
 
 
-        #debug
-        print("\n--- GENERAL WORK : WHITENING ---")
-        print("in0 :")
-        print(in0)
-        print("input_matrix :")
-        print(input_matrix)
-        print("out :")
-        print(out)
-        print("return len(out): ")
-        print(len(out))
-        print("--- WHITENING END---")
+        # #debug
+        # print("\n--- GENERAL WORK : WHITENING ---")
+        # print("in0 :")
+        # print(in0)
+        # print("input_matrix :")
+        # print(input_matrix)
+        # print("out :")
+        # print(out)
+        # print("return len(out): ")
+        # print(len(out))
+        # print("--- WHITENING END---")
 
         return len(out)
