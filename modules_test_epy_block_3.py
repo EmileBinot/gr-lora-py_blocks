@@ -24,7 +24,7 @@ def modulate(SF, id, os_factor) :
 
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
 
-    def __init__(self, SF = 9, preamble_len = 4):  # only default arguments here
+    def __init__(self, SF = 9, preamble_len = 6):  # only default arguments here
         gr.sync_block.__init__(
             self,
             name='LoRa Preamble',   # will show up in GRC

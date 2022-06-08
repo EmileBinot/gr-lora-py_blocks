@@ -17,7 +17,9 @@ class Interleaver(gr.basic_block):
         self.CR = CR
 
     def forecast(self, noutput_items, ninputs) :
-        ninput_items_required = [self.SF]*ninputs #ninput_items_required[i] is the number of items that will be consumed on input port i
+        #ninput_items_required[i] is the number of items that will be consumed on input port i
+        # we need SF items to produce anything
+        ninput_items_required = [self.SF]*ninputs 
         return ninput_items_required
 
     def general_work(self, input_items, output_items):
@@ -60,6 +62,7 @@ class Interleaver(gr.basic_block):
 
             #consume inputs (should be SF)
             self.consume(0, self.SF)
+            # return produced outputs (should be CR+4)
             return self.CR+4
 
         else :

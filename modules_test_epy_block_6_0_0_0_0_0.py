@@ -46,5 +46,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         #         tag_len    = pmt.to_python(tag.value)          # packet_len
         #         tag_pos    = tag.offset - self.nitems_read(0)  # packet_position_index
         #         print("tag_name :", tag_name, "\ntag_len :", tag_len, "\ntag_pos:", tag_pos)
-
+        # debug
+        print("\n--- GENERAL WORK : MODULATION ---")
+        print("symbols :")
+        print(symbols)
         return len(output_items[0])

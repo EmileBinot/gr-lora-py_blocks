@@ -33,7 +33,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         gr.sync_block.__init__(
             self,
             name='LoRa Demodulation',   # will show up in GRC
-            in_sig=[(np.complex64,512)],
+            in_sig=[(np.complex64,pow(2,SF))],
             # out_sig=[(np.complex64,512)]
             out_sig=[np.uint32]
         )
@@ -54,9 +54,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             output_items[0][i] = round(freq_vect[idx]*M/self.B)
             symbols_hat[i] = round(freq_vect[idx]*M/self.B)
         
-        # # debug
-        # print("\n--- GENERAL WORK : DEMODULATION ---")
-        # print("symbols_hat :")
-        # print(symbols_hat)
+        # debug
+        print("\n--- GENERAL WORK : DEMODULATION ---")
+        print("symbols_hat :")
+        print(symbols_hat)
 
         return len(output_items[0])

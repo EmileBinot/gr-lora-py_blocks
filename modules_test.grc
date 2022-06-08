@@ -9,7 +9,7 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: qt_gui
+    generate_options: no_gui
     hier_block_src_path: '.:'
     id: modules_test
     max_nouts: '0'
@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 36.0]
+    coordinate: [488, 36.0]
     rotation: 0
     state: enabled
 - name: SF
@@ -54,19 +54,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [408, 36.0]
+    coordinate: [416, 36.0]
     rotation: 0
     state: enabled
 - name: preamble_len
   id: variable
   parameters:
     comment: ''
-    value: '4'
+    value: '6'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [208, 36.0]
+    coordinate: [216, 36.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -78,7 +78,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 36.0]
+    coordinate: [320, 36.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0
@@ -96,7 +96,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 228.0]
+    coordinate: [656, 36.0]
     rotation: 0
     state: disabled
 - name: blocks_file_sink_0_0
@@ -114,7 +114,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1320, 92.0]
+    coordinate: [1352, 36.0]
     rotation: 0
     state: disabled
 - name: blocks_file_sink_0_1
@@ -132,9 +132,45 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1136, 628.0]
+    coordinate: [1088, 964.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0_2
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: dumpOUT
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [816, 36.0]
     rotation: 0
     state: disabled
+- name: blocks_file_sink_0_3
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: dumpIN
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 300.0]
+    rotation: 0
+    state: enabled
 - name: blocks_file_sink_1
   id: blocks_file_sink
   parameters:
@@ -150,16 +186,52 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1368, 428.0]
+    coordinate: [856, 580.0]
     rotation: 0
-    state: true
+    state: disabled
+- name: blocks_file_sink_2_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: payloadOUT
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 676.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_4
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: preamble
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 476.0]
+    rotation: 0
+    state: disabled
 - name: blocks_stream_mux_0
   id: blocks_stream_mux
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    lengths: (round(pow(2,SF)*(preamble_len+2.25)), 9*512)
+    lengths: (round(pow(2,SF)*(preamble_len+2.25)), 18*512)
     maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '2'
@@ -169,9 +241,103 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 392.0]
+    coordinate: [1176, 392.0]
     rotation: 0
-    state: true
+    state: disabled
+- name: blocks_stream_mux_1
+  id: blocks_stream_mux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengths: (8, round(pow(2,SF)*(preamble_len+2.25)), 18*512)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '3'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 264.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_vector_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: pow(2,SF)
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 984.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tag_debug_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 588.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tagged_stream_align_1
+  id: blocks_tagged_stream_align
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengthtagname: '"preambleStart"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 692.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: complex
+    vector: (0, 0, 0, 0, 0, 0, 0, 0)
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [912, 260.0]
+    rotation: 0
+    state: enabled
 - name: blocks_vector_source_x_0_0_0_0
   id: blocks_vector_source_x
   parameters:
@@ -183,14 +349,14 @@ blocks:
     repeat: 'False'
     tags: '[]'
     type: byte
-    vector: (0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x01, 0x02, 0x03,
-      0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
+    vector: (0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
+      0x0d, 0x0e, 0x0f, 0x0e, 0x0d, 0x0c)
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [88, 348.0]
+    coordinate: [104, 420.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_1
@@ -210,7 +376,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 92.0]
+    coordinate: [976, 36.0]
     rotation: 0
     state: disabled
 - name: blocks_vector_to_stream_0_0_0
@@ -246,7 +412,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [976, 440.0]
+    coordinate: [984, 440.0]
     rotation: 0
     state: enabled
 - name: epy_block_0
@@ -298,9 +464,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [584, 636.0]
+    coordinate: [536, 972.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_0_1_0_0
   id: epy_block
   parameters:
@@ -313,19 +479,20 @@ blocks:
       \ CR=4):\n        gr.basic_block.__init__(self,\n            name=\"LoRa Interleaver\"\
       ,\n            in_sig=[np.uint8],\n            out_sig=[np.uint32])\n      \
       \  self.SF = SF\n        self.CR = CR\n\n    def forecast(self, noutput_items,\
-      \ ninputs) :\n        ninput_items_required = [self.SF]*ninputs #ninput_items_required[i]\
-      \ is the number of items that will be consumed on input port i\n        return\
-      \ ninput_items_required\n\n    def general_work(self, input_items, output_items):\n\
-      \        \n        if(len(input_items[0]) >= self.SF) :\n\n            #buffer\
-      \ references\n            in0 = input_items[0][:self.SF]\n\n            # parsing\
-      \ in0 (convert + crop to SF lines of CR+4 bits and bundle in matrix)\n     \
-      \       input_matrix = np.zeros((self.SF, self.CR+4), dtype=np.uint8)\n    \
-      \        for i in range(len(in0)):\n                bits_crop = [int(x) for\
-      \ x in bin(in0[i])[2:]]        \n                bits_crop_norm = ([0]*(self.CR+4-len(bits_crop))\
-      \ + bits_crop)[-(self.CR+4):]\n                input_matrix[i][:] = np.asarray(bits_crop_norm,\
-      \ dtype=np.uint8)\n\n            # interleaving\n            output_matrix =\
-      \ np.zeros((self.CR+4, self.SF), dtype=np.uint8)\n            for i in range(0,(self.CR+4))\
-      \ :\n                for j in range(0,(self.SF)) :\n                    idi=self.SF-1-(j-i)%self.SF\n\
+      \ ninputs) :\n        #ninput_items_required[i] is the number of items that\
+      \ will be consumed on input port i\n        # we need SF items to produce anything\n\
+      \        ninput_items_required = [self.SF]*ninputs \n        return ninput_items_required\n\
+      \n    def general_work(self, input_items, output_items):\n        \n       \
+      \ if(len(input_items[0]) >= self.SF) :\n\n            #buffer references\n \
+      \           in0 = input_items[0][:self.SF]\n\n            # parsing in0 (convert\
+      \ + crop to SF lines of CR+4 bits and bundle in matrix)\n            input_matrix\
+      \ = np.zeros((self.SF, self.CR+4), dtype=np.uint8)\n            for i in range(len(in0)):\n\
+      \                bits_crop = [int(x) for x in bin(in0[i])[2:]]        \n   \
+      \             bits_crop_norm = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]\n\
+      \                input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)\n\
+      \n            # interleaving\n            output_matrix = np.zeros((self.CR+4,\
+      \ self.SF), dtype=np.uint8)\n            for i in range(0,(self.CR+4)) :\n \
+      \               for j in range(0,(self.SF)) :\n                    idi=self.SF-1-(j-i)%self.SF\n\
       \                    idj=self.CR+4-1-i\n                    output_matrix[i][j]=input_matrix[idi][idj]\n\
       \            \n            # to uint32\n            output_items[0][0:(self.CR+4)]\
       \ = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))\n\
@@ -336,7 +503,8 @@ blocks:
       \            # print(\"output_matrix (CR+4 x SF):\")\n            # print(output_matrix)\n\
       \            # print(\"output_items[0] = \")\n            # print(output_items[0])\n\
       \n            #consume inputs (should be SF)\n            self.consume(0, self.SF)\n\
-      \            return self.CR+4\n\n        else :\n            return 0\n\n\n\n"
+      \            # return produced outputs (should be CR+4)\n            return\
+      \ self.CR+4\n\n        else :\n            return 0\n\n\n\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -351,6 +519,80 @@ blocks:
     coordinate: [648, 428.0]
     rotation: 0
     state: enabled
+- name: epy_block_0_1_0_0_0
+  id: epy_block
+  parameters:
+    B: '250000'
+    SF: SF
+    _source_code: "\"\"\"\nLoRa sync block\n\"\"\"\n\nimport numpy as np\nfrom gnuradio\
+      \ import gr\nimport math\n\n\ndef modulate(SF, id, os_factor) :\n    M  = pow(2,SF)\n\
+      \    n_fold = M * os_factor - id * os_factor\n    chirp = np.zeros(M*os_factor,\
+      \ dtype=np.complex64)\n    for n in range(0,M*os_factor):\n        if n < n_fold:\n\
+      \            chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-0.5)*n/os_factor))\n\
+      \        else:\n            chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))\n\
+      \    return chirp\n\nclass Sync(gr.basic_block):\n    def __init__(self, SF=9,\
+      \ B=250000, preamble_len= 6):\n        gr.basic_block.__init__(self,\n     \
+      \       name=\"LoRa Sync\",\n            in_sig=[np.complex64],\n          \
+      \  out_sig=[np.complex64])\n        self.SF = SF\n        self.currentState\
+      \ = 'WAIT'\n        self.B = B\n        self.preamble_len = preamble_len\n \
+      \       self.receivedBlocksCounter = 1\n\n    def forecast(self, noutput_items,\
+      \ ninputs) :\n        #ninput_items_required[i] is the number of items that\
+      \ will be consumed on input port i\n        # we need 2^SF items to produce\
+      \ anything\n        ninput_items_required = [pow(2,self.SF)]*ninputs \n    \
+      \    return ninput_items_required\n\n    def general_work(self, input_items,\
+      \ output_items):\n        M = pow(2,self.SF)\n        threshold = M/2\n    \
+      \    syncword = 0\n\n        if(len(input_items[0]) >= pow(2,self.SF)) :\n\n\
+      \            base_upchirp = modulate(self.SF, 0, 1)\n            base_downchirp\
+      \ = np.conjugate(base_upchirp)\n            demod_signal = np.multiply(input_items[0][:M],\
+      \ base_downchirp)\n            demod_signal_fft = np.fft.fft(demod_signal)\n\
+      \            peak = int(np.max(np.abs(demod_signal_fft)))\n            idx =\
+      \ np.argmax(np.abs(demod_signal_fft))\n            freq_vect = np.arange(0,M-1)*(self.B/M)\
+      \ # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!\n            symbols_hat\
+      \ = round(freq_vect[idx]*M/self.B)\n            \n            if(self.currentState\
+      \ == 'WAIT') :\n                if peak > threshold :\n                    self.currentState\
+      \ = 'UPCHIRPS'\n                else :\n                    self.consume(0,\
+      \ M)\n\n            if self.currentState == 'UPCHIRPS' :\n                if\
+      \ peak < threshold :\n                    self.currentState = 'WAIT'\n     \
+      \           f_up = idx\n                if idx == 0 :\n                    self.receivedBlocksCounter\
+      \ += 1\n                    if self.receivedBlocksCounter >= self.preamble_len-2\
+      \ :\n                        self.currentState = 'SYNCWORD'\n              \
+      \  self.consume(0, M)\n\n            if self.currentState == 'SYNCWORD' :\n\
+      \                if peak < threshold :\n                    self.currentState\
+      \ = 'WAIT'\n                if idx == syncword :\n                    self.receivedBlocksCounter\
+      \ += 1\n                if self.receivedBlocksCounter >= self.preamble_len :\n\
+      \                    self.currentState = 'DOWNCHIRPS'\n                self.consume(0,\
+      \ M)\n\n            if self.currentState == 'DOWNCHIRPS' :\n               \
+      \ demod_signal = np.multiply(input_items[0][:M], base_upchirp)\n           \
+      \     demod_signal_fft = np.fft.fft(demod_signal)\n                peak = int(np.max(np.abs(demod_signal_fft)))\n\
+      \                idx = np.argmax(np.abs(demod_signal_fft))\n               \
+      \ freq_vect = np.arange(0,M-1)*(self.B/M) # !!!! WILL INTRODUCE PROBLEMS WHEN\
+      \ OS_FACTOR IS NOT 1 !!!!\n                f_down = idx\n                self.receivedBlocksCounter\
+      \ += 1\n\n                if self.receivedBlocksCounter > self.preamble_len+2\
+      \ :\n                    self.consume(0, M*0.25)\n                    self.currentState\
+      \ = 'SYNC'\n                else : \n                    self.consume(0, M)\n\
+      \            if self.currentState == 'SYNC' :\n                CFOint = ((f_down\
+      \ + f_up)/2)*self.B\n                STOint = (1-(f_down + f_up)/2)*M\n    \
+      \            output_items[0][0:M] = input_items[0][0:M] # pass thru\n      \
+      \          self.consume(0, M)\n\n            print(\"\\n--- Frame Sync ---\"\
+      )\n            print(self.currentState)\n            print(\"receivedBlockCounter:\
+      \ \", self.receivedBlocksCounter)\n            print(\"idx: \", idx)\n     \
+      \       print(\"peak: \", peak)\n\n\n            \n            return 0\n  \
+      \      else :\n            return 0\n\n\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    preamble_len: preamble_len
+  states:
+    _io_cache: ('LoRa Sync', 'Sync', [('SF', '9'), ('B', '250000'), ('preamble_len',
+      '6')], [('0', 'complex', 1)], [('0', 'complex', 1)], '', ['B', 'SF', 'preamble_len'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 148.0]
+    rotation: 0
+    state: disabled
 - name: epy_block_1
   id: epy_block
   parameters:
@@ -419,9 +661,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 644.0]
+    coordinate: [712, 980.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_1_0_0
   id: epy_block
   parameters:
@@ -482,7 +724,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [336, 440.0]
+    coordinate: [312, 440.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_1
@@ -608,9 +850,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 648.0]
+    coordinate: [896, 984.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_3
   id: epy_block
   parameters:
@@ -624,7 +866,7 @@ blocks:
       \            else:\n                chirp[i][n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id[i]/M-1.5)*n/os_factor))\n\
       \    \n    # chirp = np.reshape(chirp,-1)\n\n    return chirp\n\nclass blk(gr.sync_block):\
       \  # other base classes are basic_block, decim_block, interp_block\n\n    def\
-      \ __init__(self, SF = 9, preamble_len = 4):  # only default arguments here\n\
+      \ __init__(self, SF = 9, preamble_len = 6):  # only default arguments here\n\
       \        gr.sync_block.__init__(\n            self,\n            name='LoRa\
       \ Preamble',   # will show up in GRC\n            in_sig=None,\n           \
       \ # out_sig=[(np.complex64,pow(2,SF)*preamble_len+round(pow(2,SF)*2.25))]\n\
@@ -644,10 +886,10 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    preamble_len: '4'
+    preamble_len: preamble_len
   states:
-    _io_cache: ('LoRa Preamble', 'blk', [('SF', '9'), ('preamble_len', '4')], [],
-      [('0', 'complex', 3200)], '', ['SF', 'preamble_len'])
+    _io_cache: ('LoRa Preamble', 'blk', [('SF', '9'), ('preamble_len', '6')], [],
+      [('0', 'complex', 4224)], '', ['SF', 'preamble_len'])
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -709,7 +951,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 108.0]
+    coordinate: [1192, 52.0]
     rotation: 0
     state: disabled
 - name: epy_block_5
@@ -731,7 +973,7 @@ blocks:
       \ # only default arguments here\n        \"\"\"arguments to this function show\
       \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
       \   self,\n            name='LoRa Demodulation',   # will show up in GRC\n \
-      \           in_sig=[(np.complex64,512)],\n            # out_sig=[(np.complex64,512)]\n\
+      \           in_sig=[(np.complex64,pow(2,SF))],\n            # out_sig=[(np.complex64,512)]\n\
       \            out_sig=[np.uint32]\n        )\n        self.SF = SF\n        self.B\
       \ = B\n\n    def work(self, input_items, output_items):\n        \"\"\"example:\
       \ multiply with constant\"\"\"\n        base_upchirp = modulate(self.SF, 0,\
@@ -743,9 +985,9 @@ blocks:
       \ = np.arange(0,M-1)*(self.B/M) # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR\
       \ IS NOT 1 !!!!\n            output_items[0][i] = round(freq_vect[idx]*M/self.B)\n\
       \            symbols_hat[i] = round(freq_vect[idx]*M/self.B)\n        \n   \
-      \     # # debug\n        # print(\"\\n--- GENERAL WORK : DEMODULATION ---\"\
-      )\n        # print(\"symbols_hat :\")\n        # print(symbols_hat)\n\n    \
-      \    return len(output_items[0])\n"
+      \     # debug\n        print(\"\\n--- GENERAL WORK : DEMODULATION ---\")\n \
+      \       print(\"symbols_hat :\")\n        print(symbols_hat)\n\n        return\
+      \ len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -758,9 +1000,160 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 636.0]
+    coordinate: [352, 972.0]
     rotation: 0
-    state: disabled
+    state: enabled
+- name: epy_block_6
+  id: epy_block
+  parameters:
+    SF: '9'
+    _source_code: "\"\"\"\nFrame_sync block\nCorrelation method\n\"\"\"\n\nfrom readline\
+      \ import set_history_length\nimport numpy as np\nfrom gnuradio import gr\nimport\
+      \ pmt\n\nclass Frame_sync(gr.basic_block):\n    def __init__(self, SF=9, preamble_len\
+      \ = 6, frameLength = 18):\n        gr.basic_block.__init__(self,\n         \
+      \   name=\"LoRa Frame Detector\",\n            in_sig=[np.complex64,(np.complex64,\
+      \ round(pow(2,SF)*(preamble_len+2.25)))], # first input is the input signal,\
+      \ second is the preamble to be correlated with\n            # out_sig=[(np.complex64,pow(2,SF))])\n\
+      \            out_sig=[(np.complex64)])\n        self.SF = SF\n        self.fullPreambleLength\
+      \ = round(pow(2,SF)*(preamble_len+2.25))\n        self.frameLength = round(pow(2,SF)*(frameLength))\n\
+      \        set_history_length(self.fullPreambleLength)\n\n    def forecast(self,\
+      \ noutput_items, ninputs) :\n        ninput_items_required = [1]*ninputs #ninput_items_required[i]\
+      \ is the number of items that will be consumed on input port i\n        return\
+      \ ninput_items_required\n\n    def general_work(self, input_items, output_items):\n\
+      \        preamble_detected = False\n        offset = 0\n\n        #buffer references\n\
+      \        in0 = input_items[0] #input signal\n        in1 = input_items[1] #preamble\
+      \ to be correlated with\n\n        Corr = np.correlate(in0[:], in1[0])\n   \
+      \     peak = np.max(Corr)\n        peakIndex = np.argmax(Corr)\n        threshold\
+      \ = 2000\n        # print(\"\\n--- Correlator ---\")\n        # print(\"Peak:\
+      \ \", peak)\n        # print(\"Peak Index: \", peakIndex)\n        # print(\"\
+      output_items[0]: \", len(output_items[0]))\n\n        if peak > threshold :\n\
+      \            # print(\"peak > threshold\")\n            self.add_item_tag(0,\
+      \ self.nitems_written(0) + self.fullPreambleLength + peakIndex,  pmt.intern(\"\
+      preambleStart\"),  pmt.intern(str(self.frameLength)))\n            output_items[0][0:len(in0)]\
+      \ = in0[:len(output_items[0])]\n            self.consume(0, len(in0[:len(output_items[0])]))\n\
+      \            # print(\"consumed: \", len(in0[:len(output_items[0])]))\n    \
+      \        return len(in0[:len(output_items[0])])\n\n        else :\n        \
+      \    output_items[0][0:len(in0)] = in0[:len(output_items[0])]\n            self.consume(0,\
+      \ len(in0[:len(output_items[0])]))\n            # print(\"consumed: \", len(in0[:len(output_items[0])]))\n\
+      \            return len(in0[:len(output_items[0])])\n\n        # if preamble_detected\
+      \ :\n        #     print(\"preamble_detected\")\n        #     self.consume(0,\
+      \ offset) # consume till offset\n        #     pass\n        # else :\n    \
+      \    #     print(\"preamble_NOT_detected\")\n        #     self.consume(0, self.in_len)\
+      \ # consume all input items\n        #     return 0\n\n        # # parsing in0\
+      \ (convert + crop t\n        # # to uint32\n        # output_items[0][0:(self.CR+4)]\
+      \ = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))\n\
+      \n        # #consume inputs (should be SF)\n        # self.consume(0, self.SF)\n\
+      \        # return self.CR+4"
+    affinity: ''
+    alias: ''
+    comment: ''
+    frameLength: '18'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    preamble_len: preamble_len
+  states:
+    _io_cache: ('LoRa Frame Detector', 'Frame_sync', [('SF', '9'), ('preamble_len',
+      '6'), ('frameLength', '18')], [('0', 'complex', 1), ('1', 'complex', 4224)],
+      [('0', 'complex', 1)], '', ['SF', 'frameLength'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [560, 676.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_6_0
+  id: epy_block
+  parameters:
+    _source_code: "# \"\"\"\n# Preamble removal block\n# Correlation method\n# \"\"\
+      \"\n\n# import numpy as np\n# from gnuradio import gr\n# import pmt\n\n# class\
+      \ Preamble_Remover(gr.basic_block):\n#     def __init__(self, SF=9, preamble_len\
+      \ = 6):\n#         gr.basic_block.__init__(self,\n#             name=\"LoRa\
+      \ Preamble Remover\",\n#             in_sig=[(np.complex64)],\n#           \
+      \  out_sig=[(np.complex64)])\n#         self.SF = SF\n\n#     def forecast(self,\
+      \ noutput_items, ninputs) :\n#         ninput_items_required = [1]*ninputs #ninput_items_required[i]\
+      \ is the number of items that will be consumed on input port i\n#         return\
+      \ ninput_items_required\n\n#     def general_work(self, input_items, output_items):\n\
+      \n#         #buffer references\n#         in0 = input_items[0] #input signal\n\
+      \n#         tags = self.get_tags_in_window(0, 0, len(input_items[0]))\n#   \
+      \      for tag in tags:\n#             key = pmt.to_python(tag.key) # convert\
+      \ from PMT to python string\n#             value = pmt.to_python(tag.value)\
+      \ # Note that the type(value) can be several things, it depends what PMT type\
+      \ it was\n#             print('key:', key)\n#             print('value:', value,\
+      \ type(value))\n#             print('')\n#             croppedInput = in0[int(value):]\n\
+      #             output_items[0][0:len(in0)] = croppedInput[:len(output_items[0])]\n\
+      #             self.consume(0, len(in0[:len(output_items[0])]))\n#         return\
+      \ len(in0[:len(output_items[0])])\n\nimport numpy as np\nfrom gnuradio import\
+      \ gr\nimport pmt\n\nclass my_basic_adder_block(gr.basic_block):\n    def __init__(self,tag_name\
+      \ = 'packet_len'):\n        gr.basic_block.__init__(self,\n                \
+      \                name=\"Tagged Stream Cropper\",\n                         \
+      \       in_sig  = [np.complex64],\n                                out_sig =\
+      \ [np.complex64])\n\n        self.previous_tag_n_remainder = 0\n        self.tag_name\
+      \                 = tag_name\n        self.set_tag_propagation_policy(gr.TPP_DONT)\n\
+      \n\n    def general_work(self, input_items, output_items):\n        len_out\
+      \ = len(output_items[0])\n\n        # DO PROCESSING\n        out_produced =\
+      \ 0 # output produced \n\n        #-> Write the remaining data of the previous\
+      \ tag\n        if self.previous_tag_n_remainder > 0: \n            if self.previous_tag_n_remainder\
+      \ < len_out: # if the length of the input items is sufficient to write the remainder\
+      \ of the previous tag items \n                output_items[0][:self.previous_tag_n_remainder]\
+      \ = input_items[0][:self.previous_tag_n_remainder] #write to output \n     \
+      \           out_produced                                   += self.previous_tag_n_remainder\
+      \                  #inccrease the number of item produced\n                self.previous_tag_n_remainder\
+      \ = 0                                                                #reset\
+      \ the counter \n                # the RETURN is at the end of the work()\n\n\
+      \            else: # self.previous_tag_n_remainder >= len_out\n            \
+      \    output_items[0][:len_out]      = input_items[0][:len_out]\n           \
+      \     self.previous_tag_n_remainder -= len_out\n                self.consume(0,\
+      \ len_out)\n                return len_out\n\n        # READ TAGS AND PARSE\
+      \ THE RECEIVED STREAM\n        tags = self.get_tags_in_window(0, out_produced,\
+      \ len_out)\n\n        #if there exist tag\n        if len(tags) > 0:\n     \
+      \       #for each tag apply\n            for tag in tags:\n                tag_name\
+      \   = pmt.to_python(tag.key)            # packet_tag\n                tag_len\
+      \    = int(pmt.to_python(tag.value))          # packet_len\n               \
+      \ tag_pos    = tag.offset - self.nitems_read(0)  # packet_position_index\n \
+      \               if tag_name == self.tag_name:       #check if the tag name is\
+      \ appropriate\n                    if tag_pos + tag_len < len_out: # if all\
+      \ the elements correspding to the \"tag\" are included in the input_items\n\n\
+      \                        # write the elements to the output\n              \
+      \          output_items[0][out_produced:(out_produced+tag_len)] = input_items[0][tag_pos:(tag_pos+tag_len)]\n\
+      \n                        # add tag to the corresponding start point       \
+      \              \n                        self.add_item_tag(0,              \
+      \                     # Write to output port 0\n                           \
+      \              self.nitems_written(0)+out_produced,  # Index of the tag in absolute\
+      \ terms\n                                         tag.key,                 \
+      \             # Key of the tag\n                                         tag.value\
+      \                             # Value of the tag\n                         \
+      \                )\n                        #increase the number of output element\
+      \ produced counter\n                        out_produced += tag_len\n\n    \
+      \                else: #tag_pos+tag_len >= len_out:\n                      \
+      \  n_item_to_wrt = len_out - tag_pos\n                        output_items[0][out_produced:(out_produced\
+      \ + n_item_to_wrt)] = input_items[0][tag_pos:(tag_pos+n_item_to_wrt)]\n\n  \
+      \                      self.add_item_tag(0,                                \
+      \     # Write to output port 0\n                                          self.nitems_written(0)+out_produced,\
+      \   # Index of the tag in absolute terms\n                                 \
+      \         tag.key,                               # Key of the tag\n        \
+      \                                  tag.value                              #\
+      \ Value of the tag\n                                          )\n\n        \
+      \                self.previous_tag_n_remainder = tag_len - n_item_to_wrt\n \
+      \                       out_produced                 += n_item_to_wrt\n    \
+      \                    self.consume(0,len_out)\n                        return\
+      \ out_produced\n\n        #if there is no tag exits\n        self.consume(0,len_out)\n\
+      \n        #recall that the first \"if\" state is producing element!\n      \
+      \  return out_produced"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag_name: '"preambleStart"'
+  states:
+    _io_cache: ('Tagged Stream Cropper', 'my_basic_adder_block', [('tag_name', "'packet_len'")],
+      [('0', 'complex', 1)], [('0', 'complex', 1)], '', ['tag_name'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [976, 692.0]
+    rotation: 0
+    state: enabled
 - name: epy_block_6_0_0_0_0_0
   id: epy_block
   parameters:
@@ -785,7 +1178,9 @@ blocks:
       \            # packet_tag\n        #         tag_len    = pmt.to_python(tag.value)\
       \          # packet_len\n        #         tag_pos    = tag.offset - self.nitems_read(0)\
       \  # packet_position_index\n        #         print(\"tag_name :\", tag_name,\
-      \ \"\\ntag_len :\", tag_len, \"\\ntag_pos:\", tag_pos)\n\n        return len(output_items[0])"
+      \ \"\\ntag_len :\", tag_len, \"\\ntag_pos:\", tag_pos)\n        # debug\n  \
+      \      print(\"\\n--- GENERAL WORK : MODULATION ---\")\n        print(\"symbols\
+      \ :\")\n        print(symbols)\n        return len(output_items[0])"
     affinity: ''
     alias: ''
     comment: ''
@@ -894,17 +1289,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1368, 348.0]
+    coordinate: [1376, 388.0]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
-- [blocks_stream_mux_0, '0', blocks_file_sink_1, '0']
+- [blocks_stream_mux_0, '0', epy_block_6, '0']
 - [blocks_stream_mux_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_stream_mux_1, '0', epy_block_6, '0']
+- [blocks_stream_to_vector_0, '0', epy_block_5, '0']
+- [blocks_tagged_stream_align_1, '0', epy_block_6_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_stream_mux_1, '0']
+- [blocks_vector_source_x_0_0_0_0, '0', blocks_file_sink_0_3, '0']
 - [blocks_vector_source_x_0_0_0_0, '0', epy_block_1_0_0, '0']
 - [blocks_vector_source_x_0_1, '0', epy_block_4, '0']
+- [blocks_vector_to_stream_0_0_0, '0', blocks_file_sink_4, '0']
 - [blocks_vector_to_stream_0_0_0, '0', blocks_stream_mux_0, '0']
+- [blocks_vector_to_stream_0_0_0, '0', blocks_stream_mux_1, '1']
 - [blocks_vector_to_stream_0_0_1, '0', blocks_stream_mux_0, '1']
+- [blocks_vector_to_stream_0_0_1, '0', blocks_stream_mux_1, '2']
 - [epy_block_0, '0', epy_block_1, '0']
 - [epy_block_0_1_0_0, '0', epy_block_6_0_0_0_0_0, '0']
 - [epy_block_1, '0', epy_block_2, '0']
@@ -912,10 +1315,15 @@ connections:
 - [epy_block_1_1, '0', epy_block_0_1_0_0, '0']
 - [epy_block_2, '0', blocks_file_sink_0_1, '0']
 - [epy_block_3, '0', blocks_vector_to_stream_0_0_0, '0']
+- [epy_block_3, '0', epy_block_6, '1']
 - [epy_block_4, '0', blocks_file_sink_0_0, '0']
 - [epy_block_5, '0', epy_block_0, '0']
+- [epy_block_6, '0', blocks_file_sink_1, '0']
+- [epy_block_6, '0', blocks_tag_debug_0, '0']
+- [epy_block_6, '0', blocks_tagged_stream_align_1, '0']
+- [epy_block_6_0, '0', blocks_file_sink_2_0, '0']
+- [epy_block_6_0, '0', blocks_stream_to_vector_0, '0']
 - [epy_block_6_0_0_0_0_0, '0', blocks_vector_to_stream_0_0_1, '0']
-- [epy_block_6_0_0_0_0_0, '0', epy_block_5, '0']
 
 metadata:
   file_format: 1
