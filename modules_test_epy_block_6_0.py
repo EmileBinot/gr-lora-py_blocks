@@ -1,40 +1,12 @@
-# """
-# Preamble removal block
-# Correlation method
-# """
+"""
+Tagged Stream Cropper:
+Reference : https://dsp.stackexchange.com/questions/80751/gnu-radiotagged-stream-how-to-clip-the-stream-as-packet-length-tag-long
 
-# import numpy as np
-# from gnuradio import gr
-# import pmt
-
-# class Preamble_Remover(gr.basic_block):
-#     def __init__(self, SF=9, preamble_len = 6):
-#         gr.basic_block.__init__(self,
-#             name="LoRa Preamble Remover",
-#             in_sig=[(np.complex64)],
-#             out_sig=[(np.complex64)])
-#         self.SF = SF
-
-#     def forecast(self, noutput_items, ninputs) :
-#         ninput_items_required = [1]*ninputs #ninput_items_required[i] is the number of items that will be consumed on input port i
-#         return ninput_items_required
-
-#     def general_work(self, input_items, output_items):
-
-#         #buffer references
-#         in0 = input_items[0] #input signal
-
-#         tags = self.get_tags_in_window(0, 0, len(input_items[0]))
-#         for tag in tags:
-#             key = pmt.to_python(tag.key) # convert from PMT to python string
-#             value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
-#             print('key:', key)
-#             print('value:', value, type(value))
-#             print('')
-#             croppedInput = in0[int(value):]
-#             output_items[0][0:len(in0)] = croppedInput[:len(output_items[0])]
-#             self.consume(0, len(in0[:len(output_items[0])]))
-#         return len(in0[:len(output_items[0])])
+INPUTS:
+    - in_sig[0]: IQ complex stream
+OUTPUT:
+    - out_sig[0]: IQ complex stream
+"""
 
 import numpy as np
 from gnuradio import gr
@@ -50,7 +22,6 @@ class my_basic_adder_block(gr.basic_block):
         self.previous_tag_n_remainder = 0
         self.tag_name                 = tag_name
         self.set_tag_propagation_policy(gr.TPP_DONT)
-
 
     def general_work(self, input_items, output_items):
         len_out = len(output_items[0])
@@ -117,3 +88,41 @@ class my_basic_adder_block(gr.basic_block):
 
         #recall that the first "if" state is producing element!
         return out_produced
+
+# """
+# Preamble removal block
+# Correlation method
+# """
+
+# import numpy as np
+# from gnuradio import gr
+# import pmt
+
+# class Preamble_Remover(gr.basic_block):
+#     def __init__(self, SF=9, preamble_len = 6):
+#         gr.basic_block.__init__(self,
+#             name="LoRa Preamble Remover",
+#             in_sig=[(np.complex64)],
+#             out_sig=[(np.complex64)])
+#         self.SF = SF
+
+#     def forecast(self, noutput_items, ninputs) :
+#         ninput_items_required = [1]*ninputs #ninput_items_required[i] is the number of items that will be consumed on input port i
+#         return ninput_items_required
+
+#     def general_work(self, input_items, output_items):
+
+#         #buffer references
+#         in0 = input_items[0] #input signal
+
+#         tags = self.get_tags_in_window(0, 0, len(input_items[0]))
+#         for tag in tags:
+#             key = pmt.to_python(tag.key) # convert from PMT to python string
+#             value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
+#             print('key:', key)
+#             print('value:', value, type(value))
+#             print('')
+#             croppedInput = in0[int(value):]
+#             output_items[0][0:len(in0)] = croppedInput[:len(output_items[0])]
+#             self.consume(0, len(in0[:len(output_items[0])]))
+#         return len(in0[:len(output_items[0])])

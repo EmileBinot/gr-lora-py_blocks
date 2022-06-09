@@ -2,7 +2,12 @@
 Whitening block
 Whiten input sequence to remove the frequency and time correlations in it.
 
+INPUT:
+    - in_sig[0]: binary input sequence (4 useful bits per byte)
+OUTPUT:
+    - out_sig[0]: whitened binary sequence
 """
+
 import numpy as np
 from gnuradio import gr
 
@@ -23,39 +28,39 @@ whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F
                 0x0E, 0x1D, 0x3A, 0x75, 0xEA, 0xD5, 0xAA, 0x55, 0xAB, 0x57, 0xAF, 0x5F, 0xBE, 0x7C, 0xF9, 0xF2,
                 0xE5, 0xCA, 0x94, 0x28, 0x50, 0xA1, 0x42, 0x84, 0x09, 0x13, 0x27, 0x4F, 0x9F, 0x3F, 0x7F)
 
-whitening_seq_debug =0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+# # debug
+# whitening_seq_debug = 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+# whitening_seq = whitening_seq_debug
 
-whitening_seq = whitening_seq_debug
-
-class Whitening(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
-    def __init__(self):  # only default arguments here
+class Whitening(gr.sync_block):
+    def __init__(self):
         gr.sync_block.__init__(
             self,
-            name='LoRa Whitening',   # will show up in GRC
+            name='LoRa Whitening',
             in_sig=[np.uint8],
             out_sig=[np.uint8]
         )
-        self.table_idx = 0
+        self.table_idx = 0 # index of the whitening table cell to be used for whitening
         
     def work(self, input_items, output_items):
         
-        in0 = input_items[0]
-        out = output_items[0]
-        # parsing in0 (convert + crop to lines of 4 bits and bundle in matrix)
+        in0 = input_items[0]    # input buffer reference
+        out = output_items[0]   # output buffer reference
+
         input_matrix = np.zeros((len(in0), 4), dtype=np.uint8)
         for i in range(len(in0)):
-            bits_crop = [int(x) for x in bin(in0[i])[2:]]        
-            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]
-            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)
+            bits_crop = [int(x) for x in bin(in0[i])[2:]]                   # convert to binary
+            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 useful bits
+            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8) # convert to np.array
             
-            # whitening
-            out[i] = in0[i] ^ whitening_seq[self.table_idx]
-            self.table_idx += 1
-            if(self.table_idx == len(whitening_seq)):
+            
+            out[i] = in0[i] ^ whitening_seq[self.table_idx] # whiten (XOR) the input vector
+
+            self.table_idx += 1                         # increment table index
+            if(self.table_idx == len(whitening_seq)):   # if table index is out of bounds, reset it
                 self.table_idx = 0
 
-
-        # #debug
+        # # debug
         # print("\n--- GENERAL WORK : WHITENING ---")
         # print("in0 :")
         # print(in0)

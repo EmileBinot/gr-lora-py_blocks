@@ -42,28 +42,29 @@ class modules_test(gr.top_block):
         ##################################################
         self.samp_rate = samp_rate = 32000
         self.preamble_len = preamble_len = 6
+        self.frame_len = frame_len = 18
         self.SF = SF = 9
         self.CR = CR = 2
 
         ##################################################
         # Blocks
         ##################################################
-        self.epy_block_6_0_0_0_0_0 = epy_block_6_0_0_0_0_0.blk(SF=SF)
-        self.epy_block_6_0 = epy_block_6_0.my_basic_adder_block(tag_name="preambleStart")
-        self.epy_block_6 = epy_block_6.Frame_sync(SF=9, preamble_len=preamble_len, frameLength=18)
-        self.epy_block_5 = epy_block_5.blk(SF=SF, B=250000)
-        self.epy_block_3 = epy_block_3.blk(SF=9, preamble_len=preamble_len)
-        self.epy_block_2 = epy_block_2.LoRa_Dewhitening()
-        self.epy_block_1_1 = epy_block_1_1.Hamming_enc(CR=CR)
+        self.epy_block_6_0_0_0_0_0 = epy_block_6_0_0_0_0_0.Modulation(SF=SF)
+        self.epy_block_6_0 = epy_block_6_0.my_basic_adder_block(tag_name="preamble_end")
+        self.epy_block_6 = epy_block_6.Frame_sync(SF=SF, preamble_len=preamble_len, frame_length=frame_len)
+        self.epy_block_5 = epy_block_5.Demodulation(SF=SF, B=250000)
+        self.epy_block_3 = epy_block_3.PreambleGenerator(SF=9, preamble_len=preamble_len)
+        self.epy_block_2 = epy_block_2.LoraDewhitening()
+        self.epy_block_1_1 = epy_block_1_1.HammingTx(CR=CR)
         self.epy_block_1_0_0 = epy_block_1_0_0.Whitening()
-        self.epy_block_1 = epy_block_1.Hamming_Rx(CR=CR)
+        self.epy_block_1 = epy_block_1.HammingRx(CR=CR)
         self.epy_block_0_1_0_0 = epy_block_0_1_0_0.Interleaver(SF=SF, CR=CR)
         self.epy_block_0 = epy_block_0.Deinterleaver(SF=SF, CR=CR)
         self.blocks_vector_to_stream_0_0_1 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, pow(2,SF))
         self.blocks_vector_to_stream_0_0_0 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, round(pow(2,SF)*(preamble_len+2.25)))
         self.blocks_vector_source_x_0_0_0_0 = blocks.vector_source_b((0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x0e, 0x0d, 0x0c), False, 1, [])
-        self.blocks_vector_source_x_0 = blocks.vector_source_c((0, 0, 0, 0, 0, 0, 0, 0), True, 1, [])
-        self.blocks_tagged_stream_align_1 = blocks.tagged_stream_align(gr.sizeof_gr_complex*1, "preambleStart")
+        self.blocks_vector_source_x_0 = blocks.vector_source_c((0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), False, 1, [])
+        self.blocks_tagged_stream_align_1 = blocks.tagged_stream_align(gr.sizeof_gr_complex*1, "preamble_end")
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, pow(2,SF))
         self.blocks_stream_mux_1 = blocks.stream_mux(gr.sizeof_gr_complex*1, (8, round(pow(2,SF)*(preamble_len+2.25)), 18*512))
         self.blocks_file_sink_2_0 = blocks.file_sink(gr.sizeof_gr_complex*1, 'payloadOUT', False)
@@ -113,6 +114,13 @@ class modules_test(gr.top_block):
         self.preamble_len = preamble_len
         self.epy_block_3.preamble_len = self.preamble_len
 
+    def get_frame_len(self):
+        return self.frame_len
+
+    def set_frame_len(self, frame_len):
+        self.frame_len = frame_len
+        self.epy_block_6.frame_length = self.frame_len
+
     def get_SF(self):
         return self.SF
 
@@ -121,6 +129,7 @@ class modules_test(gr.top_block):
         self.epy_block_0.SF = self.SF
         self.epy_block_0_1_0_0.SF = self.SF
         self.epy_block_5.SF = self.SF
+        self.epy_block_6.SF = self.SF
         self.epy_block_6_0_0_0_0_0.SF = self.SF
 
     def get_CR(self):

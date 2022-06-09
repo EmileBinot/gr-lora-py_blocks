@@ -1,41 +1,46 @@
 """
-Frame_sync block
-Correlation method
+Frame sync block:
+Tries to find a correlation peak between the input sequence and a reference sequence (preamble). If found, tag the end of preamble.
+
+INPUTS:
+    - in_sig[0]: IQ complex input stream
+    - in_sig[1]: IQ complex reference vector (preamble)
+OUTPUT:
+    - out_sig[0]: IQ complex stream
 """
 
-from readline import set_history_length
+
 import numpy as np
 from gnuradio import gr
 import pmt
 
 class Frame_sync(gr.basic_block):
-    def __init__(self, SF=9, preamble_len = 6, frameLength = 18):
+    def __init__(self, SF=9, preamble_len = 6, frame_length = 18):
         gr.basic_block.__init__(self,
             name="LoRa Frame Detector",
             in_sig=[np.complex64,(np.complex64, round(pow(2,SF)*(preamble_len+2.25)))], # first input is the input signal, second is the preamble to be correlated with
             # out_sig=[(np.complex64,pow(2,SF))])
             out_sig=[(np.complex64)])
         self.SF = SF
-        self.fullPreambleLength = round(pow(2,SF)*(preamble_len+2.25))
-        self.frameLength = round(pow(2,SF)*(frameLength))
-        set_history_length(self.fullPreambleLength)
+        self.full_preamble_length = round(pow(2,SF)*(preamble_len+2.25))
+        self.frame_length = round(pow(2,SF)*(frame_length))
 
     def forecast(self, noutput_items, ninputs) :
         ninput_items_required = [1]*ninputs #ninput_items_required[i] is the number of items that will be consumed on input port i
         return ninput_items_required
 
     def general_work(self, input_items, output_items):
-        preamble_detected = False
-        offset = 0
 
-        #buffer references
-        in0 = input_items[0] #input signal
-        in1 = input_items[1] #preamble to be correlated with
+        # buffer references
+        in0 = input_items[0] # input signal
+        in1 = input_items[1] # preamble to be correlated with
+        out = output_items[0] # output buffer
 
-        Corr = np.correlate(in0[:], in1[0])
-        peak = np.max(Corr)
-        peakIndex = np.argmax(Corr)
-        threshold = 2000
+        corr = np.correlate(in0[:], in1[0]) # correlate input signal with preamble
+        peak = np.max(corr)                 # find the correlation peak
+        threshold = 2000                    # threshold for peak detection
+
+        # # debug
         # print("\n--- Correlator ---")
         # print("Peak: ", peak)
         # print("Peak Index: ", peakIndex)
@@ -43,31 +48,10 @@ class Frame_sync(gr.basic_block):
 
         if peak > threshold :
             # print("peak > threshold")
-            self.add_item_tag(0, self.nitems_written(0) + self.fullPreambleLength + peakIndex,  pmt.intern("preambleStart"),  pmt.intern(str(self.frameLength)))
-            output_items[0][0:len(in0)] = in0[:len(output_items[0])]
-            self.consume(0, len(in0[:len(output_items[0])]))
-            # print("consumed: ", len(in0[:len(output_items[0])]))
-            return len(in0[:len(output_items[0])])
+            peak_index = np.argmax(corr)         # get index of the peak
+            # add tag at the end of the preamble, write frame_length inside so Tagged Stream Cropper block can remove preamble
+            self.add_item_tag(0, self.nitems_written(0) + peak_index + self.full_preamble_length,  pmt.intern("preamble_end"),  pmt.intern(str(self.frame_length)))
 
-        else :
-            output_items[0][0:len(in0)] = in0[:len(output_items[0])]
-            self.consume(0, len(in0[:len(output_items[0])]))
-            # print("consumed: ", len(in0[:len(output_items[0])]))
-            return len(in0[:len(output_items[0])])
-
-        # if preamble_detected :
-        #     print("preamble_detected")
-        #     self.consume(0, offset) # consume till offset
-        #     pass
-        # else :
-        #     print("preamble_NOT_detected")
-        #     self.consume(0, self.in_len) # consume all input items
-        #     return 0
-
-        # # parsing in0 (convert + crop t
-        # # to uint32
-        # output_items[0][0:(self.CR+4)] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
-
-        # #consume inputs (should be SF)
-        # self.consume(0, self.SF)
-        # return self.CR+4
+        out[0:len(in0)] = in0[:len(out)]
+        self.consume(0, len(in0[:len(out)]))
+        return len(in0[:len(out)])

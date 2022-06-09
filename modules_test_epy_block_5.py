@@ -1,19 +1,17 @@
 """
 Demodulation Block:
+Reference : "Towards an SDR implementation of LoRa..." 2020 A.Marquet, N.Montavont, G.Papadopoulos)
+
+INPUT:
+    - in_sig[0]: IQ complex vectors input sequence
+OUTPUT:
+    - out_sig[0]: 
 """
 
 import numpy as np
 from gnuradio import gr
 import math
 
-# def modulate(SF, symbol, sign) :
-    # M  = pow(2,SF)
-    # ka = np.arange(0,M)
-    # fact1 = np.exp(1j*sign*math.pi*pow(ka,2)/M)
-    # fact1 = np.reshape(fact1,(1,-1))
-    # symbK = np.multiply(fact1,np.exp(2j*math.pi*(symbol/M)*ka))
-    # return symbK
-    
 def modulate(SF, id, os_factor) :
     M  = pow(2,SF)
     n_fold = M * os_factor - id * os_factor
@@ -25,34 +23,33 @@ def modulate(SF, id, os_factor) :
             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))
     return chirp
 
+class Demodulation(gr.sync_block):
 
-class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
-
-    def __init__(self, SF = 9, B = 250000):  # only default arguments here
-        """arguments to this function show up as parameters in GRC"""
+    def __init__(self, SF = 9, B = 250000):
         gr.sync_block.__init__(
             self,
-            name='LoRa Demodulation',   # will show up in GRC
+            name='LoRa Demodulation',
             in_sig=[(np.complex64,pow(2,SF))],
-            # out_sig=[(np.complex64,512)]
             out_sig=[np.uint32]
         )
         self.SF = SF
         self.B = B
 
     def work(self, input_items, output_items):
-        """example: multiply with constant"""
+
+        M = pow(2,self.SF)
         base_upchirp = modulate(self.SF, 0, 1)
         base_downchirp = np.conjugate(base_upchirp)
-        M = pow(2,self.SF)
+
         symbols_hat =  np.zeros(len(input_items[0]), dtype=np.uint32)
         for i in range(len(input_items[0])):
-            demod_signal = np.multiply(input_items[0][i], base_downchirp)
-            demod_signal_fft = np.fft.fft(demod_signal)
-            idx = np.argmax(np.abs(demod_signal_fft))
-            freq_vect = np.arange(0,M-1)*(self.B/M) # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!
-            output_items[0][i] = round(freq_vect[idx]*M/self.B)
-            symbols_hat[i] = round(freq_vect[idx]*M/self.B)
+            demod_signal = np.multiply(input_items[0][i], base_downchirp)   # multiply every symbol with the downchirp
+            demod_signal_fft = np.fft.fft(demod_signal)                     # perform FFT on demodulated signal    
+            idx = np.argmax(np.abs(demod_signal_fft))                       # find the frequency index of the maximum value
+            freq_vect = np.arange(0,M-1)*(self.B/M)                         # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!
+            symbols_hat[i] = round(freq_vect[idx]*M/self.B)                 # convert the frequency index to symbol index
+            output_items[0][i] = symbols_hat[i]
+            
         
         # debug
         print("\n--- GENERAL WORK : DEMODULATION ---")

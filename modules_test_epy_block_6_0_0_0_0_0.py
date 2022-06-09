@@ -1,11 +1,16 @@
 """
 Modulation Block:
+Reference : "Towards an SDR implementation of LoRa..." 2020 A.Marquet, N.Montavont, G.Papadopoulos)
+
+INPUT:
+    - in_sig[0]: int32 input stream
+OUTPUT:
+    - out_sig[0]: IQ complex vectors output stream
 """
 
 import numpy as np
 from gnuradio import gr
 import math
-import pmt
 
 def modulate(SF, id, os_factor) :
     M  = pow(2,SF)
@@ -18,36 +23,26 @@ def modulate(SF, id, os_factor) :
             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))
     return chirp
 
-class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
+class Modulation(gr.sync_block):
 
-    def __init__(self, SF = 9):  # only default arguments here
+    def __init__(self, SF = 9):
         gr.sync_block.__init__(
             self,
-            name='LoRa Modulation',   # will show up in GRC
+            name='LoRa Modulation',
             in_sig=[np.uint32],
             out_sig=[(np.complex64,pow(2,SF))]
         )
         self.SF = SF
 
     def work(self, input_items, output_items):
-        
+
         symbols = input_items[0]
-
         for i in range (len(symbols)) :
-            output_items[0][i] = modulate(self.SF, symbols[i], 1)
+            output_items[0][i] = modulate(self.SF, symbols[i], 1)   # modulate every symbol
 
-
-        # tags = self.get_tags_in_window(0, 0, len(input_items[0]))
-        # #if there exist tag
-        # if len(tags) > 0:
-        #     #for each tag apply
-        #     for tag in tags:
-        #         tag_name   = pmt.to_python(tag.key)            # packet_tag
-        #         tag_len    = pmt.to_python(tag.value)          # packet_len
-        #         tag_pos    = tag.offset - self.nitems_read(0)  # packet_position_index
-        #         print("tag_name :", tag_name, "\ntag_len :", tag_len, "\ntag_pos:", tag_pos)
         # debug
         print("\n--- GENERAL WORK : MODULATION ---")
         print("symbols :")
         print(symbols)
+
         return len(output_items[0])
