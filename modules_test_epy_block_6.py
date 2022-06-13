@@ -40,17 +40,18 @@ class Frame_sync(gr.basic_block):
         peak = np.max(corr)                 # find the correlation peak
         threshold = 2000                    # threshold for peak detection
 
-        # # debug
-        # print("\n--- Correlator ---")
-        # print("Peak: ", peak)
-        # print("Peak Index: ", peakIndex)
-        # print("output_items[0]: ", len(output_items[0]))
-
         if peak > threshold :
             # print("peak > threshold")
             peak_index = np.argmax(corr)         # get index of the peak
             # add tag at the end of the preamble, write frame_length inside so Tagged Stream Cropper block can remove preamble
             self.add_item_tag(0, self.nitems_written(0) + peak_index + self.full_preamble_length,  pmt.intern("preamble_end"),  pmt.intern(str(self.frame_length)))
+
+            # # debug
+            # print("\n--- Correlator ---")
+            # print("Peak: ", peak)
+            # print("Peak Index: ", peak_index)
+            # print("output_items[0]: ", len(output_items[0]))
+
 
         out[0:len(in0)] = in0[:len(out)]
         self.consume(0, len(in0[:len(out)]))

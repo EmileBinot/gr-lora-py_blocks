@@ -51,9 +51,9 @@ class Modulation(gr.sync_block):
             # elapsed = time.time() - t
             # print("Modulation time: ", elapsed)
 
-        # # debug
-        # print("\n--- GENERAL WORK : MODULATION ---")
-        # print("symbols :")
-        # print(symbols)
+        # debug
+        print("\n--- GENERAL WORK : MODULATION ---")
+        print("symbols :")
+        print(symbols)
 
         return len(output_items[0])

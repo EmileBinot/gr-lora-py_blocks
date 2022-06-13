@@ -19,15 +19,16 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import pdu
-from gnuradio import uhd
-import time
 import modules_test_epy_block_0 as epy_block_0  # embedded python block
 import modules_test_epy_block_0_1_0_0 as epy_block_0_1_0_0  # embedded python block
 import modules_test_epy_block_1 as epy_block_1  # embedded python block
 import modules_test_epy_block_1_0_0 as epy_block_1_0_0  # embedded python block
 import modules_test_epy_block_1_1 as epy_block_1_1  # embedded python block
 import modules_test_epy_block_2 as epy_block_2  # embedded python block
+import modules_test_epy_block_3 as epy_block_3  # embedded python block
 import modules_test_epy_block_5 as epy_block_5  # embedded python block
+import modules_test_epy_block_6 as epy_block_6  # embedded python block
+import modules_test_epy_block_6_0 as epy_block_6_0  # embedded python block
 import modules_test_epy_block_6_0_0_0_0_0 as epy_block_6_0_0_0_0_0  # embedded python block
 
 
@@ -52,26 +53,13 @@ class modules_test(gr.top_block):
         ##################################################
         # Blocks
         ##################################################
-        self.uhd_usrp_sink_0_0 = uhd.usrp_sink(
-            ",".join(("addr=192.168.10.2", "")),
-            uhd.stream_args(
-                cpu_format="fc32",
-                args='',
-                channels=list(range(0,1)),
-            ),
-            '',
-        )
-        self.uhd_usrp_sink_0_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_sink_0_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
-
-        self.uhd_usrp_sink_0_0.set_center_freq(center_freq, 0)
-        self.uhd_usrp_sink_0_0.set_antenna('TX/RX', 0)
-        self.uhd_usrp_sink_0_0.set_bandwidth(samp_rate, 0)
-        self.uhd_usrp_sink_0_0.set_gain(0, 0)
         self.pdu_random_pdu_0 = pdu.random_pdu(SF*10, SF*10, 0x0F, SF)
         self.pdu_pdu_to_stream_x_0 = pdu.pdu_to_stream_b(pdu.EARLY_BURST_APPEND, 64)
         self.epy_block_6_0_0_0_0_0 = epy_block_6_0_0_0_0_0.Modulation(SF=SF)
+        self.epy_block_6_0 = epy_block_6_0.my_basic_adder_block(tag_name="preamble_end")
+        self.epy_block_6 = epy_block_6.Frame_sync(SF=SF, preamble_len=preamble_len, frame_length=frame_len)
         self.epy_block_5 = epy_block_5.Demodulation(SF=SF, B=250000)
+        self.epy_block_3 = epy_block_3.PreambleGenerator(SF=9, preamble_len=preamble_len)
         self.epy_block_2 = epy_block_2.LoraDewhitening()
         self.epy_block_1_1 = epy_block_1_1.HammingTx(CR=CR)
         self.epy_block_1_0_0 = epy_block_1_0_0.Whitening()
@@ -79,9 +67,16 @@ class modules_test(gr.top_block):
         self.epy_block_0_1_0_0 = epy_block_0_1_0_0.Interleaver(SF=SF, CR=CR)
         self.epy_block_0 = epy_block_0.Deinterleaver(SF=SF, CR=CR)
         self.blocks_vector_to_stream_0_0_1 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, pow(2,SF))
+        self.blocks_vector_to_stream_0_0_0 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, round(pow(2,SF)*(preamble_len+2.25)))
+        self.blocks_tagged_stream_align_1 = blocks.tagged_stream_align(gr.sizeof_gr_complex*1, "preamble_end")
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, pow(2,SF))
+        self.blocks_stream_mux_1 = blocks.stream_mux(gr.sizeof_gr_complex*1, (round(pow(2,SF)*(preamble_len+2.25)),frame_len*pow(2,SF) ))
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
-        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("#t"), 10000)
+        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("#t"), 1000)
+        self.blocks_file_sink_2_0 = blocks.file_sink(gr.sizeof_gr_complex*1, 'payloadOUT', False)
+        self.blocks_file_sink_2_0.set_unbuffered(False)
+        self.blocks_file_sink_1 = blocks.file_sink(gr.sizeof_gr_complex*1, 'lora_frame', False)
+        self.blocks_file_sink_1.set_unbuffered(False)
         self.blocks_file_sink_0_3 = blocks.file_sink(gr.sizeof_char*1, 'dumpIN', False)
         self.blocks_file_sink_0_3.set_unbuffered(False)
         self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_char*1, 'dumpOUT', False)
@@ -93,9 +88,11 @@ class modules_test(gr.top_block):
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0, 'strobe'), (self.pdu_random_pdu_0, 'generate'))
         self.msg_connect((self.pdu_random_pdu_0, 'pdus'), (self.pdu_pdu_to_stream_x_0, 'pdus'))
+        self.connect((self.blocks_stream_mux_1, 0), (self.epy_block_6, 0))
         self.connect((self.blocks_stream_to_vector_0, 0), (self.epy_block_5, 0))
-        self.connect((self.blocks_vector_to_stream_0_0_1, 0), (self.blocks_stream_to_vector_0, 0))
-        self.connect((self.blocks_vector_to_stream_0_0_1, 0), (self.uhd_usrp_sink_0_0, 0))
+        self.connect((self.blocks_tagged_stream_align_1, 0), (self.epy_block_6_0, 0))
+        self.connect((self.blocks_vector_to_stream_0_0_0, 0), (self.blocks_stream_mux_1, 0))
+        self.connect((self.blocks_vector_to_stream_0_0_1, 0), (self.blocks_stream_mux_1, 1))
         self.connect((self.epy_block_0, 0), (self.epy_block_1, 0))
         self.connect((self.epy_block_0_1_0_0, 0), (self.epy_block_6_0_0_0_0_0, 0))
         self.connect((self.epy_block_1, 0), (self.epy_block_2, 0))
@@ -103,7 +100,13 @@ class modules_test(gr.top_block):
         self.connect((self.epy_block_1_1, 0), (self.epy_block_0_1_0_0, 0))
         self.connect((self.epy_block_2, 0), (self.blocks_file_sink_0_1, 0))
         self.connect((self.epy_block_2, 0), (self.blocks_null_sink_0, 0))
+        self.connect((self.epy_block_3, 0), (self.blocks_vector_to_stream_0_0_0, 0))
+        self.connect((self.epy_block_3, 0), (self.epy_block_6, 1))
         self.connect((self.epy_block_5, 0), (self.epy_block_0, 0))
+        self.connect((self.epy_block_6, 0), (self.blocks_file_sink_1, 0))
+        self.connect((self.epy_block_6, 0), (self.blocks_tagged_stream_align_1, 0))
+        self.connect((self.epy_block_6_0, 0), (self.blocks_file_sink_2_0, 0))
+        self.connect((self.epy_block_6_0, 0), (self.blocks_stream_to_vector_0, 0))
         self.connect((self.epy_block_6_0_0_0_0_0, 0), (self.blocks_vector_to_stream_0_0_1, 0))
         self.connect((self.pdu_pdu_to_stream_x_0, 0), (self.blocks_file_sink_0_3, 0))
         self.connect((self.pdu_pdu_to_stream_x_0, 0), (self.epy_block_1_0_0, 0))
@@ -121,27 +124,26 @@ class modules_test(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.uhd_usrp_sink_0_0.set_samp_rate(self.samp_rate)
-        self.uhd_usrp_sink_0_0.set_bandwidth(self.samp_rate, 0)
 
     def get_preamble_len(self):
         return self.preamble_len
 
     def set_preamble_len(self, preamble_len):
         self.preamble_len = preamble_len
+        self.epy_block_3.preamble_len = self.preamble_len
 
     def get_frame_len(self):
         return self.frame_len
 
     def set_frame_len(self, frame_len):
         self.frame_len = frame_len
+        self.epy_block_6.frame_length = self.frame_len
 
     def get_center_freq(self):
         return self.center_freq
 
     def set_center_freq(self, center_freq):
         self.center_freq = center_freq
-        self.uhd_usrp_sink_0_0.set_center_freq(self.center_freq, 0)
 
     def get_SF(self):
         return self.SF
@@ -151,6 +153,7 @@ class modules_test(gr.top_block):
         self.epy_block_0.SF = self.SF
         self.epy_block_0_1_0_0.SF = self.SF
         self.epy_block_5.SF = self.SF
+        self.epy_block_6.SF = self.SF
         self.epy_block_6_0_0_0_0_0.SF = self.SF
 
     def get_CR(self):
@@ -180,6 +183,11 @@ def main(top_block_cls=modules_test, options=None):
 
     tb.start()
 
+    try:
+        input('Press Enter to quit: ')
+    except EOFError:
+        pass
+    tb.stop()
     tb.wait()
 
 

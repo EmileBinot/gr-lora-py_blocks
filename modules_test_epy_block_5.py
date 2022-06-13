@@ -56,9 +56,9 @@ class Demodulation(gr.sync_block):
             idx = np.argmax(np.abs(demod_signal_fft))                       # find the frequency index of the maximum value
             output_items[0][i] = round(round(freq_vect[idx]))               # convert the frequency index to symbol index
 
-        # # debug
-        # print("\n--- GENERAL WORK : DEMODULATION ---")
-        # print("output_items[0][0:i] :")
-        # print(output_items[0][0:i])
+        # debug
+        print("\n--- GENERAL WORK : DEMODULATION ---")
+        print("output_items[0][0:i] :")
+        print(output_items[0][0:i])
 
         return len(output_items[0])
