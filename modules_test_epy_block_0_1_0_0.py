@@ -11,6 +11,7 @@ OUTPUT:
 
 import numpy as np
 from gnuradio import gr
+import time 
 
 class Interleaver(gr.basic_block):
     def __init__(self, SF=9, CR=4):
@@ -29,15 +30,12 @@ class Interleaver(gr.basic_block):
     def general_work(self, input_items, output_items):
         
         if(len(input_items[0]) >= self.SF) :    # if we have enough items to process
-
             in0 = input_items[0][:self.SF]  # input buffer reference
-
             # formatting the input buffer
             input_matrix = np.zeros((self.SF, self.CR+4), dtype=np.uint8)
             for i in range(len(in0)):
-                bits_crop = [int(x) for x in bin(in0[i])[2:]]                                   # convert to binary  
-                bits_crop_norm = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]    # crop to 4+CR bits
-                input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)                 # convert to np.array
+                bits_crop = [int(x) for x in bin(in0[i])[2:]]                                       # convert to binary  
+                input_matrix[i][:] = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]    # crop to 4+CR bits
 
             # interleaving
             output_matrix = np.zeros((self.CR+4, self.SF), dtype=np.uint8)
@@ -49,7 +47,6 @@ class Interleaver(gr.basic_block):
             
             # to uint32
             output_items[0][0:(self.CR+4)] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
-
             # # debug
             # print("\n--- GENERAL WORK : INTERLEAVER ---")
             # print("in0 :")

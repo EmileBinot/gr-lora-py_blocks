@@ -96,10 +96,9 @@ class HammingRx(gr.sync_block):
         input_matrix = np.zeros((len(in0), 4+self.CR), dtype=np.uint8)
 
         for i in range(len(in0)):
-            bits_crop = [int(x) for x in bin(in0[i])[2:]]                                   # convert to binary
-            bits_crop_norm = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]    # crop to 4+CR bits
-            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)                 # convert to np.array
-            output_matrix[i][:] = self.decode(input_matrix[i][:],self.CR)                   # send to decoding function
+            bits_crop = [int(x) for x in bin(in0[i])[2:]]                                       # convert to binary
+            input_matrix[i][:] = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]    # crop to 4+CR bits
+            output_matrix[i][:] = self.decode(input_matrix[i][:],self.CR)                       # send to decoding function
 
         # convert output matrix to uint8
         out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))

@@ -19,6 +19,8 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import pdu
+from gnuradio import uhd
+import time
 import modules_test_epy_block_0 as epy_block_0  # embedded python block
 import modules_test_epy_block_0_1_0_0 as epy_block_0_1_0_0  # embedded python block
 import modules_test_epy_block_1 as epy_block_1  # embedded python block
@@ -50,6 +52,22 @@ class modules_test(gr.top_block):
         ##################################################
         # Blocks
         ##################################################
+        self.uhd_usrp_sink_0_0 = uhd.usrp_sink(
+            ",".join(("addr=192.168.10.2", "")),
+            uhd.stream_args(
+                cpu_format="fc32",
+                args='',
+                channels=list(range(0,1)),
+            ),
+            '',
+        )
+        self.uhd_usrp_sink_0_0.set_samp_rate(samp_rate)
+        self.uhd_usrp_sink_0_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
+
+        self.uhd_usrp_sink_0_0.set_center_freq(center_freq, 0)
+        self.uhd_usrp_sink_0_0.set_antenna('TX/RX', 0)
+        self.uhd_usrp_sink_0_0.set_bandwidth(samp_rate, 0)
+        self.uhd_usrp_sink_0_0.set_gain(0, 0)
         self.pdu_random_pdu_0 = pdu.random_pdu(SF*10, SF*10, 0x0F, SF)
         self.pdu_pdu_to_stream_x_0 = pdu.pdu_to_stream_b(pdu.EARLY_BURST_APPEND, 64)
         self.epy_block_6_0_0_0_0_0 = epy_block_6_0_0_0_0_0.Modulation(SF=SF)
@@ -63,7 +81,7 @@ class modules_test(gr.top_block):
         self.blocks_vector_to_stream_0_0_1 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, pow(2,SF))
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, pow(2,SF))
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
-        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("#t"), 1000)
+        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("#t"), 10000)
         self.blocks_file_sink_0_3 = blocks.file_sink(gr.sizeof_char*1, 'dumpIN', False)
         self.blocks_file_sink_0_3.set_unbuffered(False)
         self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_char*1, 'dumpOUT', False)
@@ -77,6 +95,7 @@ class modules_test(gr.top_block):
         self.msg_connect((self.pdu_random_pdu_0, 'pdus'), (self.pdu_pdu_to_stream_x_0, 'pdus'))
         self.connect((self.blocks_stream_to_vector_0, 0), (self.epy_block_5, 0))
         self.connect((self.blocks_vector_to_stream_0_0_1, 0), (self.blocks_stream_to_vector_0, 0))
+        self.connect((self.blocks_vector_to_stream_0_0_1, 0), (self.uhd_usrp_sink_0_0, 0))
         self.connect((self.epy_block_0, 0), (self.epy_block_1, 0))
         self.connect((self.epy_block_0_1_0_0, 0), (self.epy_block_6_0_0_0_0_0, 0))
         self.connect((self.epy_block_1, 0), (self.epy_block_2, 0))
@@ -102,6 +121,8 @@ class modules_test(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.uhd_usrp_sink_0_0.set_samp_rate(self.samp_rate)
+        self.uhd_usrp_sink_0_0.set_bandwidth(self.samp_rate, 0)
 
     def get_preamble_len(self):
         return self.preamble_len
@@ -120,6 +141,7 @@ class modules_test(gr.top_block):
 
     def set_center_freq(self, center_freq):
         self.center_freq = center_freq
+        self.uhd_usrp_sink_0_0.set_center_freq(self.center_freq, 0)
 
     def get_SF(self):
         return self.SF
@@ -158,11 +180,6 @@ def main(top_block_cls=modules_test, options=None):
 
     tb.start()
 
-    try:
-        input('Press Enter to quit: ')
-    except EOFError:
-        pass
-    tb.stop()
     tb.wait()
 
 

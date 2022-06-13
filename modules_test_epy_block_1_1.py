@@ -33,9 +33,8 @@ class HammingTx(gr.sync_block):
 
         # Hamming encoding (iterate over matrix lines and encode each)
         for i in range(len(in0)):
-            bits_crop = [int(x) for x in bin(in0[i])[2:]]                   # convert to binary    
-            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 bits
-            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8) # convert to np.array
+            bits_crop = [int(x) for x in bin(in0[i])[2:]]                       # convert to binary    
+            input_matrix[i][:] = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 bits
 
             if self.CR == 1: # CR = 1, add one parity bit
                 p0 = input_matrix[i][0] ^ input_matrix[i][1] ^ input_matrix[i][2] ^ input_matrix[i][3]

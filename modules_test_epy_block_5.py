@@ -23,10 +23,10 @@ import math
 #             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))
 #     return chirp
 
-def modulate(SF, id, os_factor) :
+def modulate(SF, id, os_factor, sign) :
     M  = pow(2,SF)
     ka = np.arange(0,M)
-    fact1 = np.exp(1j*1*math.pi*(pow(ka,2))/M)
+    fact1 = np.exp(1j*sign*math.pi*(pow(ka,2))/M)
     chirp = fact1*np.exp(2j*math.pi*(id/M)*ka)
 
     return chirp
@@ -46,8 +46,8 @@ class Demodulation(gr.sync_block):
     def work(self, input_items, output_items):
 
         M = pow(2,self.SF)
-        base_upchirp = modulate(self.SF, 0, 1)
-        base_downchirp = np.conjugate(base_upchirp)
+        # base_upchirp = modulate(self.SF, 0, 1)
+        base_downchirp = modulate(self.SF, 0, 1, -1)
         freq_vect = np.arange(0,M)                                    # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!
 
         for i in range(len(input_items[0])):
@@ -56,10 +56,9 @@ class Demodulation(gr.sync_block):
             idx = np.argmax(np.abs(demod_signal_fft))                       # find the frequency index of the maximum value
             output_items[0][i] = round(round(freq_vect[idx]))               # convert the frequency index to symbol index
 
-
-        # debug
-        print("\n--- GENERAL WORK : DEMODULATION ---")
-        print("output_items[0][0:i] :")
-        print(output_items[0][0:i])
+        # # debug
+        # print("\n--- GENERAL WORK : DEMODULATION ---")
+        # print("output_items[0][0:i] :")
+        # print(output_items[0][0:i])
 
         return len(output_items[0])

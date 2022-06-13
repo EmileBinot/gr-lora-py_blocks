@@ -49,9 +49,8 @@ class LoraDewhitening(gr.sync_block):
 
         input_matrix = np.zeros((len(in0), 4), dtype=np.uint8)
         for i in range(len(in0)):
-            bits_crop = [int(x) for x in bin(in0[i])[2:]]                   # convert to binary
-            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 useful bits
-            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8) # convert to np.array
+            bits_crop = [int(x) for x in bin(in0[i])[2:]]                       # convert to binary
+            input_matrix[i][:] = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 useful bits
             
             out_temp = in0[i] ^ whitening_seq[self.table_idx]   # dewhitening
 

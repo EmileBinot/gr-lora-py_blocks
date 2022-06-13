@@ -10,6 +10,7 @@ OUTPUT:
 
 import numpy as np
 from gnuradio import gr
+import time
 
 whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F, 0x5E, 0xBC, 0x78, 0xF1, 0xE3,
                 0xC6, 0x8D, 0x1A, 0x34, 0x68, 0xD0, 0xA0, 0x40, 0x80, 0x01, 0x02, 0x04, 0x08, 0x11, 0x23, 0x47,
@@ -45,13 +46,14 @@ class Whitening(gr.sync_block):
 
         input_matrix = np.zeros((len(in0), 4), dtype=np.uint8)
         for i in range(len(in0)):
-            bits_crop = [int(x) for x in bin(in0[i])[2:]]                   # convert to binary
-            bits_crop_norm = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 useful bits
-            input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8) # convert to np.array
+            bits_crop = [int(x) for x in bin(in0[i])[2:]]                       # convert to binary
+            input_matrix[i][:] = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 useful bits
             out[i] = in0[i] ^ whitening_seq[self.table_idx] # whiten (XOR) the input vector
             self.table_idx += 1                         # increment table index
             if(self.table_idx == len(whitening_seq)):   # if table index is out of bounds, reset it
                 self.table_idx = 0
+   
+
 
         # # debug
         # print("\n--- GENERAL WORK : WHITENING ---")

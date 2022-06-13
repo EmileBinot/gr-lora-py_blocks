@@ -36,8 +36,7 @@ class Deinterleaver(gr.basic_block):
             input_matrix = np.zeros((self.CR+4, self.SF), dtype=np.uint8)
             for i in range(len(in0)):
                 bits_crop = [int(x) for x in bin(in0[i])[2:]]                               # convert to binary         
-                bits_crop_norm = ([0]*(self.SF-len(bits_crop)) + bits_crop)[-(self.SF):]    # crop to SF bits
-                input_matrix[i][:] = np.asarray(bits_crop_norm, dtype=np.uint8)             # convert to np.array
+                input_matrix[i][:] = ([0]*(self.SF-len(bits_crop)) + bits_crop)[-(self.SF):]    # crop to SF bits
 
             # deinterleaving
             output_matrix = np.zeros((self.SF, self.CR+4), dtype=np.uint8)
