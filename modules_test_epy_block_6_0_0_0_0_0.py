@@ -11,20 +11,28 @@ OUTPUT:
 import numpy as np
 from gnuradio import gr
 import math
+import time
+
+# def modulate(SF, id, os_factor) :
+#     M  = pow(2,SF)
+#     n_fold = M * os_factor - id * os_factor
+#     chirp = np.zeros(M*os_factor, dtype=np.complex64)
+#     for n in range(0,M*os_factor):
+#         if n < n_fold:
+#             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-0.5)*n/os_factor))
+#         else:
+#             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))
+#     return chirp
 
 def modulate(SF, id, os_factor) :
     M  = pow(2,SF)
-    n_fold = M * os_factor - id * os_factor
-    chirp = np.zeros(M*os_factor, dtype=np.complex64)
-    for n in range(0,M*os_factor):
-        if n < n_fold:
-            chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-0.5)*n/os_factor))
-        else:
-            chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))
+    ka = np.arange(0,M)
+    fact1 = np.exp(1j*1*math.pi*(pow(ka,2))/M)
+    chirp = fact1*np.exp(2j*math.pi*(id/M)*ka)
+
     return chirp
 
 class Modulation(gr.sync_block):
-
     def __init__(self, SF = 9):
         gr.sync_block.__init__(
             self,
@@ -38,11 +46,14 @@ class Modulation(gr.sync_block):
 
         symbols = input_items[0]
         for i in range (len(symbols)) :
+            # t = time.time()
             output_items[0][i] = modulate(self.SF, symbols[i], 1)   # modulate every symbol
+            # elapsed = time.time() - t
+            # print("Modulation time: ", elapsed)
 
-        # debug
-        print("\n--- GENERAL WORK : MODULATION ---")
-        print("symbols :")
-        print(symbols)
+        # # debug
+        # print("\n--- GENERAL WORK : MODULATION ---")
+        # print("symbols :")
+        # print(symbols)
 
         return len(output_items[0])
