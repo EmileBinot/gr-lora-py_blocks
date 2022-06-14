@@ -11,6 +11,7 @@ OUTPUT:
 import numpy as np
 from gnuradio import gr
 import time
+import pmt
 
 whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F, 0x5E, 0xBC, 0x78, 0xF1, 0xE3,
                 0xC6, 0x8D, 0x1A, 0x34, 0x68, 0xD0, 0xA0, 0x40, 0x80, 0x01, 0x02, 0x04, 0x08, 0x11, 0x23, 0x47,
@@ -41,6 +42,15 @@ class Whitening(gr.sync_block):
         
     def work(self, input_items, output_items):
         
+        tags = self.get_tags_in_window(0, 0, len(input_items[0]))
+        for tag in tags:
+            key = pmt.to_python(tag.key) # convert from PMT to python string
+            value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
+            
+            if key == 'tx_sob':
+                self.table_idx = 0
+                print("whitening : new LoRa frame")
+
         in0 = input_items[0]    # input buffer reference
         out = output_items[0]   # output buffer reference
 

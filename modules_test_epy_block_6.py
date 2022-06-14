@@ -1,5 +1,5 @@
 """
-Frame sync block:
+LoRa Preamble Correlator block:
 Tries to find a correlation peak between the input sequence and a reference sequence (preamble). If found, tag the end of preamble.
 
 INPUTS:
@@ -17,7 +17,7 @@ import pmt
 class Frame_sync(gr.basic_block):
     def __init__(self, SF=9, preamble_len = 6, frame_length = 18):
         gr.basic_block.__init__(self,
-            name="LoRa Frame Detector",
+            name="LoRa Preamble Correlator",
             in_sig=[np.complex64,(np.complex64, round(pow(2,SF)*(preamble_len+2.25)))], # first input is the input signal, second is the preamble to be correlated with
             # out_sig=[(np.complex64,pow(2,SF))])
             out_sig=[(np.complex64)])
@@ -26,7 +26,7 @@ class Frame_sync(gr.basic_block):
         self.frame_length = round(pow(2,SF)*(frame_length))
 
     def forecast(self, noutput_items, ninputs) :
-        ninput_items_required = [1]*ninputs #ninput_items_required[i] is the number of items that will be consumed on input port i
+        ninput_items_required = noutput_items, 1 #ninput_items_required[i] is the number of items that will be consumed on input port i
         return ninput_items_required
 
     def general_work(self, input_items, output_items):
@@ -37,20 +37,29 @@ class Frame_sync(gr.basic_block):
         out = output_items[0] # output buffer
 
         corr = np.correlate(in0[:], in1[0]) # correlate input signal with preamble
-        peak = np.max(corr)                 # find the correlation peak
+        peak = np.max(np.abs(corr))                 # find the correlation peak
         threshold = 2000                    # threshold for peak detection
+        peak_index = np.argmax(corr)         # get index of the peak
 
         if peak > threshold :
-            # print("peak > threshold")
-            peak_index = np.argmax(corr)         # get index of the peak
+            
             # add tag at the end of the preamble, write frame_length inside so Tagged Stream Cropper block can remove preamble
             self.add_item_tag(0, self.nitems_written(0) + peak_index + self.full_preamble_length,  pmt.intern("preamble_end"),  pmt.intern(str(self.frame_length)))
+            
 
-            # # debug
-            # print("\n--- Correlator ---")
+            # print("peak > threshold")
             # print("Peak: ", peak)
             # print("Peak Index: ", peak_index)
             # print("output_items[0]: ", len(output_items[0]))
+
+
+        # debug
+        print("\n--- Correlator ---")
+        print("peak: ", peak)
+        print("len(output_item[0])",len(output_items[0]))
+        print("len(input_items[0])",len(input_items[0]))
+        print("len(input_items[1])",len(input_items[1]))
+
 
 
         out[0:len(in0)] = in0[:len(out)]

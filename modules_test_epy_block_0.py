@@ -11,6 +11,7 @@ OUTPUT:
 
 import numpy as np
 from gnuradio import gr
+import pmt
 
 class Deinterleaver(gr.basic_block):
     def __init__(self, SF=9, CR=2):
@@ -20,6 +21,7 @@ class Deinterleaver(gr.basic_block):
             out_sig=[np.uint8])
         self.SF = SF
         self.CR = CR
+        self.set_tag_propagation_policy(gr.TPP_DONT)
 
     def forecast(self, noutput_items, ninputs) :
         #ninput_items_required[i] is the number of items that will be consumed on input port i
@@ -28,6 +30,15 @@ class Deinterleaver(gr.basic_block):
 
     def general_work(self, input_items, output_items):
         
+        tags = self.get_tags_in_window(0, 0, len(input_items[0]))
+        for tag in tags:
+            key = pmt.to_python(tag.key) # convert from PMT to python string
+            value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
+            # print('key:', key)
+            # print('value:', value, type(value))
+            # print('')
+            self.add_item_tag(0, self.nitems_written(0), tag.key, tag.value)
+
         if(len(input_items[0]) >= self.CR+4) :  # if we have enough items to process
 
             in0 = input_items[0][:self.CR+4]    # input buffer reference

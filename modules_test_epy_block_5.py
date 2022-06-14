@@ -50,15 +50,17 @@ class Demodulation(gr.sync_block):
         base_downchirp = modulate(self.SF, 0, 1, -1)
         freq_vect = np.arange(0,M)                                    # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!
 
+        max_array = np.zeros(len(input_items[0]), dtype=np.float32)
         for i in range(len(input_items[0])):
             demod_signal = np.multiply(input_items[0][i], base_downchirp)   # multiply every symbol with the downchirp
             demod_signal_fft = np.fft.fft(demod_signal)                     # perform FFT on demodulated signal    
             idx = np.argmax(np.abs(demod_signal_fft))                       # find the frequency index of the maximum value
             output_items[0][i] = round(round(freq_vect[idx]))               # convert the frequency index to symbol index
+            # debug
+            max_array[i] = np.max(np.abs(demod_signal_fft[idx]))
 
-        # debug
-        print("\n--- GENERAL WORK : DEMODULATION ---")
-        print("output_items[0][0:i] :")
-        print(output_items[0][0:i])
+        # # debug
+        # print("\n--- GENERAL WORK : DEMODULATION ---")
+        # print("mean max (should be 2**SF):", np.mean(max_array))
 
         return len(output_items[0])

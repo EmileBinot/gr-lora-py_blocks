@@ -28,9 +28,9 @@ class Interleaver(gr.basic_block):
         return ninput_items_required
 
     def general_work(self, input_items, output_items):
-        
-        if(len(input_items[0]) >= self.SF) :    # if we have enough items to process
+        if(len(input_items[0]) >= self.SF and len(output_items[0]) >= self.CR+4) :    # if we have enough items to process
             in0 = input_items[0][:self.SF]  # input buffer reference
+
             # formatting the input buffer
             input_matrix = np.zeros((self.SF, self.CR+4), dtype=np.uint8)
             for i in range(len(in0)):
@@ -45,8 +45,6 @@ class Interleaver(gr.basic_block):
                     idj=self.CR+4-1-i
                     output_matrix[i][j]=input_matrix[idi][idj]
             
-            # to uint32
-            output_items[0][0:(self.CR+4)] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
             # # debug
             # print("\n--- GENERAL WORK : INTERLEAVER ---")
             # print("in0 :")
@@ -59,6 +57,10 @@ class Interleaver(gr.basic_block):
             # print(output_matrix)
             # print("output_items[0] = ")
             # print(output_items[0])
+
+
+            # to uint32
+            output_items[0][0:(self.CR+4)] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
 
             self.consume(0, self.SF)    # consume inputs (should be SF)
             return self.CR+4            # return produced outputs (should be CR+4)
