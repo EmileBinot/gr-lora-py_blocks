@@ -19,6 +19,7 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import pdu
+from gnuradio import zeromq
 import modules_test_epy_block_0 as epy_block_0  # embedded python block
 import modules_test_epy_block_0_1_0_0 as epy_block_0_1_0_0  # embedded python block
 import modules_test_epy_block_1 as epy_block_1  # embedded python block
@@ -27,6 +28,7 @@ import modules_test_epy_block_1_1 as epy_block_1_1  # embedded python block
 import modules_test_epy_block_2 as epy_block_2  # embedded python block
 import modules_test_epy_block_3 as epy_block_3  # embedded python block
 import modules_test_epy_block_5 as epy_block_5  # embedded python block
+import modules_test_epy_block_6 as epy_block_6  # embedded python block
 import modules_test_epy_block_6_0 as epy_block_6_0  # embedded python block
 import modules_test_epy_block_6_0_0_0_0_0 as epy_block_6_0_0_0_0_0  # embedded python block
 import modules_test_epy_block_8 as epy_block_8  # embedded python block
@@ -42,47 +44,52 @@ class modules_test(gr.top_block):
         ##################################################
         # Variables
         ##################################################
-        self.preamble_len = preamble_len = 6
         self.payload_len = payload_len = 18
-        self.bandwidth = bandwidth = int(125e3)
         self.SF = SF = 9
         self.CR = CR = 2
+        self.preamble_len = preamble_len = 6
+        self.payload_nsymb = payload_nsymb = int((payload_len/SF)*(CR+4))
+        self.bandwidth = bandwidth = int(125e3)
         self.samp_rate = samp_rate = bandwidth
         self.preamble_nitems = preamble_nitems = round(pow(2,SF)*(preamble_len+2.25))
-        self.payload_nitems = payload_nitems = int((payload_len/SF)*(CR+4)*pow(2,SF))
+        self.payload_nitems = payload_nitems = int(payload_nsymb*pow(2,SF))
         self.center_freq = center_freq = int(868e6)
 
         ##################################################
         # Blocks
         ##################################################
+        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:2000', 100, False, -1)
+        self.zeromq_pull_source_1 = zeromq.pull_source(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:2000', 100, False, -1)
         self.pdu_random_pdu_0 = pdu.random_pdu(payload_len, payload_len, 0x0F, SF)
         self.pdu_pdu_to_stream_x_0 = pdu.pdu_to_stream_b(pdu.EARLY_BURST_APPEND, 64)
         self.epy_block_8 = epy_block_8.blk(SF=9, preamble_len=preamble_len, frame_nitems=payload_nitems)
         self.epy_block_6_0_0_0_0_0 = epy_block_6_0_0_0_0_0.Modulation(SF=SF)
         self.epy_block_6_0 = epy_block_6_0.my_basic_adder_block(tag_name="payload_begin")
+        self.epy_block_6 = epy_block_6.blk(preamble_nitems=4224, payload_nitems=6144)
         self.epy_block_5 = epy_block_5.Demodulation(SF=SF, B=250000)
         self.epy_block_3 = epy_block_3.PreambleGenerator(SF=SF, preamble_len=preamble_len)
-        self.epy_block_2 = epy_block_2.LoraDewhitening()
+        self.epy_block_2 = epy_block_2.LoraDewhitening(reset_key="payload_begin")
         self.epy_block_1_1 = epy_block_1_1.HammingTx(CR=CR)
-        self.epy_block_1_0_0 = epy_block_1_0_0.Whitening()
+        self.epy_block_1_0_0 = epy_block_1_0_0.Whitening(reset_key="tx_sob")
         self.epy_block_1 = epy_block_1.HammingRx(CR=CR)
         self.epy_block_0_1_0_0 = epy_block_0_1_0_0.Interleaver(SF=SF, CR=CR)
         self.epy_block_0 = epy_block_0.Deinterleaver(SF=SF, CR=CR)
-        self.blocks_vector_to_stream_0_0_1 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, pow(2,SF))
-        self.blocks_vector_to_stream_0_0_0 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, round(pow(2,SF)*(preamble_len+2.25)))
+        self.blocks_vector_to_stream_1_0 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, pow(2,SF))
+        self.blocks_vector_to_stream_1 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, pow(2,SF))
+        self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, payload_nitems+preamble_nitems)
         self.blocks_tagged_stream_align_2 = blocks.tagged_stream_align(gr.sizeof_int*1, "payload_begin")
         self.blocks_tagged_stream_align_1 = blocks.tagged_stream_align(gr.sizeof_gr_complex*1, "payload_begin")
+        self.blocks_stream_to_vector_1 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, payload_nitems)
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, pow(2,SF))
-        self.blocks_stream_mux_0 = blocks.stream_mux(gr.sizeof_gr_complex*1, [preamble_nitems, payload_nitems])
         self.blocks_null_sink_1 = blocks.null_sink(gr.sizeof_gr_complex*1)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
-        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("#t"), 1000)
+        self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("#t"), 5000)
         self.blocks_file_sink_2_0 = blocks.file_sink(gr.sizeof_gr_complex*1, 'payloadOUT', False)
-        self.blocks_file_sink_2_0.set_unbuffered(False)
-        self.blocks_file_sink_1_0 = blocks.file_sink(gr.sizeof_gr_complex*1, 'lora_frameBEF', False)
-        self.blocks_file_sink_1_0.set_unbuffered(False)
+        self.blocks_file_sink_2_0.set_unbuffered(True)
+        self.blocks_file_sink_1_0_0 = blocks.file_sink(gr.sizeof_gr_complex*1, 'lora_frameBEF_vect', False)
+        self.blocks_file_sink_1_0_0.set_unbuffered(True)
         self.blocks_file_sink_1 = blocks.file_sink(gr.sizeof_gr_complex*1, 'lora_frame', False)
-        self.blocks_file_sink_1.set_unbuffered(False)
+        self.blocks_file_sink_1.set_unbuffered(True)
         self.blocks_file_sink_0_3_0_0_1_0 = blocks.file_sink(gr.sizeof_char*1, 'dumpINhamm', False)
         self.blocks_file_sink_0_3_0_0_1_0.set_unbuffered(False)
         self.blocks_file_sink_0_3_0_0_1 = blocks.file_sink(gr.sizeof_char*1, 'dumpOUThamm', False)
@@ -102,13 +109,15 @@ class modules_test(gr.top_block):
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0, 'strobe'), (self.pdu_random_pdu_0, 'generate'))
         self.msg_connect((self.pdu_random_pdu_0, 'pdus'), (self.pdu_pdu_to_stream_x_0, 'pdus'))
-        self.connect((self.blocks_stream_mux_0, 0), (self.blocks_file_sink_1_0, 0))
-        self.connect((self.blocks_stream_mux_0, 0), (self.epy_block_8, 0))
+        self.connect((self.blocks_stream_to_vector_0, 0), (self.blocks_vector_to_stream_1_0, 0))
         self.connect((self.blocks_stream_to_vector_0, 0), (self.epy_block_5, 0))
+        self.connect((self.blocks_stream_to_vector_1, 0), (self.epy_block_6, 1))
         self.connect((self.blocks_tagged_stream_align_1, 0), (self.epy_block_6_0, 0))
         self.connect((self.blocks_tagged_stream_align_2, 0), (self.epy_block_0, 0))
-        self.connect((self.blocks_vector_to_stream_0_0_0, 0), (self.blocks_stream_mux_0, 0))
-        self.connect((self.blocks_vector_to_stream_0_0_1, 0), (self.blocks_stream_mux_0, 1))
+        self.connect((self.blocks_vector_to_stream_0, 0), (self.blocks_file_sink_1_0_0, 0))
+        self.connect((self.blocks_vector_to_stream_0, 0), (self.zeromq_push_sink_0, 0))
+        self.connect((self.blocks_vector_to_stream_1, 0), (self.blocks_stream_to_vector_1, 0))
+        self.connect((self.blocks_vector_to_stream_1_0, 0), (self.blocks_file_sink_2_0, 0))
         self.connect((self.epy_block_0, 0), (self.epy_block_1, 0))
         self.connect((self.epy_block_0_1_0_0, 0), (self.blocks_file_sink_0_3, 0))
         self.connect((self.epy_block_0_1_0_0, 0), (self.epy_block_6_0_0_0_0_0, 0))
@@ -119,48 +128,34 @@ class modules_test(gr.top_block):
         self.connect((self.epy_block_1_1, 0), (self.epy_block_0_1_0_0, 0))
         self.connect((self.epy_block_2, 0), (self.blocks_file_sink_0_3_0_0, 0))
         self.connect((self.epy_block_2, 0), (self.blocks_null_sink_0, 0))
-        self.connect((self.epy_block_3, 0), (self.blocks_vector_to_stream_0_0_0, 0))
+        self.connect((self.epy_block_3, 0), (self.epy_block_6, 0))
         self.connect((self.epy_block_5, 0), (self.blocks_file_sink_0_3_0, 0))
         self.connect((self.epy_block_5, 0), (self.blocks_tagged_stream_align_2, 0))
-        self.connect((self.epy_block_6_0, 0), (self.blocks_file_sink_2_0, 0))
+        self.connect((self.epy_block_6, 0), (self.blocks_vector_to_stream_0, 0))
         self.connect((self.epy_block_6_0, 0), (self.blocks_null_sink_1, 0))
         self.connect((self.epy_block_6_0, 0), (self.blocks_stream_to_vector_0, 0))
-        self.connect((self.epy_block_6_0_0_0_0_0, 0), (self.blocks_vector_to_stream_0_0_1, 0))
+        self.connect((self.epy_block_6_0_0_0_0_0, 0), (self.blocks_vector_to_stream_1, 0))
         self.connect((self.epy_block_8, 0), (self.blocks_file_sink_1, 0))
         self.connect((self.epy_block_8, 0), (self.blocks_tagged_stream_align_1, 0))
         self.connect((self.pdu_pdu_to_stream_x_0, 0), (self.blocks_file_sink_0_3_0_0_0, 0))
         self.connect((self.pdu_pdu_to_stream_x_0, 0), (self.epy_block_1_0_0, 0))
+        self.connect((self.zeromq_pull_source_1, 0), (self.epy_block_8, 0))
 
-
-    def get_preamble_len(self):
-        return self.preamble_len
-
-    def set_preamble_len(self, preamble_len):
-        self.preamble_len = preamble_len
-        self.set_preamble_nitems(round(pow(2,self.SF)*(self.preamble_len+2.25)))
-        self.epy_block_3.preamble_len = self.preamble_len
-        self.epy_block_8.preamble_len = self.preamble_len
 
     def get_payload_len(self):
         return self.payload_len
 
     def set_payload_len(self, payload_len):
         self.payload_len = payload_len
-        self.set_payload_nitems(int((self.payload_len/self.SF)*(self.CR+4)*pow(2,self.SF)))
-
-    def get_bandwidth(self):
-        return self.bandwidth
-
-    def set_bandwidth(self, bandwidth):
-        self.bandwidth = bandwidth
-        self.set_samp_rate(self.bandwidth)
+        self.set_payload_nsymb(int((self.payload_len/self.SF)*(self.CR+4)))
 
     def get_SF(self):
         return self.SF
 
     def set_SF(self, SF):
         self.SF = SF
-        self.set_payload_nitems(int((self.payload_len/self.SF)*(self.CR+4)*pow(2,self.SF)))
+        self.set_payload_nitems(int(self.payload_nsymb*pow(2,self.SF)))
+        self.set_payload_nsymb(int((self.payload_len/self.SF)*(self.CR+4)))
         self.set_preamble_nitems(round(pow(2,self.SF)*(self.preamble_len+2.25)))
         self.epy_block_0.SF = self.SF
         self.epy_block_0_1_0_0.SF = self.SF
@@ -173,11 +168,34 @@ class modules_test(gr.top_block):
 
     def set_CR(self, CR):
         self.CR = CR
-        self.set_payload_nitems(int((self.payload_len/self.SF)*(self.CR+4)*pow(2,self.SF)))
+        self.set_payload_nsymb(int((self.payload_len/self.SF)*(self.CR+4)))
         self.epy_block_0.CR = self.CR
         self.epy_block_0_1_0_0.CR = self.CR
         self.epy_block_1.CR = self.CR
         self.epy_block_1_1.CR = self.CR
+
+    def get_preamble_len(self):
+        return self.preamble_len
+
+    def set_preamble_len(self, preamble_len):
+        self.preamble_len = preamble_len
+        self.set_preamble_nitems(round(pow(2,self.SF)*(self.preamble_len+2.25)))
+        self.epy_block_3.preamble_len = self.preamble_len
+        self.epy_block_8.preamble_len = self.preamble_len
+
+    def get_payload_nsymb(self):
+        return self.payload_nsymb
+
+    def set_payload_nsymb(self, payload_nsymb):
+        self.payload_nsymb = payload_nsymb
+        self.set_payload_nitems(int(self.payload_nsymb*pow(2,self.SF)))
+
+    def get_bandwidth(self):
+        return self.bandwidth
+
+    def set_bandwidth(self, bandwidth):
+        self.bandwidth = bandwidth
+        self.set_samp_rate(self.bandwidth)
 
     def get_samp_rate(self):
         return self.samp_rate

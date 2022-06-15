@@ -9,6 +9,7 @@ OUTPUT:
     - out_sig[0]: binary output sequence (4 useful bits per byte)
 """
 
+from tkinter import E
 import numpy as np
 from gnuradio import gr
 
@@ -26,10 +27,12 @@ class HammingRx(gr.sync_block):
     def decode(self, input_vect, CR_loc) : 
 
         output=input_vect
+        success_state = 0 # 0 if no error, -2 if 2 errors detected, 1 if 1 error corrected, -1 if 1 error detected
 
         if CR_loc == 1: # CR = 1, no error correction
             
             syndrome = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]
+            success_state = 0 if syndrome == 0 else -1
             output = input_vect
 
         if CR_loc == 2: # CR = 2, no error correction
@@ -37,6 +40,7 @@ class HammingRx(gr.sync_block):
             syndrome = np.zeros((2,1), dtype=np.uint8)
             syndrome[0] = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[5]
             syndrome[1] = input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]
+            success_state = 0 if syndrome.all() == 0 else -1
             output = input_vect
 
         if CR_loc == 3: # CR = 3, 1 error correction is possible
@@ -56,9 +60,12 @@ class HammingRx(gr.sync_block):
             E = np.concatenate((tmp, tmp2),axis=0)
             S = np.dot(E,H.transpose())%2   
 
-            for j in range(S.shape[1]):             # iterate through the syndromes lookup table
-                if np.array_equal(S[j],syndrome):   # if found, correct the input_vect
-                    output = input_vect ^ E[j][:]
+
+            if syndrome.all() != 0: # error
+                for j in range(S.shape[1]):             # iterate through the syndromes lookup table
+                    if np.array_equal(S[j],syndrome):   # if found, correct the input_vect
+                        output = input_vect ^ E[j][:]
+                        success_state = 1
 
         if CR_loc == 4: # CR = 4, 1 error correction is possible, 2 error detection is possible
             
@@ -81,11 +88,12 @@ class HammingRx(gr.sync_block):
                 parity = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4] ^ input_vect[5] ^ input_vect[6] ^ input_vect[7]
                 
                 if parity : # 1 error correctable
-                    output = self.decode(input_vect[:][0:7], 3) # correct the first 7 bits by sending them to the decoding function
+                    output, success_state = self.decode(input_vect[:][0:7], 3) # correct the first 7 bits by sending them to the decoding function
         
                 else :  # 2 errors detected
-                    pass
-        return output[:][0:4] # return the first 4 bits (data bits)
+                    success_state = -2
+
+        return output[:][0:4], success_state # return the first 4 bits (data bits) and success_state (integer)
 
     def work(self, input_items, output_items):
 
@@ -94,15 +102,21 @@ class HammingRx(gr.sync_block):
     
         output_matrix = np.zeros((len(in0), 4), dtype=np.uint8)
         input_matrix = np.zeros((len(in0), 4+self.CR), dtype=np.uint8)
+        success_states = np.zeros((len(in0), 1), dtype=np.uint8)
 
         for i in range(len(in0)):
             bits_crop = [int(x) for x in bin(in0[i])[2:]]                                       # convert to binary
             input_matrix[i][:] = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]    # crop to 4+CR bits
-            output_matrix[i][:] = self.decode(input_matrix[i][:],self.CR)                       # send to decoding function
+            output_matrix[i][:], success_states[i] = self.decode(input_matrix[i][:],self.CR)    # send to decoding function
+
 
         # convert output matrix to uint8
         out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
 
+        # display success states
+        # success_state = 0 if no error, -2 if 2 errors detected, 1 if 1 error corrected, -1 if 1 error detected
+        arr,trash = np.histogram(success_states, bins = [-2.5, -1.5, -0.5, 0.5, 1.5])
+        print("[RX] Hamming : n2_detected = %d, n1_detected = %d, n0 = %d, n1_corrrected = %d" % (arr[0], arr[1], arr[2], arr[3]))
         # # debug
         # print("\n--- GENERAL WORK : HAMMING_DEC ---")
         # print("in0 :")

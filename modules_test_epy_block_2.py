@@ -34,7 +34,7 @@ whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F
 # whitening_seq = whitening_seq_debug
 
 class LoraDewhitening(gr.sync_block):
-    def __init__(self):
+    def __init__(self, reset_key = "payload_begin"):
         gr.sync_block.__init__(
             self,
             name='LoRa Dewhitening',
@@ -52,7 +52,6 @@ class LoraDewhitening(gr.sync_block):
             
             if key == 'payload_begin':
                 self.table_idx = 0
-                print("dewhitening :new LoRa frame")
 
             # # debug
             # print('key:', key)

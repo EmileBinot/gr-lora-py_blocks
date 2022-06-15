@@ -61,6 +61,6 @@ class Demodulation(gr.sync_block):
 
         # # debug
         # print("\n--- GENERAL WORK : DEMODULATION ---")
-        # print("mean max (should be 2**SF):", np.mean(max_array))
+        # print("Demodulator : mean max (should be 2**SF):", np.mean(max_array))
 
         return len(output_items[0])

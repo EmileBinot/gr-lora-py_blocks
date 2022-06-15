@@ -31,7 +31,7 @@ whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F
                 0xE5, 0xCA, 0x94, 0x28, 0x50, 0xA1, 0x42, 0x84, 0x09, 0x13, 0x27, 0x4F, 0x9F, 0x3F, 0x7F)
 
 class Whitening(gr.sync_block):
-    def __init__(self):
+    def __init__(self, reset_key="tx_sob"):
         gr.sync_block.__init__(
             self,
             name='LoRa Whitening',
@@ -39,6 +39,7 @@ class Whitening(gr.sync_block):
             out_sig=[np.uint8]
         )
         self.table_idx = 0 # index of the whitening table cell to be used for whitening
+        self.frame_counter = 0 # frame number
         
     def work(self, input_items, output_items):
         
@@ -48,8 +49,9 @@ class Whitening(gr.sync_block):
             value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
             
             if key == 'tx_sob':
+                self.frame_counter += 1
+                # print("\n[TX] Whitening  : frame sent, number : ", self.frame_counter)
                 self.table_idx = 0
-                print("whitening : new LoRa frame")
 
         in0 = input_items[0]    # input buffer reference
         out = output_items[0]   # output buffer reference

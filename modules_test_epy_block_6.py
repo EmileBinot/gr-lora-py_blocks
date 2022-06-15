@@ -1,67 +1,43 @@
 """
-LoRa Preamble Correlator block:
-Tries to find a correlation peak between the input sequence and a reference sequence (preamble). If found, tag the end of preamble.
+Embedded Python Blocks:
 
-INPUTS:
-    - in_sig[0]: IQ complex input stream
-    - in_sig[1]: IQ complex reference vector (preamble)
-OUTPUT:
-    - out_sig[0]: IQ complex stream
+Each time this file is saved, GRC will instantiate the first class it finds
+to get ports and parameters of your block. The arguments to __init__  will
+be the parameters. All of them are required to have default values!
 """
-
 
 import numpy as np
 from gnuradio import gr
-import pmt
-
-class Frame_sync(gr.basic_block):
-    def __init__(self, SF=9, preamble_len = 6, frame_length = 18):
-        gr.basic_block.__init__(self,
-            name="LoRa Preamble Correlator",
-            in_sig=[np.complex64,(np.complex64, round(pow(2,SF)*(preamble_len+2.25)))], # first input is the input signal, second is the preamble to be correlated with
-            # out_sig=[(np.complex64,pow(2,SF))])
-            out_sig=[(np.complex64)])
-        self.SF = SF
-        self.full_preamble_length = round(pow(2,SF)*(preamble_len+2.25))
-        self.frame_length = round(pow(2,SF)*(frame_length))
-
-    def forecast(self, noutput_items, ninputs) :
-        ninput_items_required = noutput_items, 1 #ninput_items_required[i] is the number of items that will be consumed on input port i
-        return ninput_items_required
-
-    def general_work(self, input_items, output_items):
-
-        # buffer references
-        in0 = input_items[0] # input signal
-        in1 = input_items[1] # preamble to be correlated with
-        out = output_items[0] # output buffer
-
-        corr = np.correlate(in0[:], in1[0]) # correlate input signal with preamble
-        peak = np.max(np.abs(corr))                 # find the correlation peak
-        threshold = 2000                    # threshold for peak detection
-        peak_index = np.argmax(corr)         # get index of the peak
-
-        if peak > threshold :
-            
-            # add tag at the end of the preamble, write frame_length inside so Tagged Stream Cropper block can remove preamble
-            self.add_item_tag(0, self.nitems_written(0) + peak_index + self.full_preamble_length,  pmt.intern("preamble_end"),  pmt.intern(str(self.frame_length)))
-            
-
-            # print("peak > threshold")
-            # print("Peak: ", peak)
-            # print("Peak Index: ", peak_index)
-            # print("output_items[0]: ", len(output_items[0]))
 
 
-        # debug
-        print("\n--- Correlator ---")
-        print("peak: ", peak)
-        print("len(output_item[0])",len(output_items[0]))
-        print("len(input_items[0])",len(input_items[0]))
-        print("len(input_items[1])",len(input_items[1]))
+class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
+    """Embedded Python Block example - a simple multiply const"""
 
-
-
-        out[0:len(in0)] = in0[:len(out)]
-        self.consume(0, len(in0[:len(out)]))
-        return len(in0[:len(out)])
+    def __init__(self, preamble_nitems = 4224, payload_nitems = 6144):  # only default arguments here
+        """arguments to this function show up as parameters in GRC"""
+        gr.sync_block.__init__(
+            self,
+            name='LoRa Frame Constructor',   # will show up in GRC
+            in_sig=[(np.complex64,preamble_nitems),(np.complex64,payload_nitems)],
+            out_sig=[(np.complex64,preamble_nitems+payload_nitems)]
+        )
+        self.payload_nitems = payload_nitems
+        self.preamble_nitems = preamble_nitems
+        self.frame_counter = 0
+        
+    def work(self, input_items, output_items):
+        # output_items[0][:] = input_items[0]
+        # out = np.concatenate((input_items[0],input_items[1]),axis=1)
+        # print(len(input_items[0][0]))
+        # print(len(input_items[1][0]))
+        if len(input_items[0][0]) == self.preamble_nitems and len(input_items[1][0]) == self.payload_nitems :
+            output_items[0][:] = np.concatenate((input_items[0],input_items[1]),axis=1)
+            self.frame_counter += 1
+            print("\n\n[TX] Constr. : Frame #%d sent" % (self.frame_counter))
+            return len(output_items[0])
+        else :
+            return 0
+        # out = np.concatenate((input_items[0][0],input_items[1][0]))
+        # print(len(out))
+        # output_items[0][:] = out
+        

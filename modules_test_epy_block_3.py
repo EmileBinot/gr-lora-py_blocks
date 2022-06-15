@@ -39,7 +39,7 @@ class PreambleGenerator(gr.sync_block):
         # t = time.time()
         preamble_up = np.reshape(modulate_vect(self.SF, [0]*self.preamble_len, 1, 1), -1)      # generate preamble_len upchirps
         preamble_down = np.reshape(np.conjugate(modulate_vect(self.SF, [0]*3, 1, 1)), -1)      # generate 3 downchirps
-        output_items[0][0] = np.concatenate((preamble_up, preamble_down[0:int(2.25*pow(2,self.SF))])) # concatenate preamble_up and preamble_down[0:2.25*M]
+        output_items[0][:] = np.concatenate((preamble_up, preamble_down[0:int(2.25*pow(2,self.SF))])) # concatenate preamble_up and preamble_down[0:2.25*M]
         # elapsed = time.time() - t
         # print("\nPreambleGenerator: ", elapsed)
         return len(output_items[0])
