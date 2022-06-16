@@ -41,6 +41,7 @@ class Modulation(gr.sync_block):
             out_sig=[(np.complex64,pow(2,SF))]
         )
         self.SF = SF
+        self.set_tag_propagation_policy(gr.TPP_DONT)
 
     def work(self, input_items, output_items):
 

@@ -8,32 +8,33 @@ be the parameters. All of them are required to have default values!
 
 import numpy as np
 from gnuradio import gr
+import pmt
 
-
-class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
-    """Embedded Python Block example - a simple multiply const"""
-
-    def __init__(self, preamble_nitems = 2, payload_nitems = 2):  # only default arguments here
-        """arguments to this function show up as parameters in GRC"""
+class blk(gr.sync_block):
+    def __init__(self, preamble_nitems = 4224, payload_nitems = 6144):
         gr.sync_block.__init__(
             self,
-            name='Embedded Python Block',   # will show up in GRC
-            in_sig=[(np.complex64,4224),(np.complex64,6144)],
-            out_sig=[(np.complex64, 6144 + 4224)]
+            name='LoRa EoB Tagger',
+            in_sig=[np.complex64],
+            out_sig=[np.complex64]
         )
-        self.preamble_nitems = preamble_nitems
         self.payload_nitems = payload_nitems
-
+        self.preamble_nitems = preamble_nitems
 
     def work(self, input_items, output_items):
-        """example: multiply with constant"""
 
-        
-        # print("\n\ninput_items[1].shape: ", input_items[1].shape)
-        frame = np.concatenate((input_items[0][:],input_items[1][:]), axis=1)
+        tags = self.get_tags_in_window(0, 0, len(input_items[0]))
+        for tag in tags:
+            key = pmt.to_python(tag.key) # convert from PMT to python string
+            value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
 
-        print("\n\n -- mux --")
-        print("\n\ninput_items[0]: ", input_items[0])
-        print("\n\nframe : ", frame)
-        output_items[0][:] = frame
+            key = pmt.intern("tx_eob")
+            value = pmt.from_bool(True)
+            self.add_item_tag(0, # Write to output port 0
+                    self.nitems_written(0) + self.payload_nitems+self.preamble_nitems-1, # Index of the tag in absolute terms
+                    key, # Key of the tag
+                    value # Value of the tag
+            )
+        output_items[0][:] = input_items[0]
+
         return len(output_items[0])

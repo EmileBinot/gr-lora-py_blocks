@@ -44,19 +44,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
         if peak > threshold :
             tag_index = self.nitems_written(0) + self.preamble_nitems
-            # tag_index = self.nitems_written(0) 
 
             # add tag at the end of the preamble, write frame_length inside so Tagged Stream Cropper block can remove preamble
             self.add_item_tag(0,tag_index,  pmt.intern("payload_begin"),  pmt.intern(str(self.frame_nitems)))
-            # self.add_item_tag(0,tag_index,  pmt.intern("payload_begin"),  pmt.intern(str(self.preamble_nitems)))
             self.frame_counter += 1
-            # print("[RX] Correlator : preamble detected, frame number :", self.frame_counter)
             print("[RX] Correl. : Frame #%d received" % (self.frame_counter))
-            # # # debug
-            # print("\n--- Correlator ---")
-            # print("peak > threshold")
-            # print("peak index :",self.nitems_written(0))
-            # print("tag index :",tag_index)
 
         output_items[0][:] = input_items[0]
         return len(output_items[0])

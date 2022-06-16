@@ -8,7 +8,7 @@ be the parameters. All of them are required to have default values!
 
 import numpy as np
 from gnuradio import gr
-
+import pmt
 
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
@@ -26,12 +26,17 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         self.frame_counter = 0
         
     def work(self, input_items, output_items):
-        # output_items[0][:] = input_items[0]
-        # out = np.concatenate((input_items[0],input_items[1]),axis=1)
-        # print(len(input_items[0][0]))
-        # print(len(input_items[1][0]))
         if len(input_items[0][0]) == self.preamble_nitems and len(input_items[1][0]) == self.payload_nitems :
             output_items[0][:] = np.concatenate((input_items[0],input_items[1]),axis=1)
+            # TAGS
+            key = pmt.intern("tx_sob")
+            value = pmt.from_bool(True)
+            self.add_item_tag(0, # Write to output port 0
+                    self.nitems_written(0), # Index of the tag in absolute terms
+                    key, # Key of the tag
+                    value # Value of the tag
+            )
+            # tx_time tag is optional : https://discuss-gnuradio.gnu.narkive.com/c2r83OZW/uhd-usrp-sink-stream-tagging
             self.frame_counter += 1
             print("\n\n[TX] Constr. : Frame #%d sent" % (self.frame_counter))
             return len(output_items[0])
