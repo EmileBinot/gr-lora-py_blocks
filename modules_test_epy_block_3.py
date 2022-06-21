@@ -12,7 +12,7 @@ import numpy as np
 from gnuradio import gr
 import math
 import time
-
+import pmt
 
 def modulate_vect(SF, id, os_factor, sign) :
     M  = pow(2,SF)
@@ -40,6 +40,12 @@ class PreambleGenerator(gr.sync_block):
         preamble_up = np.reshape(modulate_vect(self.SF, [0]*self.preamble_len, 1, 1), -1)      # generate preamble_len upchirps
         preamble_down = np.reshape(np.conjugate(modulate_vect(self.SF, [0]*3, 1, 1)), -1)      # generate 3 downchirps
         output_items[0][:] = np.concatenate((preamble_up, preamble_down[0:int(2.25*pow(2,self.SF))])) # concatenate preamble_up and preamble_down[0:2.25*M]
-        # elapsed = time.time() - t
-        # print("\nPreambleGenerator: ", elapsed)
+        # # TAGS
+        # key = pmt.intern("tx_sob")
+        # value = pmt.from_bool(True)
+        # self.add_item_tag(0, # Write to output port 0
+        #         self.nitems_written(0), # Index of the tag in absolute terms
+        #         key, # Key of the tag
+        #         value # Value of the tag
+        # )
         return len(output_items[0])

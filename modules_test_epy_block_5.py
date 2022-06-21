@@ -11,7 +11,7 @@ OUTPUT:
 import numpy as np
 from gnuradio import gr
 import math
-
+import matplotlib.pyplot as plt
 # def modulate(SF, id, os_factor) :
 #     M  = pow(2,SF)
 #     n_fold = M * os_factor - id * os_factor
@@ -49,7 +49,6 @@ class Demodulation(gr.sync_block):
         # base_upchirp = modulate(self.SF, 0, 1)
         base_downchirp = modulate(self.SF, 0, 1, -1)
         freq_vect = np.arange(0,M)                                    # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!
-
         max_array = np.zeros(len(input_items[0]), dtype=np.float32)
         for i in range(len(input_items[0])):
             demod_signal = np.multiply(input_items[0][i], base_downchirp)   # multiply every symbol with the downchirp
@@ -59,8 +58,18 @@ class Demodulation(gr.sync_block):
             # debug
             max_array[i] = np.max(np.abs(demod_signal_fft[idx]))
 
+            # vect = np.arange(0,M)
+            # fig, axs = plt.subplots(2)
+            # fig.suptitle('Vertically stacked subplots')
+            # axs[0].specgram(input_items[0][i], NFFT=64, Fs=32, noverlap=8)
+            # axs[1].plot(vect, np.abs(demod_signal_fft))
+            # plt.show()   
+            # print("[RX] Demod.  : max (should be 2**SF):", max_array[i])
+            # if max_array[i] < 2**self.SF:
+            # print("[RX] Demod.  :  max_array[i] < 2**self.SF :", max_array[i])
+
         # # debug
         # print("\n--- GENERAL WORK : DEMODULATION ---")
-        # print("Demodulator : mean max (should be 2**SF):", np.mean(max_array))
-
+        # print("[RX] Demod.  : mean max (should be 2**SF):", np.mean(max_array))
+        # print("[RX] Demod.  : nreceived symbols:", i)
         return len(output_items[0])

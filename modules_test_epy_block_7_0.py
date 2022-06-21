@@ -31,12 +31,12 @@ class blk(gr.sync_block):
             key = pmt.intern("tx_eob")
             value = pmt.from_bool(True)
             self.add_item_tag(0, # Write to output port 0
-                    self.nitems_written(0) + self.payload_nitems + self.preamble_nitems-1, # Index of the tag in absolute terms
+                    self.nitems_written(0) + self.payload_nitems+self.preamble_nitems-1, # Index of the tag in absolute terms
                     key, # Key of the tag
                     value # Value of the tag
             )
             self.frame_counter += 1
-            print("\n\n[TX] Constr. : Frame #%d sent" % (self.frame_counter))
+            # print("\n\n[TX] Constr. : Frame #%d sent" % (self.frame_counter))
         output_items[0][:] = input_items[0]
 
         return len(output_items[0])

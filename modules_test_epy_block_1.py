@@ -27,12 +27,12 @@ class HammingRx(gr.sync_block):
     def decode(self, input_vect, CR_loc) : 
 
         output=input_vect
-        success_state = 0 # 0 if no error, -2 if 2 errors detected, 1 if 1 error corrected, -1 if 1 error detected
+        success_state = 0 # 3 if 1 error detected, 2 if 2 errors detected, 1 if 1 error corrected,  0 if no error
 
         if CR_loc == 1: # CR = 1, no error correction
             
             syndrome = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]
-            success_state = 0 if syndrome == 0 else -1
+            success_state = 0 if syndrome == 0 else 3
             output = input_vect
 
         if CR_loc == 2: # CR = 2, no error correction
@@ -40,11 +40,10 @@ class HammingRx(gr.sync_block):
             syndrome = np.zeros((2,1), dtype=np.uint8)
             syndrome[0] = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[5]
             syndrome[1] = input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]
-            success_state = 0 if syndrome.all() == 0 else -1
+            success_state = 0 if syndrome.all() == 0 else 3
             output = input_vect
 
         if CR_loc == 3: # CR = 3, 1 error correction is possible
-            
             n = 4+CR_loc
             k = 4
 
@@ -59,13 +58,10 @@ class HammingRx(gr.sync_block):
             tmp2 = np.identity(n-k+4, dtype=np.uint8)
             E = np.concatenate((tmp, tmp2),axis=0)
             S = np.dot(E,H.transpose())%2   
-
-
-            if syndrome.all() != 0: # error
-                for j in range(S.shape[1]):             # iterate through the syndromes lookup table
-                    if np.array_equal(S[j],syndrome):   # if found, correct the input_vect
-                        output = input_vect ^ E[j][:]
-                        success_state = 1
+            for j in range(S.shape[0]):             # iterate through the syndromes lookup table
+                if np.array_equal(S[j],syndrome):   # if found, correct the input_vect
+                    output = input_vect ^ E[j][:]
+                    success_state = 1               # 1 error corrected
 
         if CR_loc == 4: # CR = 4, 1 error correction is possible, 2 error detection is possible
             
@@ -83,7 +79,6 @@ class HammingRx(gr.sync_block):
                 output = input_vect
 
             else :
-
                 # compute parity bit
                 parity = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4] ^ input_vect[5] ^ input_vect[6] ^ input_vect[7]
                 
@@ -91,8 +86,8 @@ class HammingRx(gr.sync_block):
                     output, success_state = self.decode(input_vect[:][0:7], 3) # correct the first 7 bits by sending them to the decoding function
         
                 else :  # 2 errors detected
-                    success_state = -2
-
+                    success_state = 2
+                
         return output[:][0:4], success_state # return the first 4 bits (data bits) and success_state (integer)
 
     def work(self, input_items, output_items):
@@ -114,9 +109,10 @@ class HammingRx(gr.sync_block):
         out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
 
         # display success states
-        # success_state = 0 if no error, -2 if 2 errors detected, 1 if 1 error corrected, -1 if 1 error detected
-        arr,trash = np.histogram(success_states, bins = [-2.5, -1.5, -0.5, 0.5, 1.5])
-        print("[RX] Hamming : n2_detected = %d, n1_detected = %d, n0 = %d, n1_corrrected = %d" % (arr[0], arr[1], arr[2], arr[3]))
+        # print("Success states:")
+        # print(success_states)
+        arr,trash = np.histogram(success_states, bins = [-1, 0.5, 1.5, 2.5, 3.5])
+        print("[RX] Hamming : n1_detected = %d, n2_detected = %d, n1_corrrected = %d, n0 = %d" % (arr[3], arr[2], arr[1], arr[0]))
         # # debug
         # print("\n--- GENERAL WORK : HAMMING_DEC ---")
         # print("in0 :")

@@ -9,7 +9,7 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: qt_gui
+    generate_options: no_gui
     hier_block_src_path: '.:'
     id: modules_test
     max_nouts: '0'
@@ -37,7 +37,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '2'
+    value: '4'
   states:
     bus_sink: false
     bus_source: false
@@ -81,21 +81,6 @@ blocks:
     coordinate: [1040, 36.0]
     rotation: 0
     state: enabled
-- name: center_freq_RX
-  id: variable_qtgui_entry
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: ''
-    type: int
-    value: '868000000'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [416, 692.0]
-    rotation: 0
-    state: disabled
 - name: payload_len
   id: variable
   parameters:
@@ -168,24 +153,78 @@ blocks:
     coordinate: [856, 36.0]
     rotation: 0
     state: enabled
-- name: blocks_file_sink_0_0
+- name: blocks_file_sink_0
   id: blocks_file_sink
   parameters:
     affinity: ''
     alias: ''
     append: 'False'
     comment: ''
-    file: dump
-    type: byte
+    file: lora_rx
+    type: complex
     unbuffered: 'False'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1728, 108.0]
+    coordinate: [760, 780.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0_1
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: lora_tx
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 780.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0_2
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: lora_rx
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1368, 916.0]
     rotation: 0
     state: disabled
+- name: blocks_file_sink_0_2_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: lora_rx_payload
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 1284.0]
+    rotation: 0
+    state: enabled
 - name: blocks_file_sink_0_3_0_0_0
   id: blocks_file_sink
   parameters:
@@ -201,7 +240,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [288, 332.0]
+    coordinate: [688, 156.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0_3_0_0_0_0
@@ -219,9 +258,45 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1400, 1188.0]
+    coordinate: [1184, 1284.0]
     rotation: 0
-    state: disabled
+    state: enabled
+- name: blocks_file_sink_0_3_0_0_0_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: dumpOUTsymb
+    type: int
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 1292.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0_3_0_0_0_0_1
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: dumpINsymb
+    type: int
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 308.0]
+    rotation: 0
+    state: enabled
 - name: blocks_message_strobe_0
   id: blocks_message_strobe
   parameters:
@@ -231,7 +306,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     msg: pmt.intern("#t")
-    period: '100'
+    period: '1000'
   states:
     bus_sink: false
     bus_source: false
@@ -253,45 +328,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1400, 1144.0]
+    coordinate: [1264, 1224.0]
     rotation: 0
-    state: disabled
-- name: blocks_null_sink_1
-  id: blocks_null_sink
+    state: true
+- name: blocks_stream_mux_0_0
+  id: blocks_stream_mux
   parameters:
     affinity: ''
     alias: ''
-    bus_structure_sink: '[[0,],]'
     comment: ''
-    num_inputs: '1'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1184, 976.0]
-    rotation: 0
-    state: disabled
-- name: blocks_null_source_0
-  id: blocks_null_source
-  parameters:
-    affinity: ''
-    alias: ''
-    bus_structure_source: '[[0,],]'
-    comment: ''
+    lengths: (10000, preamble_nitems + payload_nitems)
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_outputs: '1'
+    num_inputs: '2'
     type: complex
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 1024.0]
+    coordinate: [1280, 528.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_stream_to_vector_0
   id: blocks_stream_to_vector
   parameters:
@@ -307,9 +365,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 1144.0]
+    coordinate: [216, 1224.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_stream_to_vector_1
   id: blocks_stream_to_vector
   parameters:
@@ -325,7 +383,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 576.0]
+    coordinate: [360, 576.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tagged_stream_align_0
+  id: blocks_tagged_stream_align
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengthtagname: packet_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [864, 556.0]
     rotation: 0
     state: enabled
 - name: blocks_tagged_stream_align_1
@@ -343,27 +419,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [680, 1020.0]
+    coordinate: [480, 1068.0]
     rotation: 0
-    state: disabled
-- name: blocks_tagged_stream_align_2
-  id: blocks_tagged_stream_align
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    lengthtagname: '"payload_begin"'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: int
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [592, 1140.0]
-    rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_vector_source_x_0
   id: blocks_vector_source_x
   parameters:
@@ -381,10 +439,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [472, 148.0]
+    coordinate: [56, 148.0]
     rotation: 0
     state: disabled
-- name: blocks_vector_source_x_0_1
+- name: blocks_vector_source_x_1_0
   id: blocks_vector_source_x
   parameters:
     affinity: ''
@@ -392,18 +450,18 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    repeat: 'False'
+    repeat: 'True'
     tags: '[]'
-    type: byte
-    vector: (0xFF, 0x7F, 0x3F, 0x1F, 0x1F, 0x1F)
+    type: complex
+    vector: '[0]*10000'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1352, 108.0]
+    coordinate: [1072, 468.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_vector_to_stream_0
   id: blocks_vector_to_stream
   parameters:
@@ -419,7 +477,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 560.0]
+    coordinate: [712, 560.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_to_stream_1
@@ -437,7 +495,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 608.0]
+    coordinate: [360, 608.0]
+    rotation: 0
+    state: enabled
+- name: channels_channel_model_0
+  id: channels_channel_model
+  parameters:
+    affinity: ''
+    alias: ''
+    block_tags: 'True'
+    comment: ''
+    epsilon: '1.00007'
+    freq_offset: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_voltage: '0.1'
+    seed: '0'
+    taps: 1.0 + 0j
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 868.0]
     rotation: 0
     state: enabled
 - name: epy_block_0
@@ -500,9 +579,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [816, 1132.0]
+    coordinate: [672, 1212.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_0_1_0_0
   id: epy_block
   parameters:
@@ -554,7 +633,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [632, 412.0]
+    coordinate: [520, 396.0]
     rotation: 0
     state: enabled
 - name: epy_block_1
@@ -570,63 +649,62 @@ blocks:
       \   gr.sync_block.__init__(\n            self,\n            name='LoRa Hamming\
       \ Rx',\n            in_sig=[np.uint8],\n            out_sig=[np.uint8]\n   \
       \     )\n        self.CR = CR\n\n    def decode(self, input_vect, CR_loc) :\
-      \ \n\n        output=input_vect\n        success_state = 0 # 0 if no error,\
-      \ -2 if 2 errors detected, 1 if 1 error corrected, -1 if 1 error detected\n\n\
-      \        if CR_loc == 1: # CR = 1, no error correction\n            \n     \
-      \       syndrome = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3]\
-      \ ^ input_vect[4]\n            success_state = 0 if syndrome == 0 else -1\n\
-      \            output = input_vect\n\n        if CR_loc == 2: # CR = 2, no error\
-      \ correction\n            \n            syndrome = np.zeros((2,1), dtype=np.uint8)\n\
-      \            syndrome[0] = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[5]\n\
+      \ \n\n        output=input_vect\n        success_state = 0 # 3 if 1 error detected,\
+      \ 2 if 2 errors detected, 1 if 1 error corrected,  0 if no error\n\n       \
+      \ if CR_loc == 1: # CR = 1, no error correction\n            \n            syndrome\
+      \ = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]\n\
+      \            success_state = 0 if syndrome == 0 else 3\n            output =\
+      \ input_vect\n\n        if CR_loc == 2: # CR = 2, no error correction\n    \
+      \        \n            syndrome = np.zeros((2,1), dtype=np.uint8)\n        \
+      \    syndrome[0] = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[5]\n\
       \            syndrome[1] = input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]\n\
-      \            success_state = 0 if syndrome.all() == 0 else -1\n            output\
+      \            success_state = 0 if syndrome.all() == 0 else 3\n            output\
       \ = input_vect\n\n        if CR_loc == 3: # CR = 3, 1 error correction is possible\n\
-      \            \n            n = 4+CR_loc\n            k = 4\n\n            #\
-      \ compute syndrome of input_vect\n            Q = np.array([[0,1,1], [1,1,0],\
-      \ [1,1,1], [1,0,1]], np.uint8)\n            Id = np.identity(n-k, dtype=np.uint8)\n\
-      \            H = np.concatenate((Q.transpose(), Id),axis=1)\n            syndrome\
-      \ = np.dot(input_vect[:], H.transpose())%2\n\n            # compute syndromes\
-      \ lookup table\n            tmp = np.zeros((1,n-k+4), dtype=np.uint8)\n    \
-      \        tmp2 = np.identity(n-k+4, dtype=np.uint8)\n            E = np.concatenate((tmp,\
-      \ tmp2),axis=0)\n            S = np.dot(E,H.transpose())%2   \n\n\n        \
-      \    if syndrome.all() != 0: # error\n                for j in range(S.shape[1]):\
+      \            n = 4+CR_loc\n            k = 4\n\n            # compute syndrome\
+      \ of input_vect\n            Q = np.array([[0,1,1], [1,1,0], [1,1,1], [1,0,1]],\
+      \ np.uint8)\n            Id = np.identity(n-k, dtype=np.uint8)\n           \
+      \ H = np.concatenate((Q.transpose(), Id),axis=1)\n            syndrome = np.dot(input_vect[:],\
+      \ H.transpose())%2\n\n            # compute syndromes lookup table\n       \
+      \     tmp = np.zeros((1,n-k+4), dtype=np.uint8)\n            tmp2 = np.identity(n-k+4,\
+      \ dtype=np.uint8)\n            E = np.concatenate((tmp, tmp2),axis=0)\n    \
+      \        S = np.dot(E,H.transpose())%2   \n            for j in range(S.shape[0]):\
       \             # iterate through the syndromes lookup table\n               \
-      \     if np.array_equal(S[j],syndrome):   # if found, correct the input_vect\n\
-      \                        output = input_vect ^ E[j][:]\n                   \
-      \     success_state = 1\n\n        if CR_loc == 4: # CR = 4, 1 error correction\
-      \ is possible, 2 error detection is possible\n            \n            n =\
-      \ 4+CR_loc\n            k = 4\n\n            # compute syndrome of input_vect\n\
-      \            Q = np.array([[0,1,1,1], [1,1,0,1], [1,1,1,0], [1,0,1,1]], np.uint8)\n\
-      \            Id = np.identity(n-k, dtype=np.uint8)\n            H = np.concatenate((Q.transpose(),\
-      \ Id),axis=1)\n            syndrome = np.dot(input_vect[:], H.transpose())%2\n\
-      \n\n            if np.array_equal(syndrome,np.array([0,0,0,0])):    # if no\
-      \ error, return input_vect\n                output = input_vect\n\n        \
-      \    else :\n\n                # compute parity bit\n                parity\
-      \ = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]\
+      \ if np.array_equal(S[j],syndrome):   # if found, correct the input_vect\n \
+      \                   output = input_vect ^ E[j][:]\n                    success_state\
+      \ = 1               # 1 error corrected\n\n        if CR_loc == 4: # CR = 4,\
+      \ 1 error correction is possible, 2 error detection is possible\n          \
+      \  \n            n = 4+CR_loc\n            k = 4\n\n            # compute syndrome\
+      \ of input_vect\n            Q = np.array([[0,1,1,1], [1,1,0,1], [1,1,1,0],\
+      \ [1,0,1,1]], np.uint8)\n            Id = np.identity(n-k, dtype=np.uint8)\n\
+      \            H = np.concatenate((Q.transpose(), Id),axis=1)\n            syndrome\
+      \ = np.dot(input_vect[:], H.transpose())%2\n\n\n            if np.array_equal(syndrome,np.array([0,0,0,0])):\
+      \    # if no error, return input_vect\n                output = input_vect\n\
+      \n            else :\n                # compute parity bit\n               \
+      \ parity = input_vect[0] ^ input_vect[1] ^ input_vect[2] ^ input_vect[3] ^ input_vect[4]\
       \ ^ input_vect[5] ^ input_vect[6] ^ input_vect[7]\n                \n      \
       \          if parity : # 1 error correctable\n                    output, success_state\
       \ = self.decode(input_vect[:][0:7], 3) # correct the first 7 bits by sending\
       \ them to the decoding function\n        \n                else :  # 2 errors\
-      \ detected\n                    success_state = -2\n\n        return output[:][0:4],\
-      \ success_state # return the first 4 bits (data bits) and success_state (integer)\n\
-      \n    def work(self, input_items, output_items):\n\n        in0 = input_items[0]\
-      \    # input buffer reference\n        out = output_items[0]   # output buffer\
-      \ reference\n    \n        output_matrix = np.zeros((len(in0), 4), dtype=np.uint8)\n\
-      \        input_matrix = np.zeros((len(in0), 4+self.CR), dtype=np.uint8)\n  \
-      \      success_states = np.zeros((len(in0), 1), dtype=np.uint8)\n\n        for\
-      \ i in range(len(in0)):\n            bits_crop = [int(x) for x in bin(in0[i])[2:]]\
-      \                                       # convert to binary\n            input_matrix[i][:]\
-      \ = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]    # crop to\
-      \ 4+CR bits\n            output_matrix[i][:], success_states[i] = self.decode(input_matrix[i][:],self.CR)\
-      \    # send to decoding function\n\n\n        # convert output matrix to uint8\n\
-      \        out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] -\
-      \ 1, -1, -1))\n\n        # display success states\n        # success_state =\
-      \ 0 if no error, -2 if 2 errors detected, 1 if 1 error corrected, -1 if 1 error\
-      \ detected\n        arr,trash = np.histogram(success_states, bins = [-2.5, -1.5,\
-      \ -0.5, 0.5, 1.5])\n        print(\"[RX] Hamming : n2_detected = %d, n1_detected\
-      \ = %d, n0 = %d, n1_corrrected = %d\" % (arr[0], arr[1], arr[2], arr[3]))\n\
-      \        # # debug\n        # print(\"\\n--- GENERAL WORK : HAMMING_DEC ---\"\
-      )\n        # print(\"in0 :\")\n        # print(in0)\n        # print(\"input_matrix\
+      \ detected\n                    success_state = 2\n                \n      \
+      \  return output[:][0:4], success_state # return the first 4 bits (data bits)\
+      \ and success_state (integer)\n\n    def work(self, input_items, output_items):\n\
+      \n        in0 = input_items[0]    # input buffer reference\n        out = output_items[0]\
+      \   # output buffer reference\n    \n        output_matrix = np.zeros((len(in0),\
+      \ 4), dtype=np.uint8)\n        input_matrix = np.zeros((len(in0), 4+self.CR),\
+      \ dtype=np.uint8)\n        success_states = np.zeros((len(in0), 1), dtype=np.uint8)\n\
+      \n        for i in range(len(in0)):\n            bits_crop = [int(x) for x in\
+      \ bin(in0[i])[2:]]                                       # convert to binary\n\
+      \            input_matrix[i][:] = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]\
+      \    # crop to 4+CR bits\n            output_matrix[i][:], success_states[i]\
+      \ = self.decode(input_matrix[i][:],self.CR)    # send to decoding function\n\
+      \n\n        # convert output matrix to uint8\n        out[:] = output_matrix.dot(1\
+      \ << np.arange(output_matrix.shape[-1] - 1, -1, -1))\n\n        # display success\
+      \ states\n        # print(\"Success states:\")\n        # print(success_states)\n\
+      \        arr,trash = np.histogram(success_states, bins = [-1, 0.5, 1.5, 2.5,\
+      \ 3.5])\n        print(\"[RX] Hamming : n1_detected = %d, n2_detected = %d,\
+      \ n1_corrrected = %d, n0 = %d\" % (arr[3], arr[2], arr[1], arr[0]))\n      \
+      \  # # debug\n        # print(\"\\n--- GENERAL WORK : HAMMING_DEC ---\")\n \
+      \       # print(\"in0 :\")\n        # print(in0)\n        # print(\"input_matrix\
       \ :\")\n        # print(input_matrix)\n        # print(\"output_matrix :\")\n\
       \        # print(output_matrix)\n        # print(\"out :\")\n        # print(out)\n\
       \        # print(\"--- HAMMING_DEC END---\")\n\n        return len(output_items[0])"
@@ -641,7 +719,50 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 1140.0]
+    coordinate: [840, 1220.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_10
+  id: epy_block
+  parameters:
+    SF: '9'
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport math\nimport pmt\n\ndef modulate_vect(SF, id,\
+      \ os_factor, sign) :\n    M  = pow(2,SF)\n    ka = np.arange(0,M)\n    fact1\
+      \ = np.exp(1j*sign*math.pi*(pow(ka,2))/M)\n    chirp = np.zeros((len(id),M*os_factor),\
+      \ dtype=np.complex64)\n    for i in range(len(id)) :\n        chirp[i] = fact1*np.exp(2j*math.pi*(id[i]/M)*ka)\n\
+      \    return chirp\n\nclass blk(gr.sync_block):  # other base classes are basic_block,\
+      \ decim_block, interp_block\n    \"\"\"Embedded Python Block example - a simple\
+      \ multiply const\"\"\"\n\n    def __init__(self, preamble_len = 6, SF = 9):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='LoRa SNR estimator',   # will show up in GRC\n\
+      \            in_sig=[np.complex64],\n            out_sig=[np.complex64]\n  \
+      \      )\n        self.preamble_len = preamble_len\n        self.SF = SF\n\n\
+      \    def work(self, input_items, output_items):\n\n        preamble_up = np.reshape(modulate_vect(self.SF,\
+      \ [0]*self.preamble_len, 1, 1), -1)      # generate preamble_len upchirps\n\
+      \        preamble_down = np.reshape(np.conjugate(modulate_vect(self.SF, [0]*3,\
+      \ 1, 1)), -1)      # generate 3 downchirps\n        preamble = np.concatenate((preamble_up,\
+      \ preamble_down[0:int(2.25*pow(2,self.SF))])) # concatenate preamble_up and\
+      \ preamble_down[0:2.25*M]\n\n        \n\n\n        output_items[0][:] = input_items[0]\n\
+      \        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    preamble_len: '6'
+  states:
+    _io_cache: ('LoRa SNR estimator', 'blk', [('preamble_len', '6'), ('SF', '9')],
+      [('0', 'complex', 1)], [('0', 'complex', 1)], 'Embedded Python Block example
+      - a simple multiply const', ['SF', 'preamble_len'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1368, 860.0]
     rotation: 0
     state: disabled
 - name: epy_block_1_0_0
@@ -714,7 +835,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [288, 420.0]
+    coordinate: [208, 404.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_1
@@ -773,7 +894,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [456, 420.0]
+    coordinate: [360, 404.0]
     rotation: 0
     state: enabled
 - name: epy_block_2
@@ -852,9 +973,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1184, 1140.0]
+    coordinate: [1008, 1220.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_3
   id: epy_block
   parameters:
@@ -863,8 +984,8 @@ blocks:
       \ implementation of LoRa...\" 2020 A.Marquet, N.Montavont, G.Papadopoulos)\n\
       \nINPUT:\n    - None\nOUTPUT:\n    - out_sig[0]: IQ complex vector, length =\
       \ M * os_factor * (preamble_len + 2.25)\n\"\"\"\n\nimport numpy as np\nfrom\
-      \ gnuradio import gr\nimport math\nimport time\n\n\ndef modulate_vect(SF, id,\
-      \ os_factor, sign) :\n    M  = pow(2,SF)\n    ka = np.arange(0,M)\n    fact1\
+      \ gnuradio import gr\nimport math\nimport time\nimport pmt\n\ndef modulate_vect(SF,\
+      \ id, os_factor, sign) :\n    M  = pow(2,SF)\n    ka = np.arange(0,M)\n    fact1\
       \ = np.exp(1j*sign*math.pi*(pow(ka,2))/M)\n    chirp = np.zeros((len(id),M*os_factor),\
       \ dtype=np.complex64)\n    for i in range(len(id)) :\n        chirp[i] = fact1*np.exp(2j*math.pi*(id[i]/M)*ka)\n\
       \    return chirp\n\nclass PreambleGenerator(gr.sync_block):\n\n    def __init__(self,\
@@ -878,8 +999,11 @@ blocks:
       \        preamble_down = np.reshape(np.conjugate(modulate_vect(self.SF, [0]*3,\
       \ 1, 1)), -1)      # generate 3 downchirps\n        output_items[0][:] = np.concatenate((preamble_up,\
       \ preamble_down[0:int(2.25*pow(2,self.SF))])) # concatenate preamble_up and\
-      \ preamble_down[0:2.25*M]\n        # elapsed = time.time() - t\n        # print(\"\
-      \\nPreambleGenerator: \", elapsed)\n        return len(output_items[0])"
+      \ preamble_down[0:2.25*M]\n        # # TAGS\n        # key = pmt.intern(\"tx_sob\"\
+      )\n        # value = pmt.from_bool(True)\n        # self.add_item_tag(0, # Write\
+      \ to output port 0\n        #         self.nitems_written(0), # Index of the\
+      \ tag in absolute terms\n        #         key, # Key of the tag\n        #\
+      \         value # Value of the tag\n        # )\n        return len(output_items[0])"
     affinity: ''
     alias: ''
     comment: ''
@@ -892,67 +1016,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [200, 532.0]
+    coordinate: [16, 532.0]
     rotation: 0
     state: enabled
-- name: epy_block_4
-  id: epy_block
-  parameters:
-    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
-      \ GRC will instantiate the first class it finds\nto get ports and parameters\
-      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
-      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
-      from gnuradio import gr\n\nclass my_basic_adder_block(gr.basic_block):\n   \
-      \ # def __init__(self):\n    #     gr.basic_block.__init__(self,\n    #    \
-      \     name=\"test_blqsdock\",\n    #         in_sig=[np.uint8],\n    #     \
-      \    out_sig=[np.uint8])\n\n    # def forecast(self, noutput_items, ninputs)\
-      \ :\n    #     ninput_items_required = [0]*ninputs #ninput_items_required[i]\
-      \ is the number of items that will be consumed on input port i\n    #     for\
-      \ i in range(ninputs):\n    #         ninput_items_required[i] = 1.5 * noutput_items\
-      \ * ninputs\n\n    #     # print(\"--- FORECAST ---\")\n    #     # print(ninputs)\n\
-      \    #     # print(noutput_items)\n    #     # print(ninput_items_required)\n\
-      \n    #     return ninput_items_required\n\n\n    # def general_work(self, input_items,\
-      \ output_items):\n        \n    #     #buffer references\n    #     in0 = input_items[0][:len(output_items[0])]\n\
-      \    #     out = output_items[0]\n        \n\n    #     output_items[0][:] =\
-      \ in0\n\n\n    #     print(\"\\n--- GENERAL WORK 1  ---\")\n    #     print(\"\
-      input_items[0]\")\n    #     print(input_items[0])\n    #     print(\"in0\"\
-      )\n    #     print(in0)\n    #     print(\"len(in0)\")\n    #     print(len(in0))\n\
-      \    #     print(\"output_items[0]\")\n    #     print(output_items[0])\n  \
-      \  #     print(\"len(output_items[0])\")\n    #     print(len(output_items[0]))\n\
-      \n    #     #consume the inputs\n    #     self.consume(0, len(in0)) #consume\
-      \ port 0 input\n    #     # self.produce(0, 1) #produce 3 items on port 0\n\
-      \    #     #return produced\n    #     return len(output_items[0])\n\n   def\
-      \ __init__(self, input_buffer_len=2):\n      gr.basic_block.__init__(self,\n\
-      \         name=\"sync_test\",\n         in_sig=[np.uint8],\n         out_sig=[np.uint8])\n\
-      \      self.input_buffer_len = input_buffer_len\n\n   def forecast(self, noutput_items,\
-      \ ninputs):\n    #   print(\"FORECAST START\")\n      ninput_items_required\
-      \ = [self.input_buffer_len] * ninputs\n    #   print(\"len(ninput_items_required),noutput_items\"\
-      ,len(ninput_items_required),noutput_items)\n    #   print(\"FORECAST END\")\n\
-      \      return ninput_items_required\n\n   def general_work(self, input_items,\
-      \ output_items):\n    print(\"\\n--- GENERAL WORK START ---\")\n    if(len(input_items[0])\
-      \ >= self.input_buffer_len) :\n        out_vect = [0xFF, 0x55, 0xAA]\n     \
-      \   output_items[0][0:len(out_vect)] = out_vect\n        self.consume(0, self.input_buffer_len)\n\
-      \        self.produce(0, len(out_vect))\n\n\n        print(\"len(input_items)\"\
-      , len(input_items[0]))\n        print(\"input_buffer_len\", self.input_buffer_len)\n\
-      \        print(\"len(input_items[0]) >= input_buffer_len\")\n        print(\"\
-      len(output_items[0])\", len(output_items[0]))\n        print(\"output_items[0]\
-      \ = \")\n        print(output_items[0])\n\n    print(\"--- GENERAL WORK END\
-      \ ---\")\n    return len(out_vect)"
-    affinity: ''
-    alias: ''
-    comment: ''
-    input_buffer_len: '2'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-  states:
-    _io_cache: ('sync_test', 'my_basic_adder_block', [('input_buffer_len', '2')],
-      [('0', 'byte', 1)], [('0', 'byte', 1)], '', ['input_buffer_len'])
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1568, 124.0]
-    rotation: 0
-    state: disabled
 - name: epy_block_5
   id: epy_block
   parameters:
@@ -961,9 +1027,9 @@ blocks:
     _source_code: "\"\"\"\nDemodulation Block:\nReference : \"Towards an SDR implementation\
       \ of LoRa...\" 2020 A.Marquet, N.Montavont, G.Papadopoulos)\n\nINPUT:\n    -\
       \ in_sig[0]: IQ complex vectors input sequence\nOUTPUT:\n    - out_sig[0]: \n\
-      \"\"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport math\n\n# def\
-      \ modulate(SF, id, os_factor) :\n#     M  = pow(2,SF)\n#     n_fold = M * os_factor\
-      \ - id * os_factor\n#     chirp = np.zeros(M*os_factor, dtype=np.complex64)\n\
+      \"\"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport math\nimport matplotlib.pyplot\
+      \ as plt\n# def modulate(SF, id, os_factor) :\n#     M  = pow(2,SF)\n#     n_fold\
+      \ = M * os_factor - id * os_factor\n#     chirp = np.zeros(M*os_factor, dtype=np.complex64)\n\
       #     for n in range(0,M*os_factor):\n#         if n < n_fold:\n#          \
       \   chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-0.5)*n/os_factor))\n\
       #         else:\n#             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))\n\
@@ -978,7 +1044,7 @@ blocks:
       \        # base_upchirp = modulate(self.SF, 0, 1)\n        base_downchirp =\
       \ modulate(self.SF, 0, 1, -1)\n        freq_vect = np.arange(0,M)          \
       \                          # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS\
-      \ NOT 1 !!!!\n\n        max_array = np.zeros(len(input_items[0]), dtype=np.float32)\n\
+      \ NOT 1 !!!!\n        max_array = np.zeros(len(input_items[0]), dtype=np.float32)\n\
       \        for i in range(len(input_items[0])):\n            demod_signal = np.multiply(input_items[0][i],\
       \ base_downchirp)   # multiply every symbol with the downchirp\n           \
       \ demod_signal_fft = np.fft.fft(demod_signal)                     # perform\
@@ -986,10 +1052,16 @@ blocks:
       \                       # find the frequency index of the maximum value\n  \
       \          output_items[0][i] = round(round(freq_vect[idx]))               #\
       \ convert the frequency index to symbol index\n            # debug\n       \
-      \     max_array[i] = np.max(np.abs(demod_signal_fft[idx]))\n\n        # # debug\n\
-      \        # print(\"\\n--- GENERAL WORK : DEMODULATION ---\")\n        # print(\"\
-      Demodulator : mean max (should be 2**SF):\", np.mean(max_array))\n\n       \
-      \ return len(output_items[0])\n"
+      \     max_array[i] = np.max(np.abs(demod_signal_fft[idx]))\n\n            #\
+      \ vect = np.arange(0,M)\n            # fig, axs = plt.subplots(2)\n        \
+      \    # fig.suptitle('Vertically stacked subplots')\n            # axs[0].specgram(input_items[0][i],\
+      \ NFFT=64, Fs=32, noverlap=8)\n            # axs[1].plot(vect, np.abs(demod_signal_fft))\n\
+      \            # plt.show()   \n            # print(\"[RX] Demod.  : max (should\
+      \ be 2**SF):\", max_array[i])\n            # if max_array[i] < 2**self.SF:\n\
+      \            # print(\"[RX] Demod.  :  max_array[i] < 2**self.SF :\", max_array[i])\n\
+      \n        # # debug\n        # print(\"\\n--- GENERAL WORK : DEMODULATION ---\"\
+      )\n        # print(\"[RX] Demod.  : mean max (should be 2**SF):\", np.mean(max_array))\n\
+      \        # print(\"[RX] Demod.  : nreceived symbols:\", i)\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1001,9 +1073,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [416, 1132.0]
+    coordinate: [368, 1212.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_6
   id: epy_block
   parameters:
@@ -1014,23 +1086,29 @@ blocks:
       from gnuradio import gr\nimport pmt\n\nclass blk(gr.sync_block):  # other base\
       \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
       \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, preamble_nitems\
-      \ = 4224, payload_nitems = 6144):  # only default arguments here\n        \"\
-      \"\"arguments to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='LoRa Frame Constructor',   # will show\
-      \ up in GRC\n            in_sig=[(np.complex64,preamble_nitems),(np.complex64,payload_nitems)],\n\
-      \            out_sig=[(np.complex64,preamble_nitems+payload_nitems)]\n     \
-      \   )\n        self.payload_nitems = payload_nitems\n        self.preamble_nitems\
-      \ = preamble_nitems\n        self.frame_counter = 0\n        \n    def work(self,\
-      \ input_items, output_items):\n        if len(input_items[0][0]) == self.preamble_nitems\
-      \ and len(input_items[1][0]) == self.payload_nitems :\n            output_items[0][:]\
-      \ = np.concatenate((input_items[0],input_items[1]),axis=1)\n            # TAGS\n\
-      \            key = pmt.intern(\"tx_sob\")\n            value = pmt.from_bool(True)\n\
-      \            self.add_item_tag(0, # Write to output port 0\n               \
-      \     self.nitems_written(0), # Index of the tag in absolute terms\n       \
-      \             key, # Key of the tag\n                    value # Value of the\
-      \ tag\n            )\n            # tx_time tag is optional : https://discuss-gnuradio.gnu.narkive.com/c2r83OZW/uhd-usrp-sink-stream-tagging\n\
-      \            self.frame_counter += 1\n            print(\"\\n\\n[TX] Constr.\
-      \ : Frame #%d sent\" % (self.frame_counter))\n            return len(output_items[0])\n\
+      \ = 4224, payload_nitems = 8192):  # only default arguments here\n        \"\
+      \"\"arguments to this function show up as parameters in GRC\"\"\"\n\n      \
+      \  self.payload_nitems = payload_nitems\n        self.preamble_nitems = preamble_nitems\n\
+      \        self.frame_counter = 0\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='LoRa Frame Constructor',   # will show up in GRC\n\
+      \            in_sig=[(np.complex64,self.preamble_nitems),(np.complex64,self.payload_nitems)],\n\
+      \            out_sig=[(np.complex64,self.preamble_nitems+self.payload_nitems)]\n\
+      \        )\n        \n    def work(self, input_items, output_items):\n     \
+      \   if len(input_items[0][0]) == self.preamble_nitems and len(input_items[1][0])\
+      \ == self.payload_nitems :\n            output_items[0][:] = np.concatenate((input_items[0],input_items[1]),axis=1)\n\
+      \            # TAGS\n            key = pmt.intern(\"tx_sob\")\n            value\
+      \ = pmt.from_bool(True)\n            self.add_item_tag(0, # Write to output\
+      \ port 0\n                    self.nitems_written(0), # Index of the tag in\
+      \ absolute terms\n                    key, # Key of the tag\n              \
+      \      value # Value of the tag\n            )\n            # tx_time tag is\
+      \ optional : https://discuss-gnuradio.gnu.narkive.com/c2r83OZW/uhd-usrp-sink-stream-tagging\n\
+      \            # TAGS\n            key = pmt.intern(\"packet_len\")\n        \
+      \    value = pmt.from_long(self.preamble_nitems+self.payload_nitems)\n     \
+      \       self.add_item_tag(0, # Write to output port 0\n                    self.nitems_written(0),\
+      \ # Index of the tag in absolute terms\n                    key, # Key of the\
+      \ tag\n                    value # Value of the tag\n            )\n\n     \
+      \       self.frame_counter += 1\n            print(\"\\n\\n[TX] Constr. : Frame\
+      \ #%d sent\" % (self.frame_counter))\n            return len(output_items[0])\n\
       \        else :\n            return 0\n        # out = np.concatenate((input_items[0][0],input_items[1][0]))\n\
       \        # print(len(out))\n        # output_items[0][:] = out\n        \n"
     affinity: ''
@@ -1038,17 +1116,17 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    payload_nitems: '6144'
+    payload_nitems: '8192'
     preamble_nitems: '4224'
   states:
     _io_cache: ('LoRa Frame Constructor', 'blk', [('preamble_nitems', '4224'), ('payload_nitems',
-      '6144')], [('0', 'complex', 4224), ('1', 'complex', 6144)], [('0', 'complex',
-      10368)], 'Embedded Python Block example - a simple multiply const', ['payload_nitems',
+      '8192')], [('0', 'complex', 4224), ('1', 'complex', 8192)], [('0', 'complex',
+      12416)], 'Embedded Python Block example - a simple multiply const', ['payload_nitems',
       'preamble_nitems'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 544.0]
+    coordinate: [512, 544.0]
     rotation: 0
     state: enabled
 - name: epy_block_6_0
@@ -1145,9 +1223,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [920, 1020.0]
+    coordinate: [696, 1068.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_6_0_0_0_0_0
   id: epy_block
   parameters:
@@ -1186,10 +1264,45 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 604.0]
+    coordinate: [208, 604.0]
     rotation: 0
     state: enabled
 - name: epy_block_7
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
+      \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
+      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, example_param=1.0):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Embedded Python Block',   # will show up in GRC\n\
+      \            in_sig=[np.complex64],\n            out_sig=[np.complex64]\n  \
+      \      )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.example_param\
+      \ = example_param\n\n    def work(self, input_items, output_items):\n      \
+      \  \"\"\"example: multiply with constant\"\"\"\n        output_items[0][:] =\
+      \ input_items[0] * self.example_param\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    example_param: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Embedded Python Block', 'blk', [('example_param', '1.0')], [('0',
+      'complex', 1)], [('0', 'complex', 1)], 'Embedded Python Block example - a simple
+      multiply const', ['example_param'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1560, 884.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_7_0
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -1200,17 +1313,20 @@ blocks:
       \ preamble_nitems = 4224, payload_nitems = 6144):\n        gr.sync_block.__init__(\n\
       \            self,\n            name='LoRa EoB Tagger',\n            in_sig=[np.complex64],\n\
       \            out_sig=[np.complex64]\n        )\n        self.payload_nitems\
-      \ = payload_nitems\n        self.preamble_nitems = preamble_nitems\n\n    def\
-      \ work(self, input_items, output_items):\n\n        tags = self.get_tags_in_window(0,\
-      \ 0, len(input_items[0]))\n        for tag in tags:\n            key = pmt.to_python(tag.key)\
-      \ # convert from PMT to python string\n            value = pmt.to_python(tag.value)\
-      \ # Note that the type(value) can be several things, it depends what PMT type\
-      \ it was\n\n            key = pmt.intern(\"tx_eob\")\n            value = pmt.from_bool(True)\n\
+      \ = payload_nitems\n        self.preamble_nitems = preamble_nitems\n       \
+      \ self.frame_counter = 0\n\n    def work(self, input_items, output_items):\n\
+      \n        tags = self.get_tags_in_window(0, 0, len(input_items[0]))\n      \
+      \  for tag in tags:\n            key = pmt.to_python(tag.key) # convert from\
+      \ PMT to python string\n            value = pmt.to_python(tag.value) # Note\
+      \ that the type(value) can be several things, it depends what PMT type it was\n\
+      \            key = pmt.intern(\"tx_eob\")\n            value = pmt.from_bool(True)\n\
       \            self.add_item_tag(0, # Write to output port 0\n               \
       \     self.nitems_written(0) + self.payload_nitems+self.preamble_nitems-1, #\
       \ Index of the tag in absolute terms\n                    key, # Key of the\
       \ tag\n                    value # Value of the tag\n            )\n       \
-      \ output_items[0][:] = input_items[0]\n\n        return len(output_items[0])\n"
+      \     self.frame_counter += 1\n            # print(\"\\n\\n[TX] Constr. : Frame\
+      \ #%d sent\" % (self.frame_counter))\n        output_items[0][:] = input_items[0]\n\
+      \n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -1225,63 +1341,121 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1040, 548.0]
+    coordinate: [1080, 548.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: epy_block_8
   id: epy_block
   parameters:
     SF: '9'
-    _source_code: "import numpy as np\nfrom gnuradio import gr\nimport math\nimport\
-      \ pmt\n\ndef modulate_vect(SF, id, os_factor, sign) :\n    M  = pow(2,SF)\n\
-      \    ka = np.arange(0,M)\n    fact1 = np.exp(1j*sign*math.pi*(pow(ka,2))/M)\n\
-      \    chirp = np.zeros((len(id),M*os_factor), dtype=np.complex64)\n    for i\
-      \ in range(len(id)) :\n        chirp[i] = fact1*np.exp(2j*math.pi*(id[i]/M)*ka)\n\
-      \    return chirp\n\nclass blk(gr.sync_block):  # other base classes are basic_block,\
-      \ decim_block, interp_block\n    def __init__(self, SF=9, preamble_len = 6,\
-      \ frame_nitems = 18):  # only default arguments here\n        \"\"\"Preamble\
-      \ Correlator\"\"\"\n        gr.sync_block.__init__(\n            self,\n   \
-      \         name='Preamble Correlator',   # will show up in GRC\n            in_sig=[np.complex64],\n\
-      \            out_sig=[np.complex64]\n        )\n        # if an attribute with\
-      \ the same name as a parameter is found,\n        # a callback is registered\
-      \ (properties work, too).\n        self.SF = SF\n        self.preamble_len =\
-      \ 6\n        self.frame_len = 18\n        self.preamble_nitems = int(pow(2,SF)*(preamble_len+2.25))\n\
-      \        self.frame_nitems = frame_nitems\n        self.frame_counter = 0\n\
-      \        self.set_tag_propagation_policy(gr.TPP_DONT)\n            \n    def\
-      \ work(self, input_items, output_items):\n\n        preamble_up = np.reshape(modulate_vect(self.SF,\
-      \ [0]*self.preamble_len, 1, 1), -1)      # generate preamble_len upchirps\n\
-      \        preamble_down = np.reshape(np.conjugate(modulate_vect(self.SF, [0]*3,\
-      \ 1, 1)), -1)      # generate 3 downchirps\n        preamble = np.concatenate((preamble_up,\
-      \ preamble_down[0:int(2.25*pow(2,self.SF))])) # concatenate preamble_up and\
-      \ preamble_down[0:2.25*M]\n\n        corr = np.correlate(input_items[0][0:self.preamble_nitems+1],\
-      \ preamble) # correlate input signal with preamble\n        peak = np.max(np.abs(corr))\
-      \             # find the correlation peak\n        threshold = 2000        \
-      \                # threshold for peak detection\n        peak_index = np.argmax(corr)\
-      \            # get index of the peak\n\n        if peak > threshold :\n    \
-      \        tag_index = self.nitems_written(0) + self.preamble_nitems\n\n     \
-      \       # add tag at the end of the preamble, write frame_length inside so Tagged\
-      \ Stream Cropper block can remove preamble\n            self.add_item_tag(0,tag_index,\
-      \  pmt.intern(\"payload_begin\"),  pmt.intern(str(self.frame_nitems)))\n   \
-      \         self.frame_counter += 1\n            print(\"[RX] Correl. : Frame\
-      \ #%d received\" % (self.frame_counter))\n\n        output_items[0][:] = input_items[0]\n\
-      \        return len(output_items[0])"
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\n\nclass blk(gr.sync_block):\n\n    def __init__(self,\
+      \ SF=1):\n        gr.sync_block.__init__(\n            self,\n            name='LoRa\
+      \ Gray Tx',\n            in_sig=[np.int32],\n            out_sig=[np.int32]\n\
+      \        )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.SF\
+      \ = SF\n\n    def work(self, input_items, output_items):\n        in0 = input_items[0][:len(output_items[0])]\n\
+      \        out = output_items[0]\n\n        for i in range(len(out)):\n      \
+      \      out[i] = in0[i] ^ (in0[i] >> 1)\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
-    frame_nitems: payload_nitems
     maxoutbuf: '0'
     minoutbuf: '0'
-    preamble_len: preamble_len
   states:
-    _io_cache: ('Preamble Correlator', 'blk', [('SF', '9'), ('preamble_len', '6'),
-      ('frame_nitems', '18')], [('0', 'complex', 1)], [('0', 'complex', 1)], 'Preamble
-      Correlator', ['SF', 'frame_nitems', 'preamble_len'])
+    _io_cache: ('LoRa Gray Tx', 'blk', [('SF', '1')], [('0', 'int', 1)], [('0', 'int',
+      1)], '', ['SF'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 1004.0]
+    coordinate: [672, 404.0]
     rotation: 0
-    state: disabled
+    state: true
+- name: epy_block_8_0
+  id: epy_block
+  parameters:
+    SF: '9'
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\n\nclass blk(gr.sync_block):\n\n    def __init__(self,\
+      \ SF=1):\n        gr.sync_block.__init__(\n            self,\n            name='LoRa\
+      \ Gray Rx',\n            in_sig=[np.int32],\n            out_sig=[np.int32]\n\
+      \        )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.SF\
+      \ = SF\n\n    def work(self, input_items, output_items):\n        \"\"\"example:\
+      \ multiply with constant\"\"\"\n        in0 = input_items[0][:len(output_items[0])]\n\
+      \        out = output_items[0]\n\n        for i in range(len(out)):\n      \
+      \      out[i] = in0[i]\n            for j in range(1,self.SF):\n           \
+      \     out[i]= out[i] ^ (in0[i] >> j)\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('LoRa Gray Rx', 'blk', [('SF', '1')], [('0', 'int', 1)], [('0', 'int',
+      1)], '', ['SF'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 1220.0]
+    rotation: 0
+    state: true
+- name: epy_block_9
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\nimport matplotlib.pyplot as plt\n\nclass\
+      \ blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block\n\
+      \    \"\"\"Embedded Python Block example - a simple multiply const\"\"\"\n\n\
+      \    def __init__(self,preamble_nitems = 24, payload_nitems = 1, threshold =\
+      \ 10000):  # only default arguments here\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='LoRa Threshold Sync',   # will show up\
+      \ in GRC\n            in_sig=[np.complex64],\n            out_sig=[np.complex64]\n\
+      \        )\n\n        \n        self.preamble_nitems = preamble_nitems\n   \
+      \     self.payload_nitems = payload_nitems\n        self.threshold = threshold\n\
+      \n        self.state = 0 # 0 if searching for preamble, 1 if found\n       \
+      \ self.last_tag = 0\n\n    def work(self, input_items, output_items):\n\n  \
+      \      in0 = input_items[0][:len(output_items[0])]\n        # plt.specgram(in0,\
+      \ NFFT=64, Fs=32, noverlap=8)\n        # plt.show()\n\n        if self.state\
+      \ == 0 : \n            # print('searching for preamble')\n            for i\
+      \ in range(len(in0)) :\n                if np.abs(in0[i]) > self.threshold and\
+      \ self.state == 0 :\n                    # print(\"Threshold exceeded\")\n \
+      \                   self.state = 1\n                    tag_index = self.nitems_written(0)\
+      \ + i + self.preamble_nitems\n                    self.last_tag = self.nitems_written(0)\
+      \ + i + self.preamble_nitems\n                    self.add_item_tag(0,tag_index,\
+      \  pmt.intern(\"payload_begin\"),  pmt.intern(str(self.payload_nitems)))\n\n\
+      \n        if self.state == 1 :\n            if int(self.nitems_written(0)) -\
+      \ self.last_tag > self.payload_nitems:\n                # print(\"Reset\")\n\
+      \                self.state = 0\n            pass\n\n\n\n        output_items[0][:]\
+      \ = input_items[0]\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    payload_nitems: payload_nitems
+    preamble_nitems: preamble_nitems
+    threshold: '0.5'
+  states:
+    _io_cache: ('LoRa Threshold Sync', 'blk', [('preamble_nitems', '24'), ('payload_nitems',
+      '1'), ('threshold', '10000')], [('0', 'complex', 1)], [('0', 'complex', 1)],
+      'Embedded Python Block example - a simple multiply const', ['payload_nitems',
+      'preamble_nitems', 'threshold'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 1052.0]
+    rotation: 0
+    state: enabled
 - name: pdu_pdu_to_stream_x_0
   id: pdu_pdu_to_stream_x
   parameters:
@@ -1297,7 +1471,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 244.0]
+    coordinate: [512, 244.0]
     rotation: 0
     state: enabled
 - name: pdu_random_pdu_0
@@ -1317,161 +1491,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [288, 220.0]
-    rotation: 0
-    state: enabled
-- name: qtgui_sink_x_0
-  id: qtgui_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    bw: samp_rate*4
-    comment: ''
-    fc: '0'
-    fftsize: '1024'
-    gui_hint: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    name: '""'
-    plotconst: 'True'
-    plotfreq: 'True'
-    plottime: 'True'
-    plotwaterfall: 'True'
-    rate: '10'
-    showports: 'False'
-    showrf: 'False'
-    type: complex
-    wintype: window.WIN_BLACKMAN_hARRIS
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [520, 780.0]
-    rotation: 0
-    state: disabled
-- name: qtgui_sink_x_0_0
-  id: qtgui_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    bw: samp_rate
-    comment: ''
-    fc: '0'
-    fftsize: '1024'
-    gui_hint: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    name: '""'
-    plotconst: 'True'
-    plotfreq: 'True'
-    plottime: 'True'
-    plotwaterfall: 'True'
-    rate: '10'
-    showports: 'False'
-    showrf: 'False'
-    type: complex
-    wintype: window.WIN_BLACKMAN_hARRIS
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1216, 804.0]
-    rotation: 0
-    state: disabled
-- name: qtgui_time_sink_x_0
-  id: qtgui_time_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
-    comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '1'
-    size: preamble_nitems+payload_nitems
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: complex
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1240, 652.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
@@ -1511,7 +1530,7 @@ blocks:
     ant7: '"TX/RX"'
     ant8: '"TX/RX"'
     ant9: '"TX/RX"'
-    bw0: bandwidth
+    bw0: '0'
     bw1: '0'
     bw10: '0'
     bw11: '0'
@@ -1587,7 +1606,7 @@ blocks:
     comment: ''
     dev_addr: '"addr=192.168.10.3"'
     dev_args: ''
-    gain0: '0'
+    gain0: '30'
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -1748,9 +1767,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1352, 476.0]
+    coordinate: [1368, 716.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: uhd_usrp_source_0
   id: uhd_usrp_source
   parameters:
@@ -1788,7 +1807,7 @@ blocks:
     ant7: '"RX2"'
     ant8: '"RX2"'
     ant9: '"RX2"'
-    bw0: bandwidth*4
+    bw0: '0'
     bw1: '0'
     bw10: '0'
     bw11: '0'
@@ -1820,7 +1839,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    center_freq0: center_freq_RX
+    center_freq0: center_freq
     center_freq1: '0'
     center_freq10: '0'
     center_freq11: '0'
@@ -2184,7 +2203,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 748.0]
+    coordinate: [2224, 152.0]
     rotation: 0
     state: disabled
 - name: virtual_sink_0
@@ -2197,7 +2216,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [744, 244.0]
+    coordinate: [696, 244.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_1
@@ -2210,9 +2229,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [816, 420.0]
+    coordinate: [808, 404.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: virtual_sink_2
   id: virtual_sink
   parameters:
@@ -2223,9 +2242,35 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1152, 1020.0]
+    coordinate: [896, 1068.0]
     rotation: 0
-    state: disabled
+    state: enabled
+- name: virtual_sink_3
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Tx
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1448, 540.0]
+    rotation: 0
+    state: true
+- name: virtual_sink_4
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Rx
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 900.0]
+    rotation: 0
+    state: true
 - name: virtual_source_0
   id: virtual_source
   parameters:
@@ -2236,7 +2281,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [104, 420.0]
+    coordinate: [64, 404.0]
     rotation: 0
     state: enabled
 - name: virtual_source_1
@@ -2249,9 +2294,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 604.0]
+    coordinate: [16, 604.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: virtual_source_2
   id: virtual_source
   parameters:
@@ -2262,47 +2307,77 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 1140.0]
+    coordinate: [56, 1220.0]
     rotation: 0
-    state: disabled
+    state: enabled
+- name: virtual_source_3
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Tx
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 900.0]
+    rotation: 0
+    state: true
+- name: virtual_source_3_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Rx
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [152, 1068.0]
+    rotation: 0
+    state: true
 
 connections:
 - [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
-- [blocks_null_source_0, '0', epy_block_8, '0']
+- [blocks_stream_mux_0_0, '0', virtual_sink_3, '0']
 - [blocks_stream_to_vector_0, '0', epy_block_5, '0']
 - [blocks_stream_to_vector_1, '0', epy_block_6, '1']
+- [blocks_tagged_stream_align_0, '0', epy_block_7_0, '0']
 - [blocks_tagged_stream_align_1, '0', epy_block_6_0, '0']
-- [blocks_tagged_stream_align_2, '0', epy_block_0, '0']
 - [blocks_vector_source_x_0, '0', virtual_sink_0, '0']
-- [blocks_vector_source_x_0_1, '0', epy_block_4, '0']
-- [blocks_vector_to_stream_0, '0', epy_block_7, '0']
+- [blocks_vector_source_x_1_0, '0', blocks_stream_mux_0_0, '0']
+- [blocks_vector_to_stream_0, '0', blocks_tagged_stream_align_0, '0']
 - [blocks_vector_to_stream_1, '0', blocks_stream_to_vector_1, '0']
+- [channels_channel_model_0, '0', blocks_file_sink_0, '0']
+- [channels_channel_model_0, '0', virtual_sink_4, '0']
 - [epy_block_0, '0', epy_block_1, '0']
-- [epy_block_0_1_0_0, '0', virtual_sink_1, '0']
+- [epy_block_0_1_0_0, '0', epy_block_8, '0']
 - [epy_block_1, '0', epy_block_2, '0']
 - [epy_block_1_0_0, '0', epy_block_1_1, '0']
 - [epy_block_1_1, '0', epy_block_0_1_0_0, '0']
 - [epy_block_2, '0', blocks_file_sink_0_3_0_0_0_0, '0']
 - [epy_block_2, '0', blocks_null_sink_0, '0']
 - [epy_block_3, '0', epy_block_6, '0']
-- [epy_block_4, '0', blocks_file_sink_0_0, '0']
-- [epy_block_5, '0', blocks_tagged_stream_align_2, '0']
+- [epy_block_5, '0', blocks_file_sink_0_3_0_0_0_0_0, '0']
+- [epy_block_5, '0', epy_block_8_0, '0']
 - [epy_block_6, '0', blocks_vector_to_stream_0, '0']
-- [epy_block_6_0, '0', blocks_null_sink_1, '0']
 - [epy_block_6_0, '0', virtual_sink_2, '0']
 - [epy_block_6_0_0_0_0_0, '0', blocks_vector_to_stream_1, '0']
-- [epy_block_7, '0', qtgui_sink_x_0_0, '0']
-- [epy_block_7, '0', qtgui_time_sink_x_0, '0']
-- [epy_block_7, '0', uhd_usrp_sink_0, '0']
-- [epy_block_8, '0', blocks_tagged_stream_align_1, '0']
+- [epy_block_7_0, '0', blocks_stream_mux_0_0, '1']
+- [epy_block_8, '0', blocks_file_sink_0_3_0_0_0_0_1, '0']
+- [epy_block_8, '0', virtual_sink_1, '0']
+- [epy_block_8_0, '0', epy_block_0, '0']
+- [epy_block_9, '0', blocks_tagged_stream_align_1, '0']
+- [pdu_pdu_to_stream_x_0, '0', blocks_file_sink_0_3_0_0_0, '0']
 - [pdu_pdu_to_stream_x_0, '0', virtual_sink_0, '0']
 - [pdu_random_pdu_0, pdus, pdu_pdu_to_stream_x_0, pdus]
-- [uhd_usrp_source_0, '0', epy_block_8, '0']
-- [uhd_usrp_source_0, '0', qtgui_sink_x_0, '0']
-- [virtual_source_0, '0', blocks_file_sink_0_3_0_0_0, '0']
 - [virtual_source_0, '0', epy_block_1_0_0, '0']
 - [virtual_source_1, '0', epy_block_6_0_0_0_0_0, '0']
+- [virtual_source_2, '0', blocks_file_sink_0_2_0, '0']
 - [virtual_source_2, '0', blocks_stream_to_vector_0, '0']
+- [virtual_source_3, '0', blocks_file_sink_0_1, '0']
+- [virtual_source_3, '0', channels_channel_model_0, '0']
+- [virtual_source_3_0, '0', epy_block_9, '0']
 
 metadata:
   file_format: 1
