@@ -42,19 +42,10 @@ class Modulation(gr.sync_block):
         )
         self.SF = SF
         self.set_tag_propagation_policy(gr.TPP_DONT)
-
+        
     def work(self, input_items, output_items):
 
         symbols = input_items[0]
         for i in range (len(symbols)) :
-            # t = time.time()
             output_items[0][i] = modulate(self.SF, symbols[i], 1, 1)   # modulate every symbol
-            # elapsed = time.time() - t
-            # print("Modulation time: ", elapsed)
-
-        # # debug
-        # print("\n--- GENERAL WORK : MODULATION ---")
-        # print("symbols :")
-        # print(symbols)
-
         return len(output_items[0])

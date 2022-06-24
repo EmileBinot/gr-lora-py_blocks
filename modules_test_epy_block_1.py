@@ -9,13 +9,12 @@ OUTPUT:
     - out_sig[0]: binary output sequence (4 useful bits per byte)
 """
 
-from tkinter import E
 import numpy as np
 from gnuradio import gr
-
+import pmt
 
 class HammingRx(gr.sync_block):
-    def __init__(self, CR = 2):
+    def __init__(self, CR = 2, payload_len = 16):
         gr.sync_block.__init__(
             self,
             name='LoRa Hamming Rx',
@@ -23,6 +22,9 @@ class HammingRx(gr.sync_block):
             out_sig=[np.uint8]
         )
         self.CR = CR
+        self.payload_len = payload_len
+        self.items_counter = 0 # debug
+        self.success_counter = 0
 
     def decode(self, input_vect, CR_loc) : 
 
@@ -103,6 +105,15 @@ class HammingRx(gr.sync_block):
             bits_crop = [int(x) for x in bin(in0[i])[2:]]                                       # convert to binary
             input_matrix[i][:] = ([0]*(self.CR+4-len(bits_crop)) + bits_crop)[-(self.CR+4):]    # crop to 4+CR bits
             output_matrix[i][:], success_states[i] = self.decode(input_matrix[i][:],self.CR)    # send to decoding function
+        
+        arr,trash = np.histogram(success_states, bins = [-1, 0.5, 1.5, 2.5, 3.5])
+
+        self.items_counter += len(in0)
+        self.success_counter += arr[0]
+        if self.items_counter >= self.payload_len:
+            print("[RX] Hamming : symbols without errors = %d / %d" % (self.success_counter, self.payload_len))
+            self.success_counter = 0
+            self.items_counter = 0
 
 
         # convert output matrix to uint8
@@ -111,8 +122,15 @@ class HammingRx(gr.sync_block):
         # display success states
         # print("Success states:")
         # print(success_states)
-        arr,trash = np.histogram(success_states, bins = [-1, 0.5, 1.5, 2.5, 3.5])
-        print("[RX] Hamming : n1_detected = %d, n2_detected = %d, n1_corrrected = %d, n0 = %d" % (arr[3], arr[2], arr[1], arr[0]))
+        # print("[RX] Hamming : n1_detected = %d, n2_detected = %d, n1_corrrected = %d, n0 = %d" % (arr[3], arr[2], arr[1], arr[0]))
+        # print("[RX] Hamming : n0 = ", arr[0])
+        # tags = self.get_tags_in_window(0, 0, len(input_items[0]))
+        # for tag in tags:
+        #     key = pmt.to_python(tag.key) # convert from PMT to python string
+        #     value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
+        #     print('key:', key)
+        #     print('value:', value, type(value))
+        #     print('')
         # # debug
         # print("\n--- GENERAL WORK : HAMMING_DEC ---")
         # print("in0 :")

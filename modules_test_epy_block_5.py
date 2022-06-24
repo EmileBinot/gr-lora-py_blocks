@@ -24,32 +24,33 @@ import matplotlib.pyplot as plt
 #     return chirp
 
 def modulate(SF, id, os_factor, sign) :
-    M  = pow(2,SF)
+    M  = pow(2,SF)*os_factor
     ka = np.arange(0,M)
     fact1 = np.exp(1j*sign*math.pi*(pow(ka,2))/M)
     chirp = fact1*np.exp(2j*math.pi*(id/M)*ka)
-
     return chirp
 
 class Demodulation(gr.sync_block):
 
-    def __init__(self, SF = 9, B = 250000):
+    def __init__(self, SF = 9, B = 250000, os_factor = 1):
         gr.sync_block.__init__(
             self,
             name='LoRa Demodulation',
-            in_sig=[(np.complex64,pow(2,SF))],
+            in_sig=[(np.complex64,pow(2,SF)*os_factor)],
             out_sig=[np.uint32]
         )
         self.SF = SF
         self.B = B
+        self.os_factor = os_factor
 
     def work(self, input_items, output_items):
 
         M = pow(2,self.SF)
-        # base_upchirp = modulate(self.SF, 0, 1)
-        base_downchirp = modulate(self.SF, 0, 1, -1)
-        freq_vect = np.arange(0,M)                                    # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!
+
+        base_downchirp = modulate(self.SF, 0, self.os_factor, -1)
+        freq_vect = np.arange(0,M*self.os_factor)                                    # !!!! WILL INTRODUCE PROBLEMS WHEN OS_FACTOR IS NOT 1 !!!!
         max_array = np.zeros(len(input_items[0]), dtype=np.float32)
+        
         for i in range(len(input_items[0])):
             demod_signal = np.multiply(input_items[0][i], base_downchirp)   # multiply every symbol with the downchirp
             demod_signal_fft = np.fft.fft(demod_signal)                     # perform FFT on demodulated signal    
@@ -64,6 +65,7 @@ class Demodulation(gr.sync_block):
             # axs[0].specgram(input_items[0][i], NFFT=64, Fs=32, noverlap=8)
             # axs[1].plot(vect, np.abs(demod_signal_fft))
             # plt.show()   
+
             # print("[RX] Demod.  : max (should be 2**SF):", max_array[i])
             # if max_array[i] < 2**self.SF:
             # print("[RX] Demod.  :  max_array[i] < 2**self.SF :", max_array[i])
