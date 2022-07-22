@@ -27,7 +27,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     def __init__(self,preamble_len = 6, payload_nitems = 1, threshold = 10000, SF = 1):  # only default arguments here
         gr.sync_block.__init__(
             self,
-            name='LoRa Correlation Sync',   # will show up in GRC
+            name='LoRa Correlation Sync Preamble',   # will show up in GRC
             in_sig=[np.complex64],
             out_sig=[np.complex64]
         )
@@ -41,8 +41,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         self.state = 0 # 0 if searching for preamble, 1 if found
         self.items_written0_old = 0
         self.set_output_multiple(self.preamble_nitems + self.payload_nitems + 1000)
-        self.frame_counter = 0
-        self.message_port_register_out(pmt.intern("msg_out"))
+        # self.set_history(4224+1)
 
     def work(self, input_items, output_items):
 
@@ -62,25 +61,24 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         corr_max = np.max(corr)
         corr_max_idx = np.argmax(corr)
         if corr_max > 0.5 :
-            print(corr_max)
+            # print(corr_max)
             pass
             # print(corr_max)
         if corr_max > self.threshold :
+            # print("yes")
+            # print("corr_max_idx", corr_max_idx)
+            # print("len", len(in0))
             self.state = 1
-            tag_index = self.nitems_written(0) + corr_max_idx + len(preamble)
-            self.add_item_tag(0,tag_index,  pmt.intern("payload_begin"),  pmt.intern(str(self.payload_nitems)))
+            tag_index = self.nitems_written(0) + corr_max_idx #+ len(preamble)
+            # self.add_item_tag(0,tag_index,  pmt.intern("payload_begin"),  pmt.intern(str(self.payload_nitems)))
+            self.add_item_tag(0,tag_index,  pmt.intern("preamble_begin"),  pmt.intern(str(self.preamble_nitems)))
             self.items_written0_old = self.nitems_written(0)
-
-            self.frame_counter += 1
-            print("\n\n[RX] Correl. : Frame #%d received" % (self.frame_counter))
-            PMT_msg = pmt.cons(pmt.intern("frame_nbr_rx"), pmt.from_long(self.frame_counter))
-            self.message_port_pub(pmt.intern("msg_out"), PMT_msg)
 
             # vect = np.arange(0,len(in0))
             # plt.plot(vect, np.abs(in0))
             # plt.axvline(corr_max_idx, 0, 1, color = "red", label = "Corr peak idx")
             # fig, axs = plt.subplots(3)
-            # # axs[0].specgram(in0, NFFT=64, Fs=32, noverlap=8)
+            # axs[0].specgram(in0, NFFT=64, Fs=32, noverlap=8)
             # axs[0].plot(np.arange(0, len(in0)), in0)
             # axs[1].plot(np.arange(0, len(corr)), corr)
             # axs[2].specgram(in0, NFFT=64, Fs=32, noverlap=8)

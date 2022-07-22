@@ -15,7 +15,6 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
     def __init__(self, preamble_nitems = 4224, payload_nitems = 8192):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
-
         self.payload_nitems = payload_nitems
         self.preamble_nitems = preamble_nitems
         self.frame_counter = 0
@@ -25,6 +24,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             in_sig=[(np.complex64,self.preamble_nitems),(np.complex64,self.payload_nitems)],
             out_sig=[(np.complex64,self.preamble_nitems+self.payload_nitems)]
         )
+
+        self.message_port_register_out(pmt.intern("msg_out"))
+        
         
     def work(self, input_items, output_items):
         if len(input_items[0][0]) == self.preamble_nitems and len(input_items[1][0]) == self.payload_nitems :
@@ -49,6 +51,10 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
             self.frame_counter += 1
             print("\n\n[TX] Constr. : Frame #%d sent" % (self.frame_counter))
+
+            PMT_msg = pmt.cons(pmt.intern("frame_nbr"), pmt.from_long(self.frame_counter))
+            self.message_port_pub(pmt.intern("msg_out"), PMT_msg)
+
             return len(output_items[0])
         else :
             return 0

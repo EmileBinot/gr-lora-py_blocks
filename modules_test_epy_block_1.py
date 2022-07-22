@@ -25,6 +25,7 @@ class HammingRx(gr.sync_block):
         self.payload_len = payload_len
         self.items_counter = 0 # debug
         self.success_counter = 0
+        self.message_port_register_out(pmt.intern("msg_out"))
 
     def decode(self, input_vect, CR_loc) : 
 
@@ -112,9 +113,12 @@ class HammingRx(gr.sync_block):
         self.success_counter += arr[0]
         if self.items_counter >= self.payload_len:
             print("[RX] Hamming : symbols without errors = %d / %d" % (self.success_counter, self.payload_len))
+
+            PMT_msg = pmt.cons(pmt.intern("success_rate"), pmt.from_double(self.success_counter))
+            self.message_port_pub(pmt.intern("msg_out"), PMT_msg)
+
             self.success_counter = 0
             self.items_counter = 0
-
 
         # convert output matrix to uint8
         out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
@@ -142,5 +146,7 @@ class HammingRx(gr.sync_block):
         # print("out :")
         # print(out)
         # print("--- HAMMING_DEC END---")
+
+        
 
         return len(output_items[0])
