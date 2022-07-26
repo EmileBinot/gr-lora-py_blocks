@@ -1,6 +1,6 @@
 ## Introduction
 
-This is a GNU Radio implementation of a LoRa prototype transceiver in embedded python blocks.
+This is a GNU Radio implementation of a LoRa prototype transceiver in __embedded python blocks__.
 This work has been conducted at the IETR lab in Rennes, France.
 
 * In the Tx chain, the implementation contains the main blocks of the LoRa transceiver: whitening, Hamming encoding, interleaver block, Gray mapping, and the modulation block. 
@@ -52,7 +52,7 @@ Type : ``gnuradio-companion /tx_rx_no_gui/modules_test_no_GUI.grc`` to run it in
 Those implementations use C++ blocks and aren't implemented in GNU Radio 3.10.
 I used python embedded blocks for easier prototyping and improved flexibility.
 
-* Possible improvements are :
+* Possible improvements include :
     - Better time synchronization
     - Adding frequency synchronization
     - Adding every SF and CR
