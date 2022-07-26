@@ -1,9 +1,12 @@
 """
-Embedded Python Blocks:
+LoRa EoB tagger:
+Add tx_eob (End Of Burst) tag to the LoRa frame
+References : https://wiki.gnuradio.org/index.php/USRP_Sink
 
-Each time this file is saved, GRC will instantiate the first class it finds
-to get ports and parameters of your block. The arguments to __init__  will
-be the parameters. All of them are required to have default values!
+INPUT:
+    - in_sig[0] : IQ complex items, length = preamble_nitems+payload_nitems (= FRAME)
+OUTPUT:
+    - out_sig[0]: IQ complex items, length = preamble_nitems+payload_nitems (= FRAME) with tag added
 """
 
 import numpy as np
@@ -27,15 +30,14 @@ class blk(gr.sync_block):
         tags = self.get_tags_in_window(0, 0, len(input_items[0]))
         for tag in tags:
             if pmt.to_python(tag.key) == "tx_sob" :
-                key = pmt.intern("tx_eob")
+                key = pmt.intern("tx_eob")  # when 'tx_sob' tag detected, add 'tx_eob' tag at the end of frame
                 value = pmt.from_bool(True)
-                self.add_item_tag(0, # Write to output port 0
+                self.add_item_tag(0,
                         self.nitems_written(0) + self.payload_nitems+self.preamble_nitems-1, # Index of the tag in absolute terms
-                        key, # Key of the tag
-                        value # Value of the tag
+                        key,
+                        value
                 )
                 self.frame_counter += 1
-                # print("\n\n[TX] Constr. : Frame #%d sent" % (self.frame_counter))
         output_items[0][:] = input_items[0]
 
         return len(output_items[0])

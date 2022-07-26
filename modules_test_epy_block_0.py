@@ -4,7 +4,7 @@ Inverse of interleaving block.
 Reference : "Towards an SDR implementation of LoRa..." 2020 A.Marquet, N.Montavont, G.Papadopoulos)
 
 INPUT:
-    - in_sig[0]: CR int32 input sequence
+    - in_sig[0]: CR int32 input sequence (symbols)
 OUTPUT:
     - out_sig[0]: SF bytes output sequence (4+CR useful bits per byte)
 """
@@ -32,11 +32,8 @@ class Deinterleaver(gr.basic_block):
         
         tags = self.get_tags_in_window(0, 0, len(input_items[0]))
         for tag in tags:
-            key = pmt.to_python(tag.key) # convert from PMT to python string
-            value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
-            # print('key:', key)
-            # print('value:', value, type(value))
-            # print('')
+            key = pmt.to_python(tag.key)
+            value = pmt.to_python(tag.value)
             self.add_item_tag(0, self.nitems_written(0), tag.key, tag.value)
 
         if(len(input_items[0]) >= self.CR+4) :  # if we have enough items to process
@@ -46,7 +43,7 @@ class Deinterleaver(gr.basic_block):
             # formatting the input buffer
             input_matrix = np.zeros((self.CR+4, self.SF), dtype=np.uint8)
             for i in range(len(in0)):
-                bits_crop = [int(x) for x in bin(in0[i])[2:]]                               # convert to binary         
+                bits_crop = [int(x) for x in bin(in0[i])[2:]]                                   # convert to binary         
                 input_matrix[i][:] = ([0]*(self.SF-len(bits_crop)) + bits_crop)[-(self.SF):]    # crop to SF bits
 
             # deinterleaving
@@ -59,21 +56,6 @@ class Deinterleaver(gr.basic_block):
 
             # to uint32
             output_items[0][0:(self.SF)] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
-
-            # # debug
-            # print("\n--- GENERAL WORK : DEINTERLEAVER ---")
-            # print("in0 :")
-            # print(in0)
-            # print("len(in0) (should be CR+4): ")
-            # print(len(in0))
-            # print("input_matrix (CR+4 x SF):")
-            # print(input_matrix)
-            # print("output_matrix (SF x CR+4 ):")
-            # print(output_matrix)
-            # print("output_items[0] = ")
-            # print(output_items[0][0:(self.SF)])
-            # print("return len(output_items[0]) (should be CR+4): ")
-            # print(len(output_items[0]))
 
             self.consume(0, self.CR+4)  # consume inputs (should be CR+4)
             return self.SF              # return produced outputs (should be SF)

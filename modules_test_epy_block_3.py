@@ -2,6 +2,10 @@
 Preamble Generation Block:
 Reference : "Towards an SDR implementation of LoRa..." 2020 A.Marquet, N.Montavont, G.Papadopoulos)
 
+KNOWN BUGS :
+    - os_factor != 1 will cause problem as this feature hasn't been properly implemented
+    - changing SF and/or preamble_len values in the GRC flowgraph will not work ! If you want to change their value, do it here. (https://github.com/gnuradio/gnuradio/issues/4196)
+
 INPUT:
     - None
 OUTPUT:
@@ -36,16 +40,7 @@ class PreambleGenerator(gr.sync_block):
         self.preamble_len = preamble_len
 
     def work(self, input_items, output_items):
-        # t = time.time()
         preamble_up = np.reshape(modulate_vect(self.SF, [0]*self.preamble_len, 1, 1), -1)      # generate preamble_len upchirps
         preamble_down = np.reshape(np.conjugate(modulate_vect(self.SF, [0]*3, 1, 1)), -1)      # generate 3 downchirps
         output_items[0][:] = np.concatenate((preamble_up, preamble_down[0:int(2.25*pow(2,self.SF))])) # concatenate preamble_up and preamble_down[0:2.25*M]
-        # # TAGS
-        # key = pmt.intern("tx_sob")
-        # value = pmt.from_bool(True)
-        # self.add_item_tag(0, # Write to output port 0
-        #         self.nitems_written(0), # Index of the tag in absolute terms
-        #         key, # Key of the tag
-        #         value # Value of the tag
-        # )
         return len(output_items[0])

@@ -60,16 +60,4 @@ class HammingTx(gr.sync_block):
         # binary to decimal conversion
         out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
 
-        # #debug
-        # print("\n--- GENERAL WORK : HAMMING_ENC ---")
-        # print("in0 :")
-        # print(in0)
-        # print("input_matrix :")
-        # print(input_matrix)
-        # print("output_matrix :")
-        # print(output_matrix)
-        # print("out :")
-        # print(out)
-        # print("--- HAMMING_ENC END---")
-
         return len(output_items[0])

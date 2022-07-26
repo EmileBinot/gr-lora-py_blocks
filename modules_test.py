@@ -118,7 +118,6 @@ class modules_test(gr.top_block, Qt.QWidget):
         self.payload_nitems = payload_nitems = int(payload_nsymb*pow(2,SF))
         self.os_factor = os_factor = 1
         self.h_simul = h_simul = 1
-        self.const_multiply = const_multiply = 1
         self.chooser = chooser = 0
         self.center_freq = center_freq = int(868e6)
 
@@ -268,10 +267,10 @@ class modules_test(gr.top_block, Qt.QWidget):
         self._prod_01_1_tool_bar.addWidget(Qt.QLabel("[Rx] : Channel estimation :"))
         self._prod_01_1_label = Qt.QLabel(str(self._prod_01_1_formatter(self.prod_01_1)))
         self._prod_01_1_tool_bar.addWidget(self._prod_01_1_label)
-        self.top_grid_layout.addWidget(self._prod_01_1_tool_bar, 3, 1, 1, 1)
+        self.top_grid_layout.addWidget(self._prod_01_1_tool_bar, 3, 1, 1, 2)
         for r in range(3, 4):
             self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(1, 2):
+        for c in range(1, 3):
             self.top_grid_layout.setColumnStretch(c, 1)
         self._prod_01_0_tool_bar = Qt.QToolBar(self)
 
@@ -283,10 +282,10 @@ class modules_test(gr.top_block, Qt.QWidget):
         self._prod_01_0_tool_bar.addWidget(Qt.QLabel("[Rx] : Number of frames received :"))
         self._prod_01_0_label = Qt.QLabel(str(self._prod_01_0_formatter(self.prod_01_0)))
         self._prod_01_0_tool_bar.addWidget(self._prod_01_0_label)
-        self.top_grid_layout.addWidget(self._prod_01_0_tool_bar, 3, 2, 1, 2)
+        self.top_grid_layout.addWidget(self._prod_01_0_tool_bar, 3, 3, 1, 2)
         for r in range(3, 4):
             self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(2, 4):
+        for c in range(3, 5):
             self.top_grid_layout.setColumnStretch(c, 1)
         self._prod_01_tool_bar = Qt.QToolBar(self)
 
@@ -313,10 +312,10 @@ class modules_test(gr.top_block, Qt.QWidget):
         self._prod_tool_bar.addWidget(Qt.QLabel("[Rx] : Symbols without error on current frame (/18) :"))
         self._prod_label = Qt.QLabel(str(self._prod_formatter(self.prod)))
         self._prod_tool_bar.addWidget(self._prod_label)
-        self.top_grid_layout.addWidget(self._prod_tool_bar, 4, 2, 1, 2)
+        self.top_grid_layout.addWidget(self._prod_tool_bar, 4, 3, 1, 2)
         for r in range(4, 5):
             self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(2, 4):
+        for c in range(3, 5):
             self.top_grid_layout.setColumnStretch(c, 1)
         self.pdu_random_pdu_0 = pdu.random_pdu(payload_len, payload_len, 0x0F, SF)
         self.pdu_pdu_to_stream_x_0 = pdu.pdu_to_stream_b(pdu.EARLY_BURST_APPEND, 64)
@@ -362,22 +361,17 @@ class modules_test(gr.top_block, Qt.QWidget):
         self.blocks_selector_0 = blocks.selector(gr.sizeof_gr_complex*1,chooser,0)
         self.blocks_selector_0.set_enabled(True)
         self.blocks_null_sink_1_0 = blocks.null_sink(gr.sizeof_gr_complex*1)
-        self.blocks_null_sink_1 = blocks.null_sink(gr.sizeof_gr_complex*1)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_char*1)
         self.blocks_msgpair_to_var_0_0_0_0 = blocks.msg_pair_to_var(self.set_h_est)
         self.blocks_msgpair_to_var_0_0_0 = blocks.msg_pair_to_var(self.set_frame_nbr_rx)
         self.blocks_msgpair_to_var_0_0 = blocks.msg_pair_to_var(self.set_frame_nbr)
         self.blocks_msgpair_to_var_0 = blocks.msg_pair_to_var(self.set_success_rate)
-        self.blocks_message_debug_0 = blocks.message_debug(True)
-        self.blocks_file_sink_0_1_0 = blocks.file_sink(gr.sizeof_gr_complex*1, 'lora_rx_payload', False)
-        self.blocks_file_sink_0_1_0.set_unbuffered(False)
 
 
         ##################################################
         # Connections
         ##################################################
         self.msg_connect((self.epy_block_1, 'msg_out'), (self.blocks_msgpair_to_var_0, 'inpair'))
-        self.msg_connect((self.epy_block_12, 'h_est'), (self.blocks_message_debug_0, 'print'))
         self.msg_connect((self.epy_block_12, 'h_est'), (self.blocks_msgpair_to_var_0_0_0_0, 'inpair'))
         self.msg_connect((self.epy_block_6, 'msg_out'), (self.blocks_msgpair_to_var_0_0, 'inpair'))
         self.msg_connect((self.epy_block_9_0, 'msg_out'), (self.blocks_msgpair_to_var_0_0_0, 'inpair'))
@@ -407,8 +401,6 @@ class modules_test(gr.top_block, Qt.QWidget):
         self.connect((self.epy_block_3, 0), (self.epy_block_6, 0))
         self.connect((self.epy_block_5, 0), (self.epy_block_8_0, 0))
         self.connect((self.epy_block_6, 0), (self.blocks_vector_to_stream_0, 0))
-        self.connect((self.epy_block_6_0, 0), (self.blocks_file_sink_0_1_0, 0))
-        self.connect((self.epy_block_6_0, 0), (self.blocks_null_sink_1, 0))
         self.connect((self.epy_block_6_0, 0), (self.blocks_stream_to_vector_0, 0))
         self.connect((self.epy_block_6_0_0, 0), (self.epy_block_9_0, 0))
         self.connect((self.epy_block_6_0_0, 0), (self.epy_block_9_0_0_0, 0))
@@ -589,12 +581,6 @@ class modules_test(gr.top_block, Qt.QWidget):
         self.h_simul = h_simul
         Qt.QMetaObject.invokeMethod(self._h_simul_line_edit, "setText", Qt.Q_ARG("QString", repr(self.h_simul)))
         self.channels_channel_model_0.set_taps([self.h_simul])
-
-    def get_const_multiply(self):
-        return self.const_multiply
-
-    def set_const_multiply(self, const_multiply):
-        self.const_multiply = const_multiply
 
     def get_chooser(self):
         return self.chooser

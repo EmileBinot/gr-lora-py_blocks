@@ -1,9 +1,14 @@
 """
-Embedded Python Blocks:
+Gray coding block
+A gray coding is a mapping between a symbol in any numeric representation to a binary sequence. e
+particularity of the obtained binary sequence is that adjacent symbols in the original representation only
+differ by one bit in the gray representation.
+Reference : https://www.epfl.ch/labs/tcl/wp-content/uploads/2020/02/Reverse_Eng_Report.pdf
 
-Each time this file is saved, GRC will instantiate the first class it finds
-to get ports and parameters of your block. The arguments to __init__  will
-be the parameters. All of them are required to have default values!
+INPUT:
+    - in_sig[0]: CR int32 input sequence (symbols)
+OUTPUT:
+    - out_sig[0]: CR int32 input sequence (symbols)
 """
 
 import numpy as np
@@ -19,12 +24,9 @@ class blk(gr.sync_block):
             in_sig=[np.int32],
             out_sig=[np.int32]
         )
-        # if an attribute with the same name as a parameter is found,
-        # a callback is registered (properties work, too).
         self.SF = SF
 
     def work(self, input_items, output_items):
-        """example: multiply with constant"""
         in0 = input_items[0][:len(output_items[0])]
         out = output_items[0]
 

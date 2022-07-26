@@ -2,6 +2,9 @@
 Modulation Block:
 Reference : "Towards an SDR implementation of LoRa..." 2020 A.Marquet, N.Montavont, G.Papadopoulos)
 
+KNOWN BUGS :
+    - os_factor != 1 will cause problem as this feature hasn't been properly implemented
+    
 INPUT:
     - in_sig[0]: int32 input stream
 OUTPUT:
@@ -11,18 +14,6 @@ OUTPUT:
 import numpy as np
 from gnuradio import gr
 import math
-import time
-
-# def modulate(SF, id, os_factor, sign) :
-#     M  = pow(2,SF)
-#     n_fold = M * os_factor - id * os_factor
-#     chirp = np.zeros(M*os_factor, dtype=np.complex64)
-#     for n in range(0,M*os_factor):
-#         if n < n_fold:
-#             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-0.5)*n/os_factor))
-#         else:
-#             chirp[n] = np.exp(2j*math.pi *(n*n/(2*M)/pow(os_factor,2)+(id/M-1.5)*n/os_factor))
-#     return chirp
 
 def modulate(SF, id, os_factor, sign) :
     M  = pow(2,SF)

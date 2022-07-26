@@ -1,9 +1,12 @@
 """
-Embedded Python Blocks:
+LoRa Correlation Sync:
+This block will output h_est when estimated. Preamble is used for estimation
 
-Each time this file is saved, GRC will instantiate the first class it finds
-to get ports and parameters of your block. The arguments to __init__  will
-be the parameters. All of them are required to have default values!
+INPUT:
+    - in_sig[0] : IQ complex items
+OUTPUT:
+    - out_sig[0]: IQ complex items
+    - msg port "h_est" : h_est complex value
 """
 
 import numpy as np
@@ -21,13 +24,11 @@ def modulate_vect(SF, id, os_factor, sign) :
         chirp[i] = fact1*np.exp(2j*math.pi*(id[i]/M)*ka)
     return chirp
 
-class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
-    """Embedded Python Block example - a simple multiply const"""
-
-    def __init__(self):  # only default arguments here
+class blk(gr.sync_block):
+    def __init__(self):
         gr.sync_block.__init__(
             self,
-            name='Channel estimator',   # will show up in GRC
+            name='Channel estimator',
             in_sig=[np.complex64],
             out_sig=[np.complex64]
         )
@@ -45,33 +46,21 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
         in0 = input_items[0][:len(self.preamble)]
 
-        h_est = in0.T*self.preamble# https://www.youtube.com/watch?v=XCe0xanaPFo
         h_est_LS = in0 / self.preamble
 
-        h_est_mean = np.mean(h_est)
         h_est_LS_mean = np.mean(h_est_LS)
-
-        # print("[RX] Channel : h^est =",h_est_mean)
-        
 
         # Computing MSE :
         y = in0
         y_est_LS = self.preamble * h_est_LS_mean
         mse_LS = np.abs((np.square(y - y_est_LS)).mean(axis=None))
 
-        # y_est = self.preamble * h_est_mean
-        # mse = np.abs((np.square(y - y_est)).mean(axis=None))
-
         print("[RX] Channel : h^estLS =",h_est_LS_mean)
-        # print("[RX] Channel : MSE_LS = ",mse_LS)
-
-        # print("[RX] Channel : MSE = ",mse)
 
         P_pair = pmt.cons(pmt.string_to_symbol("h_est"), pmt.from_complex(complex(round(h_est_LS_mean.real,1),round(h_est_LS_mean.imag,1))))
-        # self.message_port_pub(pmt.intern("h_est"), P_pair)
         self.message_port_pub(pmt.intern("h_est"), P_pair)
 
-
+        # # debug
         # fig, axs = plt.subplots(4)
         # axs[0].specgram(self.preamble, NFFT=64, Fs=32, noverlap=8)
         # axs[0].set_title('X')

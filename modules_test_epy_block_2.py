@@ -29,10 +29,6 @@ whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F
                 0x0E, 0x1D, 0x3A, 0x75, 0xEA, 0xD5, 0xAA, 0x55, 0xAB, 0x57, 0xAF, 0x5F, 0xBE, 0x7C, 0xF9, 0xF2,
                 0xE5, 0xCA, 0x94, 0x28, 0x50, 0xA1, 0x42, 0x84, 0x09, 0x13, 0x27, 0x4F, 0x9F, 0x3F, 0x7F)
 
-# # debug
-# whitening_seq_debug = 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
-# whitening_seq = whitening_seq_debug
-
 class LoraDewhitening(gr.sync_block):
     def __init__(self, reset_key = "payload_begin"):
         gr.sync_block.__init__(
@@ -41,23 +37,17 @@ class LoraDewhitening(gr.sync_block):
             in_sig=[np.uint8],
             out_sig=[np.uint8]
         )
-        self.table_idx = 0 # index of the whitening table cell to be used for whitening
+        self.table_idx = 0  # index of the whitening table cell to be used for whitening
         
     def work(self, input_items, output_items):
         
         tags = self.get_tags_in_window(0, 0, len(input_items[0]))
         for tag in tags:
-            key = pmt.to_python(tag.key) # convert from PMT to python string
-            value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
+            key = pmt.to_python(tag.key)
+            value = pmt.to_python(tag.value)
             
             if key == 'payload_begin':
-                self.table_idx = 0
-
-            # # debug
-            # print('key:', key)
-            # print('value:', value, type(value))
-            # print('')
-
+                self.table_idx = 0              # if new frame ('payload_begin' tag detected), reset table_idx
 
         in0 = input_items[0]    # input buffer
         out = output_items[0]   # output buffer
@@ -79,16 +69,4 @@ class LoraDewhitening(gr.sync_block):
             if(self.table_idx == len(whitening_seq)):   # if table index is out of bounds, reset it
                 self.table_idx = 0
 
-        # # debug
-        # print("\n--- GENERAL WORK : DEWHITENING ---")
-        # print("in0 :")
-        # print(in0)
-        # print("input_matrix :")
-        # print(input_matrix)
-        # print("out :")
-        # print(output_items[0][:])
-        # print("return len(out): ")
-        # print(len(output_items[0]))
-        # print("--- DEWHITENING END---")
-        
         return len(output_items[0])

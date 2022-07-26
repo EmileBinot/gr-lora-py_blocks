@@ -1,9 +1,12 @@
 """
-Embedded Python Blocks:
+Gray decoding block
+Inverse of gray coding block
+Reference : https://www.epfl.ch/labs/tcl/wp-content/uploads/2020/02/Reverse_Eng_Report.pdf
 
-Each time this file is saved, GRC will instantiate the first class it finds
-to get ports and parameters of your block. The arguments to __init__  will
-be the parameters. All of them are required to have default values!
+INPUT:
+    - in_sig[0]: CR int32 input sequence (symbols)
+OUTPUT:
+    - out_sig[0]: CR int32 input sequence (symbols)
 """
 
 import numpy as np

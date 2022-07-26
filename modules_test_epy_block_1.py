@@ -30,7 +30,7 @@ class HammingRx(gr.sync_block):
     def decode(self, input_vect, CR_loc) : 
 
         output=input_vect
-        success_state = 0 # 3 if 1 error detected, 2 if 2 errors detected, 1 if 1 error corrected,  0 if no error
+        success_state = 0 # success_state : 3 if 1 error detected, 2 if 2 errors detected, 1 if 1 error corrected,  0 if no error
 
         if CR_loc == 1: # CR = 1, no error correction
             
@@ -111,42 +111,13 @@ class HammingRx(gr.sync_block):
 
         self.items_counter += len(in0)
         self.success_counter += arr[0]
-        if self.items_counter >= self.payload_len:
-            print("[RX] Hamming : symbols without errors = %d / %d" % (self.success_counter, self.payload_len))
-
+        if self.items_counter >= self.payload_len:  # when every symbol from a frame have been received, output decoding/correcting success or fail states for whole frame
             PMT_msg = pmt.cons(pmt.intern("success_rate"), pmt.from_double(self.success_counter))
             self.message_port_pub(pmt.intern("msg_out"), PMT_msg)
-
             self.success_counter = 0
             self.items_counter = 0
 
         # convert output matrix to uint8
         out[:] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))
-
-        # display success states
-        # print("Success states:")
-        # print(success_states)
-        # print("[RX] Hamming : n1_detected = %d, n2_detected = %d, n1_corrrected = %d, n0 = %d" % (arr[3], arr[2], arr[1], arr[0]))
-        # print("[RX] Hamming : n0 = ", arr[0])
-        # tags = self.get_tags_in_window(0, 0, len(input_items[0]))
-        # for tag in tags:
-        #     key = pmt.to_python(tag.key) # convert from PMT to python string
-        #     value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
-        #     print('key:', key)
-        #     print('value:', value, type(value))
-        #     print('')
-        # # debug
-        # print("\n--- GENERAL WORK : HAMMING_DEC ---")
-        # print("in0 :")
-        # print(in0)
-        # print("input_matrix :")
-        # print(input_matrix)
-        # print("output_matrix :")
-        # print(output_matrix)
-        # print("out :")
-        # print(out)
-        # print("--- HAMMING_DEC END---")
-
-        
 
         return len(output_items[0])

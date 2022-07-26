@@ -6,7 +6,7 @@ Reference : "Towards an SDR implementation of LoRa..." 2020 A.Marquet, N.Montavo
 INPUT:
     - in_sig[0]: SF bytes input sequence (4+CR useful bits per byte)
 OUTPUT:
-    - out_sig[0]: CR int32 output sequence
+    - out_sig[0]: CR int32 output sequence (symbols)
 """
 
 import numpy as np
@@ -44,20 +44,6 @@ class Interleaver(gr.basic_block):
                     idi=self.SF-1-(j-i)%self.SF
                     idj=self.CR+4-1-i
                     output_matrix[i][j]=input_matrix[idi][idj]
-            
-            # # debug
-            # print("\n--- GENERAL WORK : INTERLEAVER ---")
-            # print("in0 :")
-            # print(in0)
-            # print("len(in0) (should be SF): ")
-            # print(len(in0))
-            # print("input_matrix (SF x CR+4):")
-            # print(input_matrix)
-            # print("output_matrix (CR+4 x SF):")
-            # print(output_matrix)
-            # print("output_items[0] = ")
-            # print(output_items[0])
-
 
             # to uint32
             output_items[0][0:(self.CR+4)] = output_matrix.dot(1 << np.arange(output_matrix.shape[-1] - 1, -1, -1))

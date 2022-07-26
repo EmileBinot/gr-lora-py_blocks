@@ -13,6 +13,7 @@ from gnuradio import gr
 import time
 import pmt
 
+# Pseudo-random sequence used for whitening 
 whitening_seq =(0xFF, 0xFE, 0xFC, 0xF8, 0xF0, 0xE1, 0xC2, 0x85, 0x0B, 0x17, 0x2F, 0x5E, 0xBC, 0x78, 0xF1, 0xE3,
                 0xC6, 0x8D, 0x1A, 0x34, 0x68, 0xD0, 0xA0, 0x40, 0x80, 0x01, 0x02, 0x04, 0x08, 0x11, 0x23, 0x47,
                 0x8E, 0x1C, 0x38, 0x71, 0xE2, 0xC4, 0x89, 0x12, 0x25, 0x4B, 0x97, 0x2E, 0x5C, 0xB8, 0x70, 0xE0,
@@ -38,20 +39,16 @@ class Whitening(gr.sync_block):
             in_sig=[np.uint8],
             out_sig=[np.uint8]
         )
-        self.table_idx = 0 # index of the whitening table cell to be used for whitening
-        self.frame_counter = 0 # frame number
+        self.table_idx = 0  # index of the whitening table cell to be used for whitening
         
     def work(self, input_items, output_items):
         
         tags = self.get_tags_in_window(0, 0, len(input_items[0]))
         for tag in tags:
-            key = pmt.to_python(tag.key) # convert from PMT to python string
-            value = pmt.to_python(tag.value) # Note that the type(value) can be several things, it depends what PMT type it was
-            
+            key = pmt.to_python(tag.key)        # convert from PMT to python string
+            value = pmt.to_python(tag.value)
             if key == 'tx_sob':
-                self.frame_counter += 1
-                # print("\n[TX] Whitening  : frame sent, number : ", self.frame_counter)
-                self.table_idx = 0
+                self.table_idx = 0              # if new frame ('tx_sob' tag detected), reset table_idx
 
         in0 = input_items[0]    # input buffer reference
         out = output_items[0]   # output buffer reference
@@ -61,22 +58,8 @@ class Whitening(gr.sync_block):
             bits_crop = [int(x) for x in bin(in0[i])[2:]]                       # convert to binary
             input_matrix[i][:] = ([0]*(4-len(bits_crop)) + bits_crop)[-(4):]    # crop to 4 useful bits
             out[i] = in0[i] ^ whitening_seq[self.table_idx] # whiten (XOR) the input vector
-            self.table_idx += 1                         # increment table index
-            if(self.table_idx == len(whitening_seq)):   # if table index is out of bounds, reset it
+            self.table_idx += 1                             # increment table index
+            if(self.table_idx == len(whitening_seq)):       # if table index is out of bounds, reset it
                 self.table_idx = 0
-   
-
-
-        # # debug
-        # print("\n--- GENERAL WORK : WHITENING ---")
-        # print("in0 :")
-        # print(in0)
-        # print("input_matrix :")
-        # print(input_matrix)
-        # print("out :")
-        # print(out)
-        # print("return len(out): ")
-        # print(len(out))
-        # print("--- WHITENING END---")
 
         return len(out)
